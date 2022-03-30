@@ -1,0 +1,22 @@
+{% extends "map_browser/base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}
+    <title>Dodaj dokument</title>
+{% endblock title %}
+{% block content %}
+    <form enctype="multipart/form-data" method="POST">
+        {%  csrf_token %}
+        <div class="mb-3">
+            {% crispy form %}
+        </div>
+        <p>
+            <button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#authors" aria-expanded="false">Autorzy Mapy</button>
+            <button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#lang_places" aria-expanded="false">Język mapy i miejsca</button>
+        </p>
+        <div class="collapse multi-collapse" id="authors">
+
+        </div>
+        <div class="collapse multi-collapse" id="lang_places">
+        </div>
+    </form>
+{% endblock content %}

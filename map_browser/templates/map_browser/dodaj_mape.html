@@ -1,0 +1,41 @@
+{% extends "map_browser/base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}
+    <title>Dodaj mapę</title>
+{% endblock title %}
+{% block content %}
+    <form enctype="multipart/form-data" method="POST">
+        {%  csrf_token %}
+        <div class="mb-3">
+            {% crispy map_form %}
+        </div>
+            <button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#authors" aria-expanded="false">Autorzy Mapy</button>
+            <button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#lang_places" aria-expanded="false">Język mapy i miejsca</button>
+        <div class="collapse multi-collapse" id="authors">
+
+        </div>
+        <div class="collapse multi-collapse" id="lang_places">
+        </div>
+        <button type="submit" name="{{ map_form.prefix }}" class="btn btn-primary">Submit</button>
+    </form>
+           <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+                <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Dodaj nowego autora</h5>
+                      </div>
+                    <form method="POST">
+                        {%  csrf_token %}
+                        <div class="modal-body">
+                            {{ people_form.first_name|as_crispy_field }}
+                            {{ people_form.last_name|as_crispy_field }}
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" name="{{ people_form.prefix }}" class="btn btn-primary">Zapisz</button>
+                        </div>
+                    </form>
+                </div>
+          </div>
+        </div>
+{% endblock content %}

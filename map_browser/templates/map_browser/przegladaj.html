@@ -1,0 +1,15 @@
+{% extends "map_browser/base.html" %}
+{% load static %}
+{% block title %}
+
+    <title>Przeglądaj mapy</title>
+{% endblock title %}
+{% block content %}
+    <div class="row row-cols-3">
+    {% for i in data %}
+        <div class="col">
+            <img class="mapa" src="{% static 'map_browser/images/dummy_map.jpg' %}" alt="fotka">
+        </div>
+    {% endfor %}
+    </div>
+{% endblock content %}

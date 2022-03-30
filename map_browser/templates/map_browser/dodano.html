@@ -1,0 +1,10 @@
+{% extends "map_browser/base.html" %}
+{% load static %}
+{% block title %}
+{% load crispy_forms_tags %}
+
+    <title>Dodano mapę</title>
+{% endblock title %}
+{% block content %}
+    {{ form|crispy }}
+{% endblock content %}

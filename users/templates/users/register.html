@@ -1,0 +1,14 @@
+{% extends "map_browser/base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block title %}
+    <title>Zarejestruj się</title>
+{% endblock title %}
+{% block content %}
+    <legend>Wypełnij wymagane pola w celu rejestracji</legend>
+    {% csrf_token %}
+    <form method="POST">
+        {% csrf_token %}
+        {% crispy form %}
+    </form>
+{% endblock content %}
