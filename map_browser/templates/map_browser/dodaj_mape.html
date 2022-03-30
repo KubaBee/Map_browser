@@ -4,7 +4,7 @@
     <title>Dodaj mapę</title>
 {% endblock title %}
 {% block content %}
-    <form enctype="multipart/form-data" method="POST">
+    <form action="" method="POST" enctype="multipart/form-data">
         {%  csrf_token %}
         <div class="mb-3">
             {% crispy map_form %}
@@ -15,8 +15,8 @@
 
         </div>
         <div class="collapse multi-collapse" id="lang_places">
+
         </div>
-        <button type="submit" name="{{ map_form.prefix }}" class="btn btn-primary">Submit</button>
     </form>
            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
           <div class="modal-dialog">
@@ -24,7 +24,7 @@
                       <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Dodaj nowego autora</h5>
                       </div>
-                    <form method="POST">
+                    <form method="POST" id="people_form">
                         {%  csrf_token %}
                         <div class="modal-body">
                             {{ people_form.first_name|as_crispy_field }}

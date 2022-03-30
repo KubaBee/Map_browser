@@ -28,24 +28,26 @@ def _get_form(request, form_class, prefix):
     return form_class(data, prefix=prefix)
 
 
+def _get_form_with_file(request, form_class, prefix):
+    data = request.POST if prefix in request.POST else None
+    file = request.FILES if prefix in request.POST else None
+    return form_class(data, file, prefix=prefix)
+
+
 class AddMapForm(LoginRequiredMixin, CreateView):
-    model = Map
-    form_class = MapForm
     template_name = 'map_browser/dodaj_mape.html'
-    success_url = reverse_lazy('przegladaj')
 
     def get(self, request, *args, **kwargs):
         return self.render_to_response({'map_form': MapForm(prefix='map_form'),
                                         'people_form': PeopleForm(prefix='people_form')})
 
     def post(self, request, *args, **kwargs):
-        map_form = _get_form(request, MapForm, 'map_form')
+        map_form = _get_form_with_file(request, MapForm, 'map_form')
         people_form = _get_form(request, PeopleForm, 'people_form')
-        if map_form.is_valid():
-            map_form.save(commit=True)
-            return redirect('przegladaj')
-        elif people_form.is_valid():
-            people_form.save(commit=True)
-            return redirect('dodaj_mape')
-        return redirect('przegladaj')
-
+        if map_form.is_bound and map_form.is_valid():
+            print(map_form.cleaned_data)
+            map_form.save()
+        elif people_form.is_bound and people_form.is_valid():
+            print(people_form.cleaned_data)
+            people_form.save()
+        return render(request, 'map_browser/dodaj_mape.html', {'people_form': people_form, 'map_form': map_form})

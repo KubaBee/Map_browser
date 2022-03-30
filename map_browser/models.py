@@ -48,4 +48,3 @@ class Map(models.Model):
     keyword_geo = models.CharField(max_length=200, blank=True)
     additional_notes = models.TextField(blank=True)
 
-

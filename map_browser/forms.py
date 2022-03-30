@@ -53,7 +53,9 @@ class MapForm(forms.ModelForm):
                 Tab('Informacje o archiwim', FieldWithButtons('authors'), HTML(
                     """<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Dodaj nowego autora</button>""")),
                 Tab('Informacje o autorach', 'archive_id')
-            )
+            ),
+        HTML("""
+                                    <button type="submit" name="{{ map_form.prefix }}" class="btn btn-primary">Submit</button>""")
         )
 
 
@@ -78,7 +80,6 @@ class PeopleForm(forms.ModelForm):
         cleaned_data = super().clean()
         first_name = bool(cleaned_data.get('first_name', False))
         last_name = bool(cleaned_data.get('last_name', False))
-        print(f'Method worksssssss {first_name}//{last_name}')
         if first_name is False and last_name is False:
             raise ValidationError("Obydwie wartości nie mogą być puste")
         return cleaned_data
