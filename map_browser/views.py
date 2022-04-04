@@ -7,7 +7,7 @@ from .models import Map, Archive, People
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
-
+from django.contrib import messages
 
 class MapListView(ListView):
     model = Map
@@ -61,6 +61,7 @@ class AddMapForm(LoginRequiredMixin, CreateView):
 
         if map_form.is_bound and map_form.is_valid():
             map_form.save()
+            messages.success(request, 'Mapa została dodana')
 
         if people_form.is_bound and people_form.is_valid():
             values = people_form.cleaned_data
@@ -68,6 +69,8 @@ class AddMapForm(LoginRequiredMixin, CreateView):
                 first_name=values['first_name'],
                 last_name=values['last_name']
             )
+            messages.success(request, 'Autor został dodany')
+
             print(obj, created)
 
         if archive_form.is_bound and archive_form.is_valid():
@@ -78,6 +81,8 @@ class AddMapForm(LoginRequiredMixin, CreateView):
                     archive_unit=values['archive_unit'],
                     archive_number=values['archive_number']
                 )
+            messages.success(request, 'Archiwum zostało dodane')
+
             print(obj, created)
 
         return render(request, 'map_browser/dodaj_mape.html',
