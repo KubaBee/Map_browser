@@ -15,13 +15,10 @@ def register(request):
                 form.save()
                 username = form.cleaned_data.get('username')
                 messages.success(request, f"Utworzono konto dla {username}")
-                return redirect('przegladaj')
+                return redirect('login')
         else:
             form = RegisterUserFrom()
-            context = {
-                'form': form
-            }
-            return render(request, 'users/register.html', context)
+        return render(request, 'users/register.html', {'form': form})
     else:
         return redirect('przegladaj')
 
