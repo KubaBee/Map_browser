@@ -64,7 +64,7 @@ class AddMapForm(LoginRequiredMixin, CreateView):
 
         if people_form.is_bound and people_form.is_valid():
             values = people_form.cleaned_data
-            obj, created = Archive.objects.get_or_create(
+            obj, created = People.objects.get_or_create(
                 first_name=values['first_name'],
                 last_name=values['last_name']
             )
