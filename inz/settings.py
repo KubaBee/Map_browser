@@ -87,7 +87,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'map_browser_v2',
         'USER': 'postgres',
-        'PASSWORD': os.environ["API_PASSWORD"],
+        'PASSWORD': os.getenv("API_PASSWORD"),
         'HOST': 'localhost',
         'PORT': '',
     }
