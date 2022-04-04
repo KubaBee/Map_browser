@@ -18,11 +18,11 @@
 
         </div>
     </form>
-           <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="authorModal" tabindex="-1" aria-labelledby="authorModalLabel" aria-hidden="true">
           <div class="modal-dialog">
                 <div class="modal-content">
                       <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Dodaj nowego autora</h5>
+                        <h5 class="modal-title" id="authorModalLabel">Add new author</h5>
                       </div>
                     <form method="POST" id="people_form">
                         {%  csrf_token %}
@@ -32,10 +32,32 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" name="{{ people_form.prefix }}" class="btn btn-primary">Zapisz</button>
+                            <button type="submit" name="{{ people_form.prefix }}" class="btn btn-primary">Save</button>
                         </div>
                     </form>
                 </div>
           </div>
+        </div>
+        <div class="modal fade" id="archiveModal" tabindex="-1" aria-labelledby="archiveModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                    <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="archiveModalLabel">Add new archive</h5>
+                          </div>
+                        <form method="POST" id="archive_form">
+                            {%  csrf_token %}
+                            <div class="modal-body">
+                                {{ archive_form.archive_name|as_crispy_field }}
+                                {{ archive_form.archive_team|as_crispy_field }}
+                                {{ archive_form.archive_unit|as_crispy_field }}
+                                {{ archive_form.archive_number|as_crispy_field }}
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" name="{{ archive_form.prefix }}" class="btn btn-primary">Save</button>
+                            </div>
+                        </form>
+                    </div>
+              </div>
         </div>
 {% endblock content %}

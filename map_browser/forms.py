@@ -14,16 +14,11 @@ class CustomMMCF(forms.ModelMultipleChoiceField):
             return f"{creator.first_name} {creator.last_name}"
 
 
-class ArchiveMCF(forms.ModelChoiceField):
-    def label_from_instance(self, obj):
-        return f"{obj.archive_name}/{obj.archive_team}/{obj.archive_unit}/{obj.archive_number}"
-
-
 class MapForm(forms.ModelForm):
     class Meta:
         model = models.Map
         fields = ['filename', 'creator', 'archive_id', 'full_title', 'short_title', 'publishing_address',
-                  'scale', 'subject', 'subject_type', 'subject_type', 'authors', 'creation_type',
+                  'scale', 'subject', 'subject_type', 'authors', 'creation_type', 'authors',
                   'description', 'keyword_name', 'keyword_subject', 'keyword_geo', 'additional_notes']
 
     creator = CustomMMCF(
@@ -31,32 +26,19 @@ class MapForm(forms.ModelForm):
         widget=forms.CheckboxSelectMultiple
     )
 
-    authors = CustomMMCF(
-        queryset=models.People.objects.all(),
-        widget=forms.SelectMultiple()
-    )
-
-    archive_id = ArchiveMCF(
-        queryset=models.Archive.objects.all()
-    )
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.layout = Layout(
-            # Div(
-            #     Div('filename', 'creator', 'short_title', 'authors', 'archive_id'),
-            # ),
-            # Submit('submit', 'Submit'),
             TabHolder(
-                Tab('Informacje o mapie', 'creator', 'short_title', 'filename'),
-                Tab('Informacje o archiwim', FieldWithButtons('authors'), HTML(
-                    """<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Dodaj nowego autora</button>""")),
-                Tab('Informacje o autorach', 'archive_id')
-            ),
-        HTML("""
-                                    <button type="submit" name="{{ map_form.prefix }}" class="btn btn-primary">Submit</button>""")
-        )
+                Tab('Informacje o mapie', 'short_title', 'full_title', 'creator', 'subject', 'scale', 'filename',
+                    'description', 'publishing_address', 'subject_type', 'creation_type', 'keyword_name',
+                    'keyword_subject', 'keyword_geo', 'additional_notes'),
+                Tab('Informacje o autorach i archiwim', 'authors', HTML(
+                    """<button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#authorModal">Add new author</button>"""),
+                    'archive_id',
+                    HTML("""<button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#archiveModal">Dodaj nowe archiwum</button>"""))),
+            HTML("""<button type="submit" name="{{ map_form.prefix }}" class="btn btn-primary">Submit</button>"""))
 
 
 class ArchiveForm(forms.ModelForm):
@@ -73,8 +55,8 @@ class PeopleForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["first_name"].label = "Imię autora"
-        self.fields["last_name"].label = "Nazwisko autora"
+        self.fields["first_name"].label = 'Author First Name'#"Imię autora"
+        self.fields["last_name"].label = 'Author Last Name'#"Nazwisko autora"
 
     def clean(self):
         cleaned_data = super().clean()

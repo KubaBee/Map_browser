@@ -1,18 +1,30 @@
+import os
+
 from django.shortcuts import render, redirect
 from django.views.generic import CreateView
-from django.http import HttpResponse, HttpResponseRedirect
-from .forms import MapForm, PeopleForm
-from .models import Map
-from django.urls import reverse_lazy, reverse
+from .forms import MapForm, PeopleForm, ArchiveForm
+from .models import Map, Archive, People
 from django.contrib.auth.mixins import LoginRequiredMixin
-# Create your views here.
+from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
 
 
-def browse(request):
-    context = {
-        "data": [1, 2, 3, 4, 5, 6, 7, 8, 9]
-    }
-    return render(request, 'map_browser/przegladaj.html', context)
+class MapListView(ListView):
+    model = Map
+    paginate_by = 9
+    ordering = ['-added_at']
+
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     return context
+
+
+class MapDetailView(DetailView):
+    model = Map
+
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     return context
 
 
 def search(request):
@@ -39,15 +51,34 @@ class AddMapForm(LoginRequiredMixin, CreateView):
 
     def get(self, request, *args, **kwargs):
         return self.render_to_response({'map_form': MapForm(prefix='map_form'),
-                                        'people_form': PeopleForm(prefix='people_form')})
+                                        'people_form': PeopleForm(prefix='people_form'),
+                                        'archive_form': ArchiveForm(prefix='archive_form')})
 
     def post(self, request, *args, **kwargs):
         map_form = _get_form_with_file(request, MapForm, 'map_form')
         people_form = _get_form(request, PeopleForm, 'people_form')
+        archive_form = _get_form(request, ArchiveForm, 'archive_form')
+
         if map_form.is_bound and map_form.is_valid():
-            print(map_form.cleaned_data)
             map_form.save()
-        elif people_form.is_bound and people_form.is_valid():
-            print(people_form.cleaned_data)
-            people_form.save()
-        return render(request, 'map_browser/dodaj_mape.html', {'people_form': people_form, 'map_form': map_form})
+
+        if people_form.is_bound and people_form.is_valid():
+            values = people_form.cleaned_data
+            obj, created = Archive.objects.get_or_create(
+                first_name=values['first_name'],
+                last_name=values['last_name']
+            )
+            print(obj, created)
+
+        if archive_form.is_bound and archive_form.is_valid():
+            values = archive_form.cleaned_data
+            obj, created = Archive.objects.get_or_create(
+                    archive_name=values['archive_name'],
+                    archive_team=values['archive_team'],
+                    archive_unit=values['archive_unit'],
+                    archive_number=values['archive_number']
+                )
+            print(obj, created)
+
+        return render(request, 'map_browser/dodaj_mape.html',
+                      {'people_form': people_form, 'map_form': map_form, 'archive_form': archive_form})

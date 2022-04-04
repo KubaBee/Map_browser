@@ -1,0 +1,94 @@
+html {
+  overflow-y: scroll;
+}
+
+nav{
+    filter: drop-shadow(0 0 0.5rem #8f8f8f);
+    margin-bottom: 30px;
+}
+
+nav > div{
+    margin: 0 45px !important;
+}
+
+.nav_img{
+    max-height: 50px !important;
+    width: auto;
+}
+
+#container{
+        margin: 0 60px !important;
+}
+
+.mapa{
+    border-radius: 15px;
+    padding: 10px;
+    /*max-width: 100%;*/
+    width: 100%; /* You can set the dimensions to whatever you want */
+    height: 300px;
+    object-fit: cover;
+}
+
+#login-form img {
+    max-height: 100px;
+}
+
+.row>*  {
+    padding-left: 0 !important;
+}
+
+.row  {
+    padding-left: calc(var(--bs-gutter-x) * .5);
+}
+
+.card{
+    height: 350px;
+}
+
+/*PAGINATOR*/
+.pagination > li > a
+{
+    background-color: white;
+    color: #5A4181;
+}
+
+.pagination > li > a:focus,
+.pagination > li > a:hover,
+.pagination > li > span:focus,
+.pagination > li > span:hover
+{
+    color: #5a5a5a;
+    background-color: #eee;
+    border-color: #ddd;
+}
+
+.pagination > .active > span
+{
+    color: white;
+    background-color: #bcbcbc !Important;
+    border: solid 1px #bcbcbc !Important;
+}
+
+.pagination > .active > a:hover
+{
+    background-color: #5A4181 !Important;
+    border: solid 1px #5A4181;
+}
+
+.card-as-link{
+    transition: ease-in-out 0.3s;
+    color: #5a5a5a;
+    text-decoration-color: #5a5a5a;
+    text-underline-offset: 3px;
+    z-index: 1;
+}
+
+.card-as-link:hover{
+    color: #5A4181;
+    transform: scale(1.1);
+    text-decoration-style: solid;
+    transition: ease-in-out 0.3s;
+    z-index: 999;
+    text-decoration-thickness: 2px;
+    text-decoration-color: #5A4181;
+}
