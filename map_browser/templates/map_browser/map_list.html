@@ -4,7 +4,7 @@
 {% endblock title %}
 
 {% block content %}
-    <div class="row row-cols-3">
+    <div class="row row-cols-sm-1 row-cols-md-3">
     {% for map in object_list %}
         <a class="card-as-link" href="map/{{ map.id }}">
         <div class="card m-4">
