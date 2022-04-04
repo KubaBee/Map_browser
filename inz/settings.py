@@ -28,7 +28,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # 'django-insecure-bs^kyth^2+@jm-es_j_0kmutoz2v3eztv)w=@fa^n2t07ww8&3'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['map-browser.herokuapp.com/']
 
@@ -146,6 +146,7 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
 LOGIN_REDIRECT_URL = 'przegladaj'
+R
 
 AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')

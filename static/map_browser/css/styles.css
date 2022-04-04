@@ -88,7 +88,11 @@ nav > div{
     transform: scale(1.1);
     text-decoration-style: solid;
     transition: ease-in-out 0.3s;
-    z-index: 999;
+    z-index: 20;
     text-decoration-thickness: 2px;
     text-decoration-color: #5A4181;
+}
+
+.mapa-dokument{
+    z-index: 999;
 }
