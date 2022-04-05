@@ -25,9 +25,6 @@ class RegisterUserFrom(UserCreationForm):
         self.fields['password1'].help_text = None
         self.fields['password2'].label = "Confirm Password*"
         self.helper.layout = Layout(
-            # Fieldset('Zarejestruj się!', FloatingField('username', 'email', 'password1', 'password2', 'first_name',
-            #                                            'last_name', css_class='col-md-6')),
-            # Submit('submit', 'Zarejestruj się')
             Div(
                 Div(FloatingField('username', 'email', 'password1', 'password2', HTML("""<p>Masz już konto? 
             <a href="{% url 'login' %}">Zaloguj się!</a></p>""")), css_class='col-md-6', ),

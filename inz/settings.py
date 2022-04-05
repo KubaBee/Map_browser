@@ -28,7 +28,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # 'django-insecure-bs^kyth^2+@jm-es_j_0kmutoz2v3eztv)w=@fa^n2t07ww8&3'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = (os.getenv('DEBUG_VALUE') == 'TRUE')
 
 ALLOWED_HOSTS = ['map-browser.herokuapp.com/', 'http://127.0.0.1:8000/']
 

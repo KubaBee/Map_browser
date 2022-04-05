@@ -8,6 +8,8 @@
     {% csrf_token %}
     <form method="POST">
         {% csrf_token %}
-        {% crispy form %}
+        <div class="col-lg-4 col-md-6 col-sm-12">
+            {% crispy form %}
+        </div>
     </form>
 {% endblock content %}
