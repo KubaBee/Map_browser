@@ -5,10 +5,10 @@
 {% block content %}
 
     <h1>{{ object.full_title }}</h1>
-    <p>{{ object.added_at }}</p>
-
+    <p>{{ object.added_at| date:"d/m/Y" }}</p>
+    <h5>{% for type in object.subject_type.all %}<span class="badge rounded-pill bg-secondary">{{ type }}</span> {% endfor %}</h5>
     <img src="{{ object.thumbnail.url }}" class="img-fluid" alt="detail_image">
-    <p><a href="{{ object.filename }}" download class="btn btn-outline-dark float-right">Pobierz mapę w pełnej rozdzielczości</a></p>
+    <p><a href="{{ object.filename.url }}" download="{{ object.filename.url }}" class="btn btn-outline-dark float-right">Pobierz mapę w pełnej rozdzielczości</a></p>
     <p> <strong>Język mapy:</strong>
         {% for lang in object.language_id.all %}
             {% if not forloop.last %}
