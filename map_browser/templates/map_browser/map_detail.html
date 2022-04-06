@@ -8,9 +8,18 @@
     <p>{{ object.added_at }}</p>
 
     <img src="{{ object.thumbnail.url }}" class="img-fluid" alt="detail_image">
-    <p>{{ object.language_id.all }}</p>
-    <ul>
-    </ul>
-    {{ object.creator.all }}
+    <p><a href="{{ object.filename }}" download class="btn btn-outline-dark float-right">Pobierz mapę w pełnej rozdzielczości</a></p>
+    <p> <strong>Język mapy:</strong>
+        {% for lang in object.language_id.all %}
+            {% if not forloop.last %}
+                {{ lang }},
+            {% else %}
+                {{ lang }}
+            {% endif %}
+        {% endfor %}
+    </p>
+    {% for creator in object.creator.all %}
+        {{ creator }}
+    {% endfor %}
 
 {% endblock content %}

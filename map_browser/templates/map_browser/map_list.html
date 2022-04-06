@@ -4,7 +4,7 @@
 {% endblock title %}
 
 {% block content %}
-    <div class="row row-cols-sm-1 row-cols-md-3">
+    <div class="row row-cols-sm-1 row-cols-md-3 g-4">
     {% for map in object_list %}
         <a class="card-as-link" href="map/{{ map.id }}">
         <div class="card md-m-4 sm-m-1">
@@ -17,8 +17,8 @@
     {% endfor %}
     </div>
     {% if is_paginated %}
-        <nav aria-label="mapy-paginator" style="float: right">
-            <ul class="pagination mt-4">
+        <nav aria-label="mapy-paginator" >
+            <ul class="pagination justify-content-end mt-4">
                 {% if page_obj.has_previous %}
                     {% if not page_obj.previous_page_number == 1 %}
                     <li class="page-item">

@@ -32,14 +32,19 @@
                           <li class="nav-item">
                               <a class="nav-link active" href="{% url 'kontakt' %}">Skontaktuj się</a>
                           </li>
-                          {% if user.is_authenticated %}
-                          <li class="nav-item dropdown">
-                              <a class="nav-link active dropdown-toggle" href="{% url 'dodaj_mape' %}" id="dodaj" role="button" data-bs-toggle="dropdown" aria-expanded="false">Dodaj </a>
-                              <ul class="dropdown-menu" aria-labelledby="dodaj">
-                                  <li><a class="dropdown-item" href="{% url 'dodaj_mape' %}">Mapę</a></li>
-                                  <li><a class="dropdown-item" href="#">Dokument</a></li>
-                              </ul>
-                          </li>
+                        {% if user.is_superuser %}
+                            <li class="nav-item">
+                                <a class="nav-link active" href="{% url 'admin:index' %}">Admin Panel</a>
+                            </li>
+                        {% endif %}
+                              {% if user.is_authenticated %}
+                                  <li class="nav-item dropdown">
+                                      <a class="nav-link dropdown-toggle active" href="{% url 'dodaj_mape' %}" id="dodaj" role="button" data-bs-toggle="dropdown" aria-expanded="false">Dodaj </a>
+                                      <ul class="dropdown-menu" aria-labelledby="dodaj">
+                                          <li><a class="dropdown-item" href="{% url 'dodaj_mape' %}">Mapę</a></li>
+                                          <li><a class="dropdown-item" href="#">Dokument</a></li>
+                                      </ul>
+                                  </li>
                           {% endif %}
                       </ul>
                     {% if user.is_authenticated %}
@@ -54,7 +59,7 @@
           </div>
     </nav>
 
-    <div id="container">
+    <main id="container">
     {% if messages %}
         {% for message in messages %}
             <div class="alert alert-{{ message.tags }}">{{ message }}</div>
@@ -64,7 +69,23 @@
     {% block content %}
 
     {% endblock %}
-    </div>
+    </main>
+
+    <footer>
+        <div class="container footer p-4 mt-4">
+            <div class="row">
+                <div class="col-md-6 text-center">
+                    <a href="https://www.agh.edu.pl/" class="">Akademia Górniczo-Hutnicza im. Stanisława Staszica w Krakowie</a>
+                </div>
+                <div class="col-md-6 text-center">
+                    <a href="https://www.umcs.pl/" class="">Uniwersytet Marii Curie-Skłodowskiej</a>
+                </div>
+            </div>
+            <div class="row mt-3 text-center">
+                <p>Copyright 2022; all rights reserved</p>
+            </div>
+        </div>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <script src="{% static 'map_browser/js/helper.js' %}"></script>

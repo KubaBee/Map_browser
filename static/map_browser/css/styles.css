@@ -5,10 +5,12 @@ html {
 nav{
     filter: drop-shadow(0 0 0.5rem #8f8f8f);
     margin-bottom: 30px;
+    z-index: 130;
 }
 
 body{
- zoom: 80%;
+    zoom: 80%;
+
 }
 
 nav > div{
@@ -18,6 +20,10 @@ nav > div{
 .nav_img{
     max-height: 50px !important;
     width: auto;
+}
+
+main{
+    min-height: 90vh;
 }
 
 #container{
@@ -46,7 +52,7 @@ nav > div{
 }
 
 .card{
-    height: 350px;
+    height: 380px;
 }
 
 /*PAGINATOR*/
@@ -89,7 +95,7 @@ nav > div{
 
 .card-as-link:hover{
     color: #5A4181;
-    transform: scale(1.1);
+    transform: scale(1.02);
     text-decoration-style: solid;
     transition: ease-in-out 0.3s;
     z-index: 20;
@@ -99,4 +105,19 @@ nav > div{
 
 .mapa-dokument{
     z-index: 999;
+}
+
+footer a{
+    color: white;
+}
+
+a{
+    color: black;
+}
+
+footer{
+    color: white;
+    background-color: #8f8f8f;
+    border-radius: 10px 10px 0 0;
+    filter: drop-shadow(0 0 0.5rem #8f8f8f);
 }
