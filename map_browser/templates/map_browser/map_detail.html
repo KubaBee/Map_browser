@@ -3,23 +3,41 @@
     <title>Przeglądaj mapy</title>
 {% endblock title %}
 {% block content %}
-
-    <h1>{{ object.full_title }}</h1>
-    <p>{{ object.added_at| date:"d/m/Y" }}</p>
-    <h5>{% for type in object.subject_type.all %}<span class="badge rounded-pill bg-secondary">{{ type }}</span> {% endfor %}</h5>
-    <img src="{{ object.thumbnail.url }}" class="img-fluid" alt="detail_image">
-    <p><a href="{{ object.filename.url }}" download="{{ object.filename.url }}" class="btn btn-outline-dark float-right">Pobierz mapę w pełnej rozdzielczości</a></p>
-    <p> <strong>Język mapy:</strong>
-        {% for lang in object.language_id.all %}
-            {% if not forloop.last %}
-                {{ lang }},
-            {% else %}
-                {{ lang }}
+    <div class="row">
+        <h1>{{ object.full_title }}</h1>
+        <p>{{ object.added_at| date:"d/m/Y" }}</p>
+        <h5>{% for type in object.subject_type.all %}<span class="badge rounded-pill bg-secondary">{{ type }}</span> {% endfor %}</h5>
+    </div>
+    <div class="row row-cols-md-2">
+        <div class="col">
+           <img src="{{ object.thumbnail.url }}" class="img-fluid" alt="detail_image">
+            <p>Zdjęcie wyświelone powyżej jest tylko miniaturką, <a target="_blank" href="{{ object.filename.url }}" download="" >kliknij tutaj aby zobaczyć mapę w pełnej rozdzielczości</a></p>
+        </div>
+        <div class="col">
+            {% if object.description %}
+                <h5><strong>Opis</strong></h5>
+                <p>
+                    {{ object.description }}
+                </p>
             {% endif %}
-        {% endfor %}
-    </p>
-    {% for creator in object.creator.all %}
-        {{ creator }}
-    {% endfor %}
-
+        {% if object.language_id %}
+            <p><strong>Język mapy:</strong>
+                {% for lang in object.language_id.all %}
+                    {% if not forloop.last %}
+                        {{ lang }},
+                    {% else %}
+                        {{ lang }}
+                    {% endif %}
+                {% endfor %}
+            </p>
+        {% endif %}
+        {% if object.creator %}
+            <p><strong>Osoby dodajce mapę:</strong>
+                {% for creator in object.creator.all %}
+                    {{ creator }}
+                {% endfor %}
+            </p>
+        {% endif %}
+        </div>
+    </div>
 {% endblock content %}

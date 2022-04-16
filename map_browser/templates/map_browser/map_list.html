@@ -4,7 +4,12 @@
 {% endblock title %}
 
 {% block content %}
-    <div class="row row-cols-sm-1 row-cols-md-3 g-4">
+    <form method="get">
+        <label for="search"></label>
+        <input id="search" name="title" class="form-control mb-3" placeholder="Wpisz tytuł...">
+        <button type="submit">Szukaj</button>
+    </form>
+    <div id="box" class="row row-cols-sm-1 row-cols-md-3 g-4">
     {% for map in object_list %}
         <a class="card-as-link" href="map/{{ map.id }}">
         <div class="card md-m-4 sm-m-1">

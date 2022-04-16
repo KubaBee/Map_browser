@@ -1,5 +1,33 @@
+:root {
+  --main-color-bg: #fefefe;
+  --main-color-footer: #8E806A;
+  --main-color-buttons: #8E806A;
+}
+
+
 html {
   overflow-y: scroll;
+}
+
+html, body{
+    scrollbar-color: #c4c4c4 transparenr;
+    scrollbar-width: thin;
+    background-color: var(--main-color-bg);
+}
+
+.btn-secondary{
+    background-color: var(--main-color-buttons);
+}
+
+::-webkit-scrollbar {
+  width: 9px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #c4c4c4;
+  border-radius: 20px;
 }
 
 nav{
@@ -10,7 +38,6 @@ nav{
 
 body{
     zoom: 80%;
-
 }
 
 nav > div{
@@ -18,7 +45,7 @@ nav > div{
 }
 
 .nav_img{
-    max-height: 50px !important;
+    max-height: 60px !important;
     width: auto;
 }
 
@@ -39,8 +66,8 @@ main{
     object-fit: cover;
 }
 
-#login-form img {
-    max-height: 100px;
+.user-form{
+    height: 600px;
 }
 
 .row>*  {
@@ -53,13 +80,15 @@ main{
 
 .card{
     height: 380px;
+    background-color: var(--main-color-bg);
+    box-shadow: 0px 0px 59px -21px rgba(142, 128, 106, 0.5);
 }
 
 /*PAGINATOR*/
 .pagination > li > a
 {
     background-color: white;
-    color: #5A4181;
+    color: var(--main-color-footer);
 }
 
 .pagination > li > a:focus,
@@ -88,8 +117,8 @@ main{
 .card-as-link{
     transition: ease-in-out 0.3s;
     color: #5a5a5a;
-    text-decoration-color: #5a5a5a;
-    text-underline-offset: 3px;
+    background-color: var(--main-color-bg);
+    text-decoration: none;
     z-index: 1;
 }
 
@@ -99,8 +128,7 @@ main{
     text-decoration-style: solid;
     transition: ease-in-out 0.3s;
     z-index: 20;
-    text-decoration-thickness: 2px;
-    text-decoration-color: #5A4181;
+    text-decoration: none;
 }
 
 .mapa-dokument{
@@ -117,7 +145,7 @@ a{
 
 footer{
     color: white;
-    background-color: #8f8f8f;
+    background-color: #8E806A;
     border-radius: 10px 10px 0 0;
     filter: drop-shadow(0 0 0.5rem #8f8f8f);
 }

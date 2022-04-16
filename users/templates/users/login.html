@@ -1,6 +1,7 @@
 {% extends "map_browser/base.html" %}
 {% load crispy_forms_filters %}
 {% load crispy_forms_tags %}
+{% load static %}
 {% block title %}
     <title>Zaloguj się</title>
 {% endblock title %}
@@ -8,8 +9,19 @@
     {% csrf_token %}
     <form method="POST">
         {% csrf_token %}
-        <div class="col-lg-4 col-md-6 col-sm-12">
-            {% crispy form %}
+        <div class="d-flex user-form align-items-center justify-content-center">
+            <div class="col-md-4">
+{#                <img src="{% static "map_browser/images/agh_logo.png" %}" alt="AGH-logo" style="max-width: 48%">#}
+                <img src="{% static "map_browser/images/umcs_logo.png" %}" alt="UMCS-logo" style="max-width: 100%">
+            </div>
+            <div class=" col-md-4 col-8 p-4 ">
+                <div>
+                    {% crispy form %}
+                </div>
+                <div>
+                    <input type="submit" name="submit" value="Zaloguj się" class="btn btn-secondary" id="submit-id-submit">
+                </div>
+            </div>
         </div>
     </form>
 {% endblock content %}

@@ -1,6 +1,4 @@
-import os
-
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 from django.views.generic import CreateView
 from .forms import MapForm, PeopleForm, ArchiveForm
 from .models import Map, Archive, People
@@ -8,23 +6,25 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.contrib import messages
+from django.forms.models import modelformset_factory
+
 
 class MapListView(ListView):
     model = Map
     paginate_by = 9
     ordering = ['-added_at']
 
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     return context
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+
+    # def get_queryset(self):
+    #     qs = super().get_queryset()
+    #     q = self.request.GET.get('title')
 
 
-class MapDetailView(DetailView):
+class MapDetailView(DetailView, LoginRequiredMixin):
     model = Map
-
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     return context
 
 
 def search(request):
@@ -60,8 +60,10 @@ class AddMapForm(LoginRequiredMixin, CreateView):
         archive_form = _get_form(request, ArchiveForm, 'archive_form')
 
         if map_form.is_bound and map_form.is_valid():
-            map_form.save()
+            obj = map_form.save()
             messages.success(request, 'Mapa została dodana')
+            # on success redirect to the detail page of newly created object
+            return redirect(reverse('map-detail', kwargs={'pk': obj.pk}))
 
         if people_form.is_bound and people_form.is_valid():
             values = people_form.cleaned_data
@@ -69,9 +71,7 @@ class AddMapForm(LoginRequiredMixin, CreateView):
                 first_name=values['first_name'],
                 last_name=values['last_name']
             )
-            messages.success(request, 'Autor został dodany')
-
-            print(obj, created)
+            messages.success(request, f'Autor {obj.first_name} {obj.last_name} został dodany')
 
         if archive_form.is_bound and archive_form.is_valid():
             values = archive_form.cleaned_data
@@ -83,7 +83,9 @@ class AddMapForm(LoginRequiredMixin, CreateView):
                 )
             messages.success(request, 'Archiwum zostało dodane')
 
-            print(obj, created)
-
         return render(request, 'map_browser/dodaj_mape.html',
                       {'people_form': people_form, 'map_form': map_form, 'archive_form': archive_form})
+
+
+def add_map_form(request):
+    MapFormset = modelformset_factory(Map, form=MapForm, extra=0)
