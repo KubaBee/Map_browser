@@ -14,13 +14,20 @@ class MapListView(ListView):
     paginate_by = 9
     ordering = ['-added_at']
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(MapListView, self).get_context_data(**kwargs)
+        title = self.request.GET.get('title')
+        if title:
+            context.update({'title': title})
         return context
 
-    # def get_queryset(self):
-    #     qs = super().get_queryset()
-    #     q = self.request.GET.get('title')
+    def get_queryset(self):
+        qs = super().get_queryset()
+        title = self.request.GET.get('title')
+        if title:
+            return qs.filter(full_title__icontains=title)
+        else:
+            return qs
 
 
 class MapDetailView(DetailView, LoginRequiredMixin):

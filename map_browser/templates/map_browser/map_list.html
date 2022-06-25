@@ -5,9 +5,12 @@
 
 {% block content %}
     <form method="get">
+    <div class="input-group mb-3">
         <label for="search"></label>
-        <input id="search" name="title" class="form-control mb-3" placeholder="Wpisz tytuł...">
-        <button type="submit">Szukaj</button>
+        <input id="search" name="title" class="form-control mb-3" {% if title %} value="{{ title }}" {% else %}placeholder="Wpisz tytuł..."{% endif %}>
+
+        <button class="btn btn-secondary" type="submit">Szukaj</button>
+    </div>
     </form>
     <div id="box" class="row row-cols-sm-1 row-cols-md-3 g-4">
     {% for map in object_list %}
