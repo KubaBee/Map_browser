@@ -1,8 +1,24 @@
 {% extends "map_browser/base.html" %}
+{% load crispy_forms_tags %}
 
 {% block title %}
     <title>Wyszukaj</title>
 {% endblock title %}
 {% block content %}
-
+{#    <div class="row">#}
+{#        <div class="col-md-4">#}
+{#            <form method="POST" id="people_form">#}
+{#                {%  csrf_token %}#}
+{#                    {{ people_form.first_name|as_crispy_field }}#}
+{#                    {{ people_form.last_name|as_crispy_field }}#}
+{#                <div class="modal-footer">#}
+{#                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>#}
+{#                    <button type="submit" name="{{ people_form.prefix }}" class="btn btn-primary">Save</button>#}
+{#                </div>#}
+{#            </form>#}
+{#        </div>#}
+{#        <div class="col-md-8">#}
+{#            Tutaj będą wyniki#}
+{#        </div>#}
+{#    </div>#}
 {% endblock content %}

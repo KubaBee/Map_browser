@@ -47,6 +47,7 @@
                                   </li>
                           {% endif %}
                       </ul>
+
                     {% if user.is_authenticated %}
                         <a href="{% url 'logout' %}">
                         <button type="button" class="btn btn-outline-secondary">Wyloguj się</button>
@@ -54,7 +55,6 @@
                         <a href="{% url 'login' %}">
                         <button type="button" class="btn btn-secondary">Zaloguj się</button>
                     {% endif %}
-
                     </a>
                 </div>
           </div>

@@ -6,6 +6,7 @@
     <div class="row">
         <h1>{{ object.full_title }}</h1>
         <p>{{ object.added_at| date:"d/m/Y" }}</p>
+        {% if user in object.creator.all %}<p><a href="{% url 'edytuj' map.id %}">Kliknij tutaj aby edtować</a></p>{% endif %}
         <h5>{% for type in object.subject_type.all %}<span class="badge rounded-pill bg-secondary">{{ type }}</span> {% endfor %}</h5>
     </div>
     <div class="row row-cols-md-2">
