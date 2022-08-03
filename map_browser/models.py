@@ -6,6 +6,7 @@ from django.core.files.storage import default_storage as storage
 from io import BytesIO
 from django.core.files.base import ContentFile
 
+
 # Create your models here.
 
 
@@ -49,6 +50,7 @@ class PublicationPlaces(models.Model):
 
 class SubjectTypes(models.Model):
     name = models.CharField(max_length=50, blank=True)
+
     def __str__(self):
         return f'{self.name}'
 
@@ -58,10 +60,10 @@ class Map(models.Model):
     thumbnail = models.ImageField(upload_to='thumbnails/')
     authors = models.ManyToManyField(People, null=True)
     corrector_id = models.ForeignKey(People, blank=True, null=True,
-                                     on_delete=models.SET_NULL, related_name="%(class)s_corrector")
+                                     on_delete=models.SET("N/A"), related_name="%(class)s_corrector")
     language_id = models.ManyToManyField(Languages, blank=True, null=True)
-    archive_id = models.ForeignKey(Archive, blank=True, null=True, on_delete=models.SET_NULL)
-    publication_place = models.ForeignKey(PublicationPlaces, blank=True, null=True, on_delete=models.SET_NULL)
+    archive_id = models.ForeignKey(Archive, blank=True, null=True, on_delete=models.SET("N/A"))
+    publication_place = models.ForeignKey(PublicationPlaces, blank=True, null=True, on_delete=models.SET("N/A"))
     added_at = models.DateTimeField(auto_now_add=True)
     creator = models.ManyToManyField(settings.AUTH_USER_MODEL)
     full_title = models.CharField(max_length=500, blank=True)
@@ -78,6 +80,14 @@ class Map(models.Model):
     additional_notes = models.TextField(blank=True)
     created_at = models.CharField(blank=True, max_length=150)
     source_text = models.CharField(blank=True, max_length=500)
+
+    def __str__(self):
+        if self.full_title is not None:
+            return f"{self.id}. {self.full_title}"
+        elif self.full_title is None and self.short_title is not None:
+            return f"{self.id}. {self.short_title}"
+        else:
+            return f"{self.id} --;--"
 
     def save(self, *args, **kwargs):
 
@@ -107,3 +117,28 @@ class Map(models.Model):
         temp_thumb.close()
 
         return True
+
+
+class Document(models.Model):
+    title = models.CharField(max_length=250, verbose_name="Tytuł")
+    description = models.TextField(blank=True, verbose_name="Opis dokumentu")
+    added_at = models.DateTimeField(auto_now_add=True)
+    authors = models.ManyToManyField(People, null=True, verbose_name="Autorzy")
+    creator = models.ManyToManyField(settings.AUTH_USER_MODEL, verbose_name="Osoba wprowadzająca dane")
+    created_at = models.CharField(blank=True, max_length=150, verbose_name="Data powstania")
+    language_id = models.ManyToManyField(Languages, blank=True, verbose_name="Język/i")
+    receiver = models.ManyToManyField(People, blank=True, verbose_name="Adresat", related_name="receiver_id")
+    archive_id = models.ForeignKey(Archive, blank=True, on_delete=models.SET("N/A"), verbose_name="Archiwum")
+    keyword_name = models.CharField(max_length=500, blank=True, verbose_name="Słowa kluczowe imienne")
+    keyword_subject = models.CharField(max_length=500, blank=True, verbose_name="Słowa kluczowe rzeczowe")
+    keyword_geo = models.CharField(max_length=500, blank=True, verbose_name="Słowa kluczowe geograficzne")
+    source_reference = models.ManyToManyField(Map, blank=True, verbose_name="Odwołanie do mapy źródłowej")
+    is_statistic_data = models.BooleanField(blank=True, verbose_name="Czy znajdują się dane statystyczne?")
+    is_map = models.BooleanField(blank=True, verbose_name="Czy znajdują się mapy tekstowe?")
+    link = models.URLField(verbose_name="Link do dokumentu")
+    volume = models.IntegerField(verbose_name="Liczba/objętość", blank=True)
+    doc_format = models.CharField(max_length=150, blank=True, verbose_name="Forma dokumentu")
+    source_type = models.CharField(max_length=150, blank=True, verbose_name="Typ źródła")
+
+    def __str__(self):
+        return self.title

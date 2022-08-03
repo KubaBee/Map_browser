@@ -1,12 +1,13 @@
 from django.shortcuts import render, redirect, reverse
-from django.views.generic import CreateView
+from django.views.generic import CreateView, UpdateView, DeleteView
 from .forms import MapForm, PeopleForm, ArchiveForm
-from .models import Map, Archive, People
+from .models import Map, Archive, People, Document
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.contrib import messages
 from django.forms.models import modelformset_factory
+from django.urls import reverse_lazy
 
 
 class MapListView(ListView):
@@ -34,6 +35,10 @@ class MapDetailView(DetailView, LoginRequiredMixin):
     model = Map
 
 
+class DocumentDetailView(DetailView, LoginRequiredMixin):
+    model = Document
+
+
 def search(request):
     return render(request, 'map_browser/wyszukaj.html')
 
@@ -51,6 +56,20 @@ def _get_form_with_file(request, form_class, prefix):
     data = request.POST if prefix in request.POST else None
     file = request.FILES if prefix in request.POST else None
     return form_class(data, file, prefix=prefix)
+
+
+class EditMapForm(LoginRequiredMixin, UpdateView):
+    model = Map
+    fields = '__all__'
+    template_name_suffix = '_edit'
+
+    def get_success_url(self):
+        return reverse('map-detail', kwargs={'pk': self.object.pk})
+
+
+class DeleteMapView(DeleteView):
+    model = Map
+    success_url = reverse_lazy('przegladaj')
 
 
 class AddMapForm(LoginRequiredMixin, CreateView):

@@ -1,0 +1,7 @@
+<form method="post">{% csrf_token %}
+
+        <p class="align-middle">Czy na pewno chcesz usunąć mapę "{{ object.full_title }}"?</p>
+        <button type="submit" value="Confirm">Usuń</button>
+        <button><a style="text-decoration: none" href="{% url 'map-detail' object.pk %}">Wróc</a></button>
+
+</form>

@@ -65,3 +65,8 @@ class PeopleForm(forms.ModelForm):
         if first_name is False and last_name is False:
             raise ValidationError("Obydwie wartości nie mogą być puste")
         return cleaned_data
+
+
+# class FiltersForm(forms.ModelForm):
+#     class Meta:
+#         model = PeopleForm

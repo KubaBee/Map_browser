@@ -1,0 +1,54 @@
+{% extends "map_browser/base.html" %}
+{% block title %}
+    <title>{{ object.title }}</title>
+{% endblock title %}
+{% block content %}
+    <div class="row">
+        <h1>{{ object.title }}</h1>
+        <p>{{ object.added_at| date:"d/m/Y" }}</p>
+{#        {% if user in object.creator.all or user.is_superuser %}#}
+{#            <p><a href="{% url 'edytuj' map.id %}">Kliknij tutaj aby edtować</a></p>#}
+{#            <p><a href="{% url 'usun' map.id %}" style="color: darkred">Kliknij tutaj aby usunąć</a></p>#}
+{#        {% endif %}#}
+    </div>
+    <div class="row row-cols-md-2">
+        <div class="col">
+            {% if object.description %}
+                <h5><strong>Opis</strong></h5>
+                <p>
+                    {{ object.description }}
+                </p>
+            {% endif %}
+            {% if object.link %}
+                <p><strong>Link do mapy:</strong></p>
+                <a href="{{ object.link }}">{{ object.link }}</a>
+            {% endif %}
+            {% if object.language_id %}
+                <p><strong>Język mapy:</strong>
+                    {% for lang in object.language_id.all %}
+                        {% if not forloop.last %}
+                            {{ lang }},
+                        {% else %}
+                            {{ lang }}
+                        {% endif %}
+                    {% endfor %}
+                </p>
+            {% endif %}
+            {% if object.creator %}
+                <p><strong>Osoby dodajce mapę:</strong>
+                    {% for creator in object.creator.all %}
+                        {{ creator }}
+                    {% endfor %}
+                </p>
+            {% endif %}
+            <h5><strong>Mapy Referencyjne</strong></h5>
+            {% if object.source_reference %}
+                <ul class="list-group">
+                {% for map in object.source_reference.all %}
+                    <li class="list-group-item"><a href={% url 'map-detail' map.id %}>{{ map.full_title }}</a></li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+    </div>
+{% endblock content %}
