@@ -1,5 +1,7 @@
 {% extends "map_browser/base.html" %}
 {% load crispy_forms_tags %}
+{% load static  %}
+    <script src="{% static 'map_browser/js/jquery-3.6.0.min.js' %}"></script>
 {% block title %}
     <title>Dodaj mapę</title>
 {% endblock title %}
@@ -18,7 +20,7 @@
 
         </div>
     </form>
-    <div class="modal fade" id="authorModal" tabindex="-1" aria-labelledby="authorModalLabel" aria-hidden="true">
+        <div class="modal fade" id="authorModal" tabindex="-1" aria-labelledby="authorModalLabel" aria-hidden="true">
           <div class="modal-dialog">
                 <div class="modal-content">
                       <div class="modal-header">
@@ -54,7 +56,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="submit" name="{{ archive_form.prefix }}" class="btn btn-primary">Save</button>
+                                <button type="submit" name="{{ archive_form.prefix }}" id="add_archive_button" class="btn btn-primary">Save</button>
                             </div>
                         </form>
                     </div>
