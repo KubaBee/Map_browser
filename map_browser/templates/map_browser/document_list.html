@@ -1,0 +1,39 @@
+{% extends "map_browser/base.html" %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block title %}
+    <title>Zaloguj się</title>
+{% endblock title %}
+{% block content %}
+
+    <div class="row">
+        <div class="col-3">
+            <a class="btn btn-secondary" href="{% url 'przegladaj-mapy' %}">Przeglądaj Mapy</a>
+        </div>
+        <div class="col-3 mb-3 offset-md-6">
+            <form method="get">
+                <div class="input-group">
+                    <label for="search"></label>
+                    <input id="search" name="title" class="form-control" {% if title %} value="{{ title }}" {% else %}placeholder="Wpisz tytuł..."{% endif %}>
+                    <div class="input-group-append">
+                        <button class="btn btn-secondary" type="submit">Szukaj</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    {% for doc in document_list %}
+        <a class="card-as-link" href="{% url 'doc-detail' doc.id %}">
+        <div class="card md-m-4 sm-m-1" style="height: 150px">
+            <div class="card-body">
+                    <h4 class="card-text">{{ doc.title|truncatechars:100 }}</h4>
+                    <p class="card-text">{{ doc.description|truncatechars:500 }}</p>
+            </div>
+        </div>
+        </a>
+    {% endfor %}
+
+
+
+{% endblock content %}

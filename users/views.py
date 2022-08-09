@@ -20,7 +20,7 @@ def register(request):
             form = RegisterUserFrom()
         return render(request, 'users/register.html', {'form': form})
     else:
-        return redirect('przegladaj')
+        return redirect('przegladaj-mapy')
 
 
 class LogoutViewMy(LoginRequiredMixin, auth_views.LogoutView):

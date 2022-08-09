@@ -8,10 +8,9 @@
 {% block content %}
     {% csrf_token %}
     <form method="POST">
-        {% csrf_token %}
+
         <div class="d-flex user-form align-items-center justify-content-center">
             <div class="col-md-4">
-{#                <img src="{% static "map_browser/images/agh_logo.png" %}" alt="AGH-logo" style="max-width: 48%">#}
                 <img src="{% static "map_browser/images/umcs_logo.png" %}" alt="UMCS-logo" style="max-width: 100%">
             </div>
             <div class=" col-md-4 col-8 p-4 ">

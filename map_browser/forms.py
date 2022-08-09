@@ -6,6 +6,7 @@ from crispy_forms.bootstrap import Tab, TabHolder, FieldWithButtons, StrictButto
 from crispy_forms.layout import Layout, Submit, Div, HTML
 from crispy_bootstrap5.bootstrap5 import FloatingField
 from django.core.exceptions import ValidationError
+import django_filters
 
 
 class CustomMMCF(forms.ModelMultipleChoiceField):
@@ -67,6 +68,15 @@ class PeopleForm(forms.ModelForm):
         return cleaned_data
 
 
-# class FiltersForm(forms.ModelForm):
-#     class Meta:
-#         model = PeopleForm
+
+
+
+
+
+
+
+
+
+
+
+

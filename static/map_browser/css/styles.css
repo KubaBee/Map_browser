@@ -22,6 +22,19 @@ html, body{
 
 .btn-primary{
     background-color: var(--sec-color-buttons);
+    border-color: var(--sec-color-buttons);
+}
+
+.btn-primary:hover{
+    background-color: #222;
+    border-color: var(--sec-color-buttons);
+}
+
+.btn-check:focus+.btn-primary, .btn-primary:focus {
+    color: #fff;
+    background-color: #222;
+    border-color: #222;
+    box-shadow: 0 0 0 0.25rem rgb(0 0 0 / 50%);
 }
 
 ::-webkit-scrollbar {
@@ -119,6 +132,14 @@ main{
     border: solid 1px #5A4181;
 }
 
+.action-buttons-detail{
+    border-bottom: 2px solid #8E806A;
+}
+
+.action-buttons-detail:hover{
+    border-bottom: 2px solid #000;
+}
+
 .card-as-link{
     transition: ease-in-out 0.3s;
     color: #5a5a5a;
@@ -138,6 +159,14 @@ main{
 
 .mapa-dokument{
     z-index: 999;
+}
+
+.nav-link {
+    color: #8E806A; !important;
+}
+
+.nav-link:hover, .nav-link:focus {
+    color: #8E806A; !important;
 }
 
 footer a{

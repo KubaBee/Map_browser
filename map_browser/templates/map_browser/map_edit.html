@@ -5,8 +5,12 @@
     <title>Wyszukaj</title>
 {% endblock title %}
 {% block content %}
-<form method="post" enctype="multipart/form-data">{% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Update">
-</form>
+    {% for field, errors in form.errors.items %}
+        {% for error in errors %}
+        {% endfor %}
+    {% endfor %}
+    <form method="post" enctype="multipart/form-data">{% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Update">
+    </form>
 {% endblock content %}

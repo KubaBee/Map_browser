@@ -1,42 +1,96 @@
+import requests
 from django.shortcuts import render, redirect, reverse
 from django.views.generic import CreateView, UpdateView, DeleteView
 from .forms import MapForm, PeopleForm, ArchiveForm
 from .models import Map, Archive, People, Document
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic.list import ListView
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.views.generic.list import ListView, MultipleObjectMixin
 from django.views.generic.detail import DetailView
 from django.contrib import messages
 from django.forms.models import modelformset_factory
 from django.urls import reverse_lazy
+from django.db.models import Q
+from .filters import MapFilter
+from itertools import chain
+from django.core.paginator import Paginator
 
 
-class MapListView(ListView):
+class MapListView(ListView, MultipleObjectMixin):
     model = Map
-    paginate_by = 9
+    template_name = 'map_browser/map_list.html'
     ordering = ['-added_at']
+    paginate_by = 9
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(MapListView, self).get_context_data(**kwargs)
         title = self.request.GET.get('title')
         if title:
             context.update({'title': title})
+        print(context)
         return context
 
+    # dodaj szukanie po dokumentsach
     def get_queryset(self):
         qs = super().get_queryset()
         title = self.request.GET.get('title')
         if title:
-            return qs.filter(full_title__icontains=title)
+            res = qs.filter(Q(full_title__icontains=title))
+            return res
         else:
             return qs
 
 
-class MapDetailView(DetailView, LoginRequiredMixin):
+class DocumentListView(ListView, MultipleObjectMixin):
+    model = Document
+    template_name = 'map_browser/document_list.html'
+    ordering = ['-added_at']
+    paginate_by = 6
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(DocumentListView, self).get_context_data(**kwargs)
+        title = self.request.GET.get('title')
+        if title:
+            context.update({'title': title})
+        print(context)
+        return context
+
+    # dodaj szukanie po dokumentsach
+    def get_queryset(self):
+        qs = super().get_queryset()
+        title = self.request.GET.get('title')
+        if title:
+            res = qs.filter(Q(title__icontains=title))
+            return res
+        else:
+            return qs
+
+
+class MapDetailView(LoginRequiredMixin, DetailView):
     model = Map
 
 
-class DocumentDetailView(DetailView, LoginRequiredMixin):
+class DocumentDetailView(DetailView, MultipleObjectMixin):
     model = Document
+    paginate_by = 5
+
+    def get_context_data(self, **kwargs):
+        object_list = Map.objects.filter(document=self.get_object())
+        context = super(DocumentDetailView, self).get_context_data(object_list=object_list)
+        print(context)
+        return context
+
+
+class FilterMapView(ListView):
+    model = Map
+    template_name = 'map_browser/wyszukaj.html'
+    paginate_by = 6
+
+    def get_context_data(self, **kwargs):
+        obj_list = MapFilter(self.request.GET, queryset=self.get_queryset())
+        context = super(FilterMapView, self).get_context_data(object_list=obj_list.qs)
+        context['filter'] = obj_list
+
+        return context
 
 
 def search(request):
@@ -60,14 +114,15 @@ def _get_form_with_file(request, form_class, prefix):
 
 class EditMapForm(LoginRequiredMixin, UpdateView):
     model = Map
-    fields = '__all__'
+    fields = ('full_title', 'description', 'filename', 'keyword_geo', 'keyword_name', 'keyword_subject', 'scale',
+              'subject', 'source_text', 'creation_type',)
     template_name_suffix = '_edit'
 
     def get_success_url(self):
         return reverse('map-detail', kwargs={'pk': self.object.pk})
 
 
-class DeleteMapView(DeleteView):
+class DeleteMapView(LoginRequiredMixin, DeleteView):
     model = Map
     success_url = reverse_lazy('przegladaj')
 
@@ -102,11 +157,11 @@ class AddMapForm(LoginRequiredMixin, CreateView):
         if archive_form.is_bound and archive_form.is_valid():
             values = archive_form.cleaned_data
             obj, created = Archive.objects.get_or_create(
-                    archive_name=values['archive_name'],
-                    archive_team=values['archive_team'],
-                    archive_unit=values['archive_unit'],
-                    archive_number=values['archive_number']
-                )
+                archive_name=values['archive_name'],
+                archive_team=values['archive_team'],
+                archive_unit=values['archive_unit'],
+                archive_number=values['archive_number']
+            )
             messages.success(request, 'Archiwum zostało dodane')
 
         return render(request, 'map_browser/dodaj_mape.html',

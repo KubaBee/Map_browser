@@ -41,13 +41,45 @@
                     {% endfor %}
                 </p>
             {% endif %}
+
             <h5><strong>Mapy Referencyjne</strong></h5>
-            {% if object.source_reference %}
+            {% if page_obj %}
                 <ul class="list-group">
-                {% for map in object.source_reference.all %}
+                {% for map in page_obj %}
                     <li class="list-group-item"><a href={% url 'map-detail' map.id %}>{{ map.full_title }}</a></li>
                 {% endfor %}
                 </ul>
+            {% endif %}
+            {% if is_paginated %}
+                <nav aria-label="mapy-paginator" >
+                    <ul class="pagination justify-content-end mt-4">
+                        {% if page_obj.has_previous %}
+                            {% if not page_obj.previous_page_number == 1 %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1">&laquo; 1</a>
+                            </li>
+                            {% endif %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+                            </li>
+                        {% endif %}
+
+                        <li class="page-item active" aria-current="page">
+                            <span class="page-link">{{ page_obj.number }}</span>
+                        </li>
+
+                        {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+                            </li>
+                            {% if not page_obj.next_page_number == page_obj.paginator.num_pages %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }} &raquo; </a>
+                                </li>
+                            {% endif %}
+                        {% endif %}
+                    </ul>
+                </nav>
             {% endif %}
         </div>
     </div>

@@ -6,19 +6,67 @@
 {% endblock title %}
 {% block content %}
 
-    <div class="col-md-4">
-        <ul class="nav nav-tabs" id="wyszukaj" role="tablist">
-            <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="map-tab" data-bs-toggle="tab" data-bs-target="#map" type="button" role="tab" aria-controls="map" aria-selected="true">Mapy</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="doc-tab" data-bs-toggle="tab" data-bs-target="#doc" type="button" role="tab" aria-controls="doc" aria-selected="false">Dokumenty</button>
-            </li>
-        </ul>
-        <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade show active" id="map" role="tabpanel" aria-labelledby="map-tab"><h2>Wyszukaj Mapy</h2></div>
-            <div class="tab-pane fade" id="doc" role="tabpanel" aria-labelledby="doc-tab"><h2>Wyszukaj Dokumenty</h2></div>
+
+    <div class="row mb-4">
+        <div class="col-4">
+            <a class="btn btn-secondary" href="{% url 'przegladaj-mapy' %}">Przeglądaj Mapy</a>
         </div>
     </div>
+    <div class="row">
+        <div class="col-md-3">
+            <div>
+                <form method="get">
+                    {{ filter.form|crispy }}
+                    <button type="submit" class="btn btn-primary">Szukaj</button>
+                </form>
+            </div>
+        </div>
+        <div class="col-md-8 offset-md-1">
+            <div class="tab-pane fade show active" id="maps" role="tabpanel" aria-labelledby="maps-tab">
+                <div id="box" class="row row-cols-sm-1 row-cols-md-3 g-4">
+                {% for map in object_list %}
+                    <a class="card-as-link" href="{% url 'map-detail' map.pk %}">
+                    <div class="card md-m-4 sm-m-1">
+                        <img src="{{ map.thumbnail.url }}" class="mapa card-img-top" alt="map_image">
+                        <div class="card-body">
+                                <p class="card-text">{{ map.full_title|truncatechars:100 }}</p>
+                        </div>
+                    </div>
+                    </a>
+                {% endfor %}
+                {% if is_paginated %}
+                <nav aria-label="dokumenty-paginator" >
+                    <ul class="pagination justify-content-end mt-4">
+                        {% if page_obj.has_previous %}
+                            {% if not page_obj.previous_page_number == 1 %}
+                            <li class="page-item">
+                                <a class="page-link" href="?{{ request.get_full_path }}&page=1">&laquo; 1</a>
+                            </li>
+                            {% endif %}
+                            <li class="page-item">
+                                <a class="page-link" href="?{{ request.get_full_path }}&page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+                            </li>
+                        {% endif %}
+                        <li class="page-item active" aria-current="page">
+                            <span class="page-link">{{ page_obj.number }}</span>
+                        </li>
 
+                        {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?{{ request.get_full_path }}&page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+                            </li>
+                            {% if not page_obj.next_page_number == page_obj.paginator.num_pages %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?{{ request.get_full_path }}&page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }} &raquo; </a>
+                                </li>
+                            {% endif %}
+                        {% endif %}
+                    </ul>
+                </nav>
+                {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock content %}
+

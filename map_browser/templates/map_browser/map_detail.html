@@ -1,19 +1,25 @@
 {% extends "map_browser/base.html" %}
+{% load static %}
 {% block title %}
     <title>Przeglądaj mapy</title>
 {% endblock title %}
 {% block content %}
     <div class="row">
         <h1>{{ object.full_title }}</h1>
-        <p>{{ object.added_at| date:"d/m/Y" }}</p>
-        {% if user in object.creator.all or user.is_superuser %}
-            <p><a href="{% url 'edytuj' map.id %}">Kliknij tutaj aby edtować</a></p>
-            <p><a href="{% url 'usun' map.id %}" style="color: darkred">Kliknij tutaj aby usunąć</a></p>
-        {% endif %}
-
-
-
-        <h5>{% for type in object.subject_type.all %}<span class="badge rounded-pill bg-secondary">{{ type }}</span> {% endfor %}</h5>
+        <div>
+            <div class="row">
+                <div class="col d-flex">
+                    <span class="me-2">{{ object.added_at| date:"d/m/Y" }}</span>
+                </div>
+                <div class="col d-flex justify-content-end">
+                    {% if user in object.creator.all or user.is_superuser %}
+                        <span class="me-4"><a href="{% url 'edytuj' map.id %}"><img class="action-buttons-detail" style="max-width: 16px" src="{% static 'map_browser/images/pencil.png' %}" alt="Edytuj"></a></span>
+                        <span><a href="{% url 'usun' map.id %}"><img class="action-buttons-detail" style="max-width: 16px" src="{% static 'map_browser/images/bin.png' %}" alt="Usuń"></a></span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <h5>{% for type in object.subject_type.all %}<span class="badge rounded-pill bg-secondary mt-3">{{ type }}</span> {% endfor %}</h5>
     </div>
     <div class="row row-cols-md-2">
         <div class="col">
@@ -45,7 +51,7 @@
                 {% endfor %}
             </p>
         {% endif %}
-        {% if object.document_set %}
+        {% if object.document_set.count > 0 %}
             <strong>Powiązane Dokumenty</strong>
             <ul class="list-group">
             {% for doc in object.document_set.all %}
