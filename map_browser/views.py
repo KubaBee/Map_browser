@@ -124,7 +124,7 @@ class EditMapForm(LoginRequiredMixin, UpdateView):
 
 class DeleteMapView(LoginRequiredMixin, DeleteView):
     model = Map
-    success_url = reverse_lazy('przegladaj')
+    success_url = reverse_lazy('przegladaj-mapy')
 
 
 class AddMapForm(LoginRequiredMixin, CreateView):
