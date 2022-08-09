@@ -3,6 +3,7 @@ from . import views
 from .models import Map
 
 urlpatterns = [
+    path('', views.default_redirect, name='pusty'),
     path('wyszykaj-mape/', views.FilterMapView.as_view(), name='wyszukaj'),
     path('kontakt/', views.contact, name='kontakt'),
     path('dodaj-mape/', views.AddMapForm.as_view(), name='dodaj_mape'),

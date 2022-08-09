@@ -93,12 +93,12 @@ class FilterMapView(ListView):
         return context
 
 
-def search(request):
-    return render(request, 'map_browser/wyszukaj.html')
-
-
 def contact(request):
     return render(request, 'map_browser/kontakt.html', {})
+
+
+def default_redirect(request):
+    return redirect('przegladaj-mapy')
 
 
 def _get_form(request, form_class, prefix):
