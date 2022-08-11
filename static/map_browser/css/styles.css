@@ -1,7 +1,7 @@
 :root {
     --main-color-bg: #fefefe;
-    --main-color-footer: #8E806A;
-    --main-color-buttons: #8E806A;
+    --main-color-footer: #B49E7F;
+    --main-color-buttons: #B49E7F;
     --sec-color-buttons: #5c636a;
 }
 
@@ -18,11 +18,24 @@ html, body{
 
 .btn-secondary{
     background-color: var(--main-color-buttons);
+    border-color: var(--main-color-buttons);
+}
+
+.btn-secondary:hover{
+    background-color: #8E806A;
+    border-color: #8E806A;
+}
+
+.btn-secondary:focus+.btn-secondary, .btn-secondary:focus {
+    color: #fff;
+    background-color: #8E806A;
+    border-color: #8E806A;
+    box-shadow: 0 0 0 0.25rem rgb(0 0 0 / 50%);
 }
 
 .btn-primary{
     background-color: var(--sec-color-buttons);
-    border-color: var(--sec-color-buttons);
+    border: none;
 }
 
 .btn-primary:hover{
@@ -36,6 +49,7 @@ html, body{
     border-color: #222;
     box-shadow: 0 0 0 0.25rem rgb(0 0 0 / 50%);
 }
+
 
 ::-webkit-scrollbar {
   width: 9px;
@@ -65,6 +79,15 @@ nav > div{
 .nav_img{
     max-height: 60px !important;
     width: auto;
+}
+
+
+#search{
+    border-radius: 0.25rem 0 0 0.25rem;
+}
+
+.search-btn{
+    border-radius: 0 0.25rem 0.25rem 0;
 }
 
 main{
@@ -179,7 +202,7 @@ a{
 
 footer{
     color: white;
-    background-color: #8E806A;
+    background-color: var(--main-color-buttons);
     border-radius: 10px 10px 0 0;
     filter: drop-shadow(0 0 0.5rem #8f8f8f);
 }

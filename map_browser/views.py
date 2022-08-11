@@ -87,9 +87,8 @@ class FilterMapView(ListView):
 
     def get_context_data(self, **kwargs):
         obj_list = MapFilter(self.request.GET, queryset=self.get_queryset())
-        context = super(FilterMapView, self).get_context_data(object_list=obj_list.qs)
+        context = super(FilterMapView, self).get_context_data(object_list=obj_list.qs.order_by('added_at'))
         context['filter'] = obj_list
-
         return context
 
 

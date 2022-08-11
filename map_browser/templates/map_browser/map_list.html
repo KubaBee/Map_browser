@@ -1,4 +1,5 @@
 {% extends "map_browser/base.html" %}
+{% load templatehelper %}
 {% block title %}
     <title>Przeglądaj mapy</title>
 {% endblock title %}
@@ -15,7 +16,7 @@
                     <label for="search"></label>
                     <input id="search" name="title" class="form-control" {% if title %} value="{{ title }}" {% else %}placeholder="Wpisz tytuł..."{% endif %}>
                     <div class="input-group-append">
-                        <button class="btn btn-secondary" type="submit">Szukaj</button>
+                        <button class="search-btn btn btn-secondary" type="submit">Szukaj</button>
                     </div>
                 </div>
             </form>
@@ -40,11 +41,11 @@
                 {% if page_obj.has_previous %}
                     {% if not page_obj.previous_page_number == 1 %}
                     <li class="page-item">
-                        <a class="page-link" href="?{{ request.get_full_path }}&page=1">&laquo; 1</a>
+                        <a class="page-link" href="{% relative_url i 'page' request.GET.urlencode %}&page=1">&laquo; 1</a>
                     </li>
                     {% endif %}
                     <li class="page-item">
-                        <a class="page-link" href="?{{ request.get_full_path }}&page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+                        <a class="page-link" href="{% relative_url i 'page' request.GET.urlencode %}&page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
                     </li>
                 {% endif %}
 
@@ -54,11 +55,11 @@
 
                 {% if page_obj.has_next %}
                     <li class="page-item">
-                        <a class="page-link" href="?{{ request.get_full_path }}&page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+                        <a class="page-link" href="{% relative_url i 'page' request.GET.urlencode %}&page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
                     </li>
                     {% if not page_obj.next_page_number == page_obj.paginator.num_pages %}
                         <li class="page-item">
-                            <a class="page-link" href="?{{ request.get_full_path }}&page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }} &raquo; </a>
+                            <a class="page-link" href="{% relative_url i 'page' request.GET.urlencode %}&page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }} &raquo; </a>
                         </li>
                     {% endif %}
                 {% endif %}
