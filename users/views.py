@@ -28,3 +28,4 @@ class LogoutViewMy(LoginRequiredMixin, auth_views.LogoutView):
 
 
 
+

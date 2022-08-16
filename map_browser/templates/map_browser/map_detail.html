@@ -21,7 +21,7 @@
         </div>
         <h5>{% for type in object.subject_type.all %}<span class="badge rounded-pill bg-secondary mt-3">{{ type }}</span> {% endfor %}</h5>
     </div>
-    <div class="row row-cols-md-2">
+    <div class="row row-cols-md-2 row-cols-1">
         <div class="col">
            <img src="{{ object.thumbnail.url }}" class="img-fluid" alt="detail_image">
             <p>Zdjęcie wyświelone powyżej jest tylko miniaturką, <a target="_blank" href="{{ object.filename.url }}" download="" >kliknij tutaj aby zobaczyć mapę w pełnej rozdzielczości</a></p>
@@ -30,7 +30,7 @@
             {% if object.description %}
                 <h5><strong>Opis</strong></h5>
                 <p>
-                    {{ object.description }}
+                    {{ object.description|linebreaksbr }}
                 </p>
             {% endif %}
         {% if object.language_id %}

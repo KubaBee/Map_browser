@@ -163,8 +163,13 @@ class AddMapForm(LoginRequiredMixin, CreateView):
             )
             messages.success(request, 'Archiwum zostało dodane')
 
+        print("is bound: " + str(map_form.is_bound) + 'is valid: ' + str(map_form.is_valid()) + 'fields' +
+              str(map_form.fields))
+
+        map_form = MapForm(request.POST)
+
         return render(request, 'map_browser/dodaj_mape.html',
-                      {'people_form': people_form, 'map_form': map_form, 'archive_form': archive_form})
+                      {'map_form': map_form, 'people_form': people_form, 'archive_form': archive_form})
 
 
 def add_map_form(request):
