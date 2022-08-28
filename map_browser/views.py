@@ -11,6 +11,7 @@ from django.forms.models import modelformset_factory
 from django.urls import reverse_lazy
 from django.db.models import Q
 from .filters import MapFilter
+from django.http import HttpResponseRedirect
 from itertools import chain
 from django.core.paginator import Paginator
 
@@ -163,10 +164,7 @@ class AddMapForm(LoginRequiredMixin, CreateView):
             )
             messages.success(request, 'Archiwum zostało dodane')
 
-        print("is bound: " + str(map_form.is_bound) + 'is valid: ' + str(map_form.is_valid()) + 'fields' +
-              str(map_form.fields))
-
-        map_form = MapForm(request.POST)
+        print(request.POST)
 
         return render(request, 'map_browser/dodaj_mape.html',
                       {'map_form': map_form, 'people_form': people_form, 'archive_form': archive_form})

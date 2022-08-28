@@ -10,6 +10,8 @@
         <title>Base</title>
     {% endblock title %}
     <link rel="stylesheet" type="text/css" href="{% static 'map_browser/css/styles.css' %}">
+    {% block additonal_css %}
+    {% endblock %}
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">

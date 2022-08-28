@@ -6,8 +6,8 @@
 {% endblock title %}
 {% block content %}
     <legend>Wypełnij wymagane pola w celu rejestracji</legend>
-    {% csrf_token %}
     <form method="POST">
+    {% csrf_token %}
         {% csrf_token %}
         {% crispy form %}
     </form>

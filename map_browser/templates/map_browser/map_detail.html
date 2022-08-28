@@ -3,9 +3,13 @@
 {% block title %}
     <title>Przeglądaj mapy</title>
 {% endblock title %}
+{% block additonal_css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'map_browser/css/map_details.css' %}">
+{% endblock %}
 {% block content %}
     <div class="row">
         <h1>{{ object.full_title }}</h1>
+        <h6>{{ object.short_title }}</h6>
         <div>
             <div class="row">
                 <div class="col d-flex">
@@ -21,44 +25,113 @@
         </div>
         <h5>{% for type in object.subject_type.all %}<span class="badge rounded-pill bg-secondary mt-3">{{ type }}</span> {% endfor %}</h5>
     </div>
+
     <div class="row row-cols-md-2 row-cols-1">
         <div class="col">
            <img src="{{ object.thumbnail.url }}" class="img-fluid" alt="detail_image">
             <p>Zdjęcie wyświelone powyżej jest tylko miniaturką, <a target="_blank" href="{{ object.filename.url }}" download="" >kliknij tutaj aby zobaczyć mapę w pełnej rozdzielczości</a></p>
         </div>
         <div class="col">
+
             {% if object.description %}
                 <h5><strong>Opis</strong></h5>
                 <p>
                     {{ object.description|linebreaksbr }}
                 </p>
             {% endif %}
-        {% if object.language_id %}
-            <p><strong>Język mapy:</strong>
-                {% for lang in object.language_id.all %}
-                    {% if not forloop.last %}
-                        {{ lang }},
-                    {% else %}
-                        {{ lang }}
-                    {% endif %}
-                {% endfor %}
-            </p>
-        {% endif %}
-        {% if object.creator %}
-            <p><strong>Osoby dodajce mapę:</strong>
-                {% for creator in object.creator.all %}
-                    {{ creator }}
-                {% endfor %}
-            </p>
-        {% endif %}
-        {% if object.document_set.count > 0 %}
-            <strong>Powiązane Dokumenty</strong>
-            <ul class="list-group">
-            {% for doc in object.document_set.all %}
-                <li class="list-group-item"><a href={% url 'doc-detail' doc.id %}>{{ doc.title }}</a></li>
-            {% endfor %}
-            </ul>
-        {% endif %}
+
+            <div class="accordion" id="accordionPanelsStayOpenExample">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="mapaDane-headingOne">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#mapaDane-collapseOne" aria-expanded="true" aria-controls="mapaDane-collapseOne">
+                            Podstawowe Informacje
+                        </button>
+                    </h2>
+                    <div id="mapaDane-collapseOne" class="accordion-collapse collapse show" aria-labelledby="mapaDane-headingOne">
+                        <div class="accordion-body">
+                            {% if object.language_id %}
+                                <p><strong>Język mapy:</strong>
+                                    {% for lang in object.language_id.all %}
+                                        {% if not forloop.last %}
+                                            {{ lang }},
+                                        {% else %}
+                                            {{ lang }}
+                                        {% endif %}
+                                    {% endfor %}
+                                </p>
+                            {% endif %}
+
+                            {% if object.authors.all %}
+                                {% if object.authors.all|length == 1 %}
+                                    <p><strong>Autor Mapy:</strong>
+                                {% else %}
+                                    <p><strong>Autorzy Mapy:</strong>
+                                {% endif %}
+                                    {% for author in object.authors.all %}
+                                        {% if forloop.last %}
+                                            {{ author }}
+                                        {% else %}
+                                            {{ author }},
+                                        {% endif %}
+                                    {% endfor %}
+                                </p>
+                            {% else %}
+                                <p><strong>Autor nieznany</strong></p>
+                            {% endif %}
+
+                            {% if object.publication_place %}
+                                <p><strong>Miejsce Wydania: </strong>{{ object.publication_place|linebreaksbr }} </p>
+                            {% endif %}
+
+                            {% if object.created_at %}
+                                <p><strong>Rok Wydania: </strong>{{ object.created_at }} </p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="mapaDane-headingTwo">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#mapaDane-collapseTwo" aria-expanded="false" aria-controls="mapaDane-collapseTwo">
+                            Słowa Kluczowe
+                        </button>
+                    </h2>
+                    <div id="mapaDane-collapseTwo" class="accordion-collapse collapse" aria-labelledby="mapaDane-headingTwo">
+                        <div class="accordion-body">
+                            {% if object.keyword_geo %}
+                                <p><strong>Słowa kluczowe geograficzne:</strong>
+                                {{ object.keyword_geo }}</p>
+                            {% endif %}
+                            {% if object.keyword_name %}
+                                <p><strong>Słowa kluczowe imienne:</strong>
+                                    {{ object.keyword_name }}</p>
+                            {% endif %}
+                            {% if object.keyword_subject %}
+                                <p><strong>Słowa kluczowe rzeczowe:</strong>
+                                {{ object.keyword_subject }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="mapaDane-headingThree">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#mapaDane-collapseThree" aria-expanded="false" aria-controls="mapaDane-collapseThree">
+                            Powiązane Dokumenty
+                        </button>
+                    </h2>
+                    <div id="mapaDane-collapseThree" class="accordion-collapse collapse" aria-labelledby="mapaDane-headingThree">
+                        <div class="accordion-body">
+                            {% if object.document_set.count > 0 %}
+                                <ul class="list-group mt-2">
+                                {% for doc in object.document_set.all %}
+                                    <li class="list-group-item"><a href={% url 'doc-detail' doc.id %}>{{ doc.title }}</a></li>
+                                {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                    </div>
+            </div>
         </div>
     </div>
 {% endblock content %}

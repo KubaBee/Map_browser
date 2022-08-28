@@ -55,4 +55,30 @@
                     </div>
               </div>
         </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.js"
+      integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+        crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+    $(document).on('submit','#people_form',function(e){
+        e.preventDefault();
+        $.ajax({
+            type:'POST',
+            url:'{% url "dodaj_mape" %}',
+            data:
+            {
+                csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+                'people_form-first_name':$("#id_people_form-first_name").val(),
+                'people_form-last_name':$("#id_people_form-last_name").val(),
+                'people_form': ''
+
+            },
+            success:function(){
+                  alert('Saved');
+                    }
+            })
+        });
+    </script>
 {% endblock content %}
