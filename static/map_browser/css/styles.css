@@ -68,9 +68,6 @@ nav{
     z-index: 130;
 }
 
-body{
-    zoom: 80%;
-}
 
 nav > div{
     margin: 0 45px !important;
