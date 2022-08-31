@@ -30,7 +30,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = (os.getenv('DEBUG_VALUE') == 'TRUE')
 
-ALLOWED_HOSTS = ['map-browser.herokuapp.com/', 'http://127.0.0.1:8000/']
+ALLOWED_HOSTS = ['https://map-browser.herokuapp.com/', 'http://127.0.0.1:8000/']
 
 # Application definition
 
