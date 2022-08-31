@@ -70,7 +70,7 @@ class MapDetailView(LoginRequiredMixin, DetailView):
     model = Map
 
 
-class DocumentDetailView(DetailView, MultipleObjectMixin):
+class DocumentDetailView(LoginRequiredMixin,DetailView, MultipleObjectMixin):
     model = Document
     paginate_by = 5
 
@@ -140,12 +140,6 @@ class AddMapForm(LoginRequiredMixin, CreateView):
         people_form = _get_form(request, PeopleForm, 'people_form')
         archive_form = _get_form(request, ArchiveForm, 'archive_form')
 
-        if map_form.is_bound and map_form.is_valid():
-            obj = map_form.save()
-            messages.success(request, 'Mapa została dodana')
-            # on success redirect to the detail page of newly created object
-            return redirect(reverse('map-detail', kwargs={'pk': obj.pk}))
-
         if people_form.is_bound and people_form.is_valid():
             values = people_form.cleaned_data
             obj, created = People.objects.get_or_create(
@@ -164,7 +158,15 @@ class AddMapForm(LoginRequiredMixin, CreateView):
             )
             messages.success(request, 'Archiwum zostało dodane')
 
-        print(request.POST)
+        if map_form.is_bound and map_form.is_valid():
+            obj = map_form.save()
+            messages.success(request, 'Mapa została dodana')
+            # on success redirect to the detail page of newly created object
+            return redirect(reverse('map-detail', kwargs={'pk': obj.pk}))
+
+        print(map_form['short_title'].value())
+
+        messages.warning(request, 'Mapa nie została dodana')
 
         return render(request, 'map_browser/dodaj_mape.html',
                       {'map_form': map_form, 'people_form': people_form, 'archive_form': archive_form})

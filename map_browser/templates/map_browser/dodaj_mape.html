@@ -9,9 +9,59 @@
     <form action="" method="POST" enctype="multipart/form-data">
         {%  csrf_token %}
         <div class="mb-3">
-            {% crispy map_form %}
-        </div>
+{#            {% crispy map_form %}#}
 
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#informacje-o-mapie" data-bs-toggle="tab">Informacje o mapie</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#informacje-o-autorach-i-archiwim" data-bs-toggle="tab">Informacje o autorach i archiwim</a>
+                </li>
+            </ul>
+
+            <div class="tab-content card-body">
+                <div id="informacje-o-mapie" class="tab-pane active">
+
+                    {{ map_form.short_title|as_crispy_field }}
+                    {{ map_form.full_title|as_crispy_field }}
+                    {{ map_form.filename|as_crispy_field }}
+                    {{ map_form.creator|as_crispy_field }}
+                    {{ map_form.publishing_address|as_crispy_field }}
+                    {{ map_form.scale|as_crispy_field }}
+                    {{ map_form.subject|as_crispy_field }}
+                    {{ map_form.subject_type|as_crispy_field }}
+                    {{ map_form.creation_type|as_crispy_field }}
+                    <div class="row">
+                        <div class="col-12 col-md-4">
+                            {{ map_form.keyword_name|as_crispy_field }}
+                        </div>
+                        <div class="col-12 col-md-4">
+                            {{ map_form.keyword_subject|as_crispy_field }}
+                        </div>
+                        <div class="col-12 col-md-4">
+                            {{ map_form.keyword_geo|as_crispy_field }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-md-6">
+                            {{ map_form.description|as_crispy_field }}
+                        </div>
+                        <div class="col-12 col-md-6">
+                            {{ map_form.additional_notes|as_crispy_field }}
+                        </div>
+                    </div>
+                </div>
+
+                <div id="informacje-o-autorach-i-archiwim" class="tab-pane">
+                    {{ map_form.authors|as_crispy_field }}
+                    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#authorModal">Add new author</button>
+                    {{ map_form.archive_id|as_crispy_field }}
+                    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#archiveModal">Dodaj nowe archiwum</button>
+                </div>
+            </div>
+            <button type="submit" name="map_form" class="btn btn-primary">Submit</button>
+        </div>
     </form>
         <div class="modal fade" id="authorModal" tabindex="-1" aria-labelledby="authorModalLabel" aria-hidden="true">
           <div class="modal-dialog">
@@ -27,7 +77,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" name="{{ people_form.prefix }}" class="btn btn-primary">Save</button>
+                            <button type="submit" name="{{ people_form.prefix }}" id="save_people_form" class="btn btn-primary">Save</button>
                         </div>
                     </form>
                 </div>
@@ -49,7 +99,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="submit" name="{{ archive_form.prefix }}" id="add_archive_button" class="btn btn-primary">Save</button>
+                                <button type="submit" name="{{ archive_form.prefix }}" id="save_archive_form" class="btn btn-primary">Save</button>
                             </div>
                         </form>
                     </div>
@@ -61,9 +111,17 @@
       integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
         crossorigin="anonymous"></script>
 
+{#  2nd dynamic modal  #}
     <script type="text/javascript">
-    $(document).on('submit','#people_form',function(e){
+    $(document).on('submit','#people_form', function(e){
         e.preventDefault();
+
+        let save_btn = document.getElementById('save_people_form');
+        save_btn.innerHTML = '<div class="spinner-border" role="status"> <span class="visually-hidden">Loading...</span> </div>'
+
+        let select = document.getElementById('id_map_form-authors')
+        let first_name = document.getElementById("id_people_form-first_name").value
+        let last_name = document.getElementById("id_people_form-last_name").value
         $.ajax({
             type:'POST',
             url:'{% url "dodaj_mape" %}',
@@ -75,10 +133,62 @@
                 'people_form': ''
 
             },
+            success:function() {
+                $('#authorModal').modal('hide');
+                save_btn.innerHTML = 'Save'
+            }
+            })
+
+        let opt = document.createElement('option');
+        opt.value = $('#id_map_form-authors option:last').val();
+        opt.value = parseInt(opt.value) + 1
+        opt.innerHTML = first_name + " " +last_name;
+        select.appendChild(opt);
+        console.log(opt.value, opt.innerHTML)
+    });
+    </script>
+
+
+{#  2nd dynamic modal  #}
+    <script type="text/javascript">
+    $(document).on('submit','#archive_form', function(e){
+        e.preventDefault();
+
+        let save_btn = document.getElementById('save_archive_form');
+        save_btn.innerHTML = '<div class="spinner-border" role="status"> <span class="visually-hidden">Loading...</span> </div>'
+        save_btn.setAttribute('disabled', true)
+
+        let select = document.getElementById('id_map_form-archive_id')
+        let archive_name = document.getElementById("id_archive_form-archive_name").value
+        let archive_team = document.getElementById("id_archive_form-archive_team").value
+        let archive_unit = document.getElementById("id_archive_form-archive_unit").value
+        let archive_number = document.getElementById("id_archive_form-archive_number").value
+        $.ajax({
+            type:'POST',
+            url:'{% url "dodaj_mape" %}',
+            data:
+            {
+                csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+                'archive_form-archive_name':$("#id_archive_form-archive_name").val(),
+                'archive_form-archive_team':$("#id_archive_form-archive_team").val(),
+                'archive_form-archive_unit':$("#id_archive_form-archive_unit").val(),
+                'archive_form-archive_number':$("#id_archive_form-archive_number").val(),
+                'archive_form': ''
+
+            },
             success:function(){
-                  alert('Saved');
+                  $('#archiveModal').modal('hide');
+                  save_btn.innerHTML = "Save"
+                  save_btn.removeAttribute('disabled')
                     }
             })
-        });
+
+        let opt = document.createElement('option');
+        opt.value = $('#id_map_form-archive_id option:last').val();
+        opt.value = parseInt(opt.value) + 1
+        opt.innerHTML = archive_name + "/" + archive_team  + "/" + archive_unit + "/" + archive_number;
+        select.appendChild(opt);
+        console.log(opt.value, opt.innerHTML)
+    });
     </script>
 {% endblock content %}
