@@ -1,0 +1,10 @@
+Cześć {{ user.username }},
+
+
+Nowe konto w serwisie Map Browser zostało utworzone przy użyciu tego adresu email.
+Kliknij poniższy link aby aktywować konto.
+
+{{ protocol }}://{{ domain }}{% url 'activate' uidb64=uid token=token %}
+
+Pozdrawiamy,
+Administratorzy Serwisu
