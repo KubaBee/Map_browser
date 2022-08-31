@@ -22,6 +22,26 @@ class MapForm(forms.ModelForm):
                   'scale', 'subject', 'subject_type', 'authors', 'creation_type',
                   'description', 'keyword_name', 'keyword_subject', 'keyword_geo', 'additional_notes']
 
+        labels = {
+            "full_title": "Tytuł Pełny",
+            "short_title": "Tytuł Skrócony",
+            "filename": "Plik Mapy",
+            "creator": "Osoba Dodająca",
+            "publishing_address": "Miejsce Wydania",
+            "scale": "Skala (mianownik)",
+            "subject": "Przedmiot Mapy",
+            "subject_type": "Rodzaj",
+            "creation_type": "Rodzaj mapy ze względu na sposób wykonania",
+            "description": "Opis",
+            "keyword_name": "Słowa Kluczowe Imienne",
+            "keyword_subject": "Słowa Kluczowe Rzeczowe",
+            "keyword_geo": "Słowa Kluczowe Geograficzne",
+            "additional_notes": "Dodatkowe Informacje",
+            "archive_id": "Archiwum",
+            "authors": "Autorzy",
+        }
+
+
     # creator = CustomMMCF(
     #     queryset=get_user_model().objects.all(),
     #     widget=forms.CheckboxSelectMultiple

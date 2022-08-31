@@ -22,15 +22,25 @@
 
             <div class="tab-content card-body">
                 <div id="informacje-o-mapie" class="tab-pane active">
+                    <div class="col-8">
+                        {{ map_form.full_title|as_crispy_field }}
+                    </div>
+                    <div class="col-6">
+                        {{ map_form.short_title|as_crispy_field }}
+                    </div>
+                    <div class="col-12 col-md-6">
+                        {{ map_form.creator|as_crispy_field }}
+                    </div>
+                    <div class="col-12 col-md-6">
+                        {{ map_form.subject_type|as_crispy_field }}
+                    </div>
 
-                    {{ map_form.short_title|as_crispy_field }}
-                    {{ map_form.full_title|as_crispy_field }}
-                    {{ map_form.filename|as_crispy_field }}
-                    {{ map_form.creator|as_crispy_field }}
+                    <div class="col-4">
+                        {{ map_form.filename|as_crispy_field }}
+                    </div>
                     {{ map_form.publishing_address|as_crispy_field }}
                     {{ map_form.scale|as_crispy_field }}
                     {{ map_form.subject|as_crispy_field }}
-                    {{ map_form.subject_type|as_crispy_field }}
                     {{ map_form.creation_type|as_crispy_field }}
                     <div class="row">
                         <div class="col-12 col-md-4">
@@ -59,8 +69,10 @@
                     {{ map_form.archive_id|as_crispy_field }}
                     <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#archiveModal">Dodaj nowe archiwum</button>
                 </div>
+                <div class="d-flex flex-row-reverse">
+                    <button type="submit" name="map_form" class="btn btn-secondary">Submit</button>
+                </div>
             </div>
-            <button type="submit" name="map_form" class="btn btn-primary">Submit</button>
         </div>
     </form>
         <div class="modal fade" id="authorModal" tabindex="-1" aria-labelledby="authorModalLabel" aria-hidden="true">
@@ -83,6 +95,7 @@
                 </div>
           </div>
         </div>
+
         <div class="modal fade" id="archiveModal" tabindex="-1" aria-labelledby="archiveModalLabel" aria-hidden="true">
               <div class="modal-dialog">
                     <div class="modal-content">
