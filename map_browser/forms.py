@@ -12,7 +12,7 @@ import django_filters
 class CustomMMCF(forms.ModelMultipleChoiceField):
     def label_from_instance(self, creator):
         if creator.__class__.__name__ == 'People' or creator.__class__.__name__ == "User":
-            return f"{creator.first_name} {creator.last_name}"
+            return f"{creator.last_name} {creator.first_name}"
 
 
 class MapForm(forms.ModelForm):
@@ -67,16 +67,26 @@ class ArchiveForm(forms.ModelForm):
         model = models.Archive
         fields = ['archive_name', 'archive_team', 'archive_unit', 'archive_number']
 
+        labels = {
+            "archive_name": "Nazwa Archiwum",
+            "archive_team": "Zespół Archiwalny",
+            "archive_unit": "Jednostka Archiwalna",
+            "archive_number": "Numer",
+        }
+
 
 class PeopleForm(forms.ModelForm):
     class Meta:
         model = models.People
         fields = '__all__'
 
+        labels = {
+            "first_name": "Imie",
+            "last_name": "Nazwisko",
+        }
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["first_name"].label = 'Author First Name'#"Imię autora"
-        self.fields["last_name"].label = 'Author Last Name'#"Nazwisko autora"
 
     def clean(self):
         cleaned_data = super().clean()

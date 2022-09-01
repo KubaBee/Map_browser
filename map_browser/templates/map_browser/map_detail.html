@@ -39,6 +39,7 @@
             {% endif %}
 
             <div class="accordion" id="accordionPanelsStayOpenExample">
+                {% if object.language_id or object.authors or object.publication_place or object.created_at %}
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="mapaDane-headingOne">
                         <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#mapaDane-collapseOne" aria-expanded="true" aria-controls="mapaDane-collapseOne">
@@ -61,9 +62,9 @@
 
                             {% if object.authors.all %}
                                 {% if object.authors.all|length == 1 %}
-                                    <p><strong>Autor Mapy:</strong>
+                                    <p><strong>Twórca Mapy:</strong>
                                 {% else %}
-                                    <p><strong>Autorzy Mapy:</strong>
+                                    <p><strong>Twórcy Mapy:</strong>
                                 {% endif %}
                                     {% for author in object.authors.all %}
                                         {% if forloop.last %}
@@ -87,7 +88,8 @@
                         </div>
                     </div>
                 </div>
-
+                {% endif %}
+                {% if object.keyword_geo or object.keyword_name or object.keyword_subject %}
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="mapaDane-headingTwo">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#mapaDane-collapseTwo" aria-expanded="false" aria-controls="mapaDane-collapseTwo">
@@ -111,7 +113,9 @@
                         </div>
                     </div>
                 </div>
+                {% endif %}
 
+                {% if object.document_set.count > 0 %}
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="mapaDane-headingThree">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#mapaDane-collapseThree" aria-expanded="false" aria-controls="mapaDane-collapseThree">
@@ -120,16 +124,15 @@
                     </h2>
                     <div id="mapaDane-collapseThree" class="accordion-collapse collapse" aria-labelledby="mapaDane-headingThree">
                         <div class="accordion-body">
-                            {% if object.document_set.count > 0 %}
                                 <ul class="list-group mt-2">
                                 {% for doc in object.document_set.all %}
                                     <li class="list-group-item"><a href={% url 'doc-detail' doc.id %}>{{ doc.title }}</a></li>
                                 {% endfor %}
                                 </ul>
-                            {% endif %}
                         </div>
                     </div>
-            </div>
+                </div>
+                {% endif %}
         </div>
     </div>
 {% endblock content %}
