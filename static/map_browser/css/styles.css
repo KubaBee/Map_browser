@@ -91,9 +91,9 @@ main{
     min-height: 90vh;
 }
 
-#container{
-        margin: 0 60px !important;
-}
+/*#container{*/
+/*        margin: 0 60px !important;*/
+/*}*/
 
 .mapa{
     border-radius: 15px;
