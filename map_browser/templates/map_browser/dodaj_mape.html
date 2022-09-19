@@ -22,10 +22,10 @@
 
             <div class="tab-content card-body">
                 <div id="informacje-o-mapie" class="tab-pane active">
-                    <div class="col-8">
+                    <div class="col-12 col-md-8">
                         {{ map_form.full_title|as_crispy_field }}
                     </div>
-                    <div class="col-6">
+                    <div class="col-12 col-md-6">
                         {{ map_form.short_title|as_crispy_field }}
                     </div>
                     <div class="col-12 col-md-6">
@@ -35,7 +35,7 @@
                         {{ map_form.subject_type|as_crispy_field }}
                     </div>
 
-                    <div class="col-4">
+                    <div class="col-12 col-md-4">
                         {{ map_form.filename|as_crispy_field }}
                     </div>
                     {{ map_form.publishing_address|as_crispy_field }}

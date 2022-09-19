@@ -19,19 +19,24 @@
             </form>
         </div>
     </div>
+
     <div class="tab-pane fade show active" id="maps" role="tabpanel" aria-labelledby="maps-tab">
-        <div id="box" class="row row-cols-sm-1 row-cols-md-3 g-4">
-        {% for map in map_list %}
-            <a class="card-as-link" href="{% url 'map-detail' map.pk %}">
-            <div class="card map-card md-m-4 sm-m-1">
-                <img src="{{ map.thumbnail.url }}" class="mapa card-img-top" alt="map_image">
-                <div class="card-body">
-                        <p class="card-text">{{ map.full_title|truncatechars:100 }}</p>
+        {% if map_list %}
+            <div id="box" class="row row-cols-sm-1 row-cols-md-3 g-4">
+            {% for map in map_list %}
+                <a class="card-as-link" href="{% url 'map-detail' map.pk %}">
+                <div class="card map-card md-m-4 sm-m-1">
+                    <img src="{{ map.thumbnail.url }}" class="mapa card-img-top" alt="map_image">
+                    <div class="card-body">
+                            <p class="card-text">{{ map.full_title|truncatechars:100 }}</p>
+                    </div>
                 </div>
+                </a>
+            {% endfor %}
             </div>
-            </a>
-        {% endfor %}
-        </div>
+        {% else %}
+            <h1>Brak Wyników!</h1>
+        {% endif %}
         {% if is_paginated %}
         <nav aria-label="dokumenty-paginator" >
             <ul class="pagination justify-content-end mt-4">

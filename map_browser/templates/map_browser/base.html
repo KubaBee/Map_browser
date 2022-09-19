@@ -34,9 +34,9 @@
                           <li class="nav-item">
                               <a class="nav-link active" href="{% url 'wyszukaj' %}">Wyszukaj</a>
                           </li>
-                          <li class="nav-item">
-                              <a class="nav-link active" href="{% url 'kontakt' %}">Kontakt</a>
-                          </li>
+{#                          <li class="nav-item">#}
+{#                              <a class="nav-link active" href="{% url 'kontakt' %}">Kontakt</a>#}
+{#                          </li>#}
                         {% if user.is_superuser %}
                             <li class="nav-item">
                                 <a class="nav-link active" href="{% url 'admin:index' %}">Admin Panel</a>

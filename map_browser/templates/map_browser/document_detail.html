@@ -12,6 +12,40 @@
 {#        {% endif %}#}
     </div>
     <div class="row row-cols-md-2">
+
+    {% if object.doc_file %}
+        <div class="col">
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item">
+                  <a class="nav-link active" data-bs-toggle="tab" href="#dokument">Dokumnet Oryginalny</a>
+                </li>
+                {% if object.translation_file %}
+                    <li class="nav-item">
+                      <a class="nav-link" data-bs-toggle="tab" href="#tlumaczenie">Tłumaczenie</a>
+                    </li>
+                {% endif %}
+            </ul>
+
+          <!-- Tab panes -->
+            <div class="tab-content">
+                <div id="dokument" class="container tab-pane active"><br>
+                    <div class="col pe-4">
+                        <object data="{{ object.doc_file.url }}" width="100%" height="700px"></object>
+                    </div>
+                </div>
+                {% if object.translation_file %}
+                    <div id="tlumaczenie" class="container tab-pane fade"><br>
+                        <div class="col pe-4">
+                            <object data="{{ object.translation_file.url }}" width="100%" height="700px"></object>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+
+
+
         <div class="col">
             {% if object.description %}
                 <h5><strong>Opis</strong></h5>

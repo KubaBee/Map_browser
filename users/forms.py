@@ -40,7 +40,7 @@ class LoginUserForm(AuthenticationForm):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.layout = Layout(
-            Fieldset('Zaloguj się się!', FloatingField('username', 'password', HTML("""<p>Nie masz jeszcze konta? 
+            Fieldset('Zaloguj się!', FloatingField('username', 'password', HTML("""<p>Nie masz jeszcze konta? 
             <a href="{% url 'register' %}">Załóż je!</a></p>"""))),
             # Submit('submit', 'Zaloguj się')
         )

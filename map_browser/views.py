@@ -11,9 +11,10 @@ from django.forms.models import modelformset_factory
 from django.urls import reverse_lazy
 from django.db.models import Q
 from .filters import MapFilter
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from itertools import chain
 from django.core.paginator import Paginator
+import csv
 
 
 class MapListView(ListView, MultipleObjectMixin):
@@ -30,7 +31,7 @@ class MapListView(ListView, MultipleObjectMixin):
         print(context)
         return context
 
-    # dodaj szukanie po dokumentsach
+    # dodaj szukanie po mapach
     def get_queryset(self):
         qs = super().get_queryset()
         title = self.request.GET.get('title')
@@ -69,15 +70,24 @@ class DocumentListView(ListView, MultipleObjectMixin):
 class MapDetailView(LoginRequiredMixin, DetailView):
     model = Map
 
+    def get_context_data(self, **kwargs):
 
-class DocumentDetailView(LoginRequiredMixin,DetailView, MultipleObjectMixin):
+        context = super(MapDetailView, self).get_context_data(**kwargs)
+
+        if Map.objects.filter(id__gt=self.get_object().id).first() is not None:
+            context['next_map'] = Map.objects.filter(id__gt=self.get_object().id).first()
+        if Map.objects.filter(id__lt=self.get_object().id).first() is not None:
+            context['prev_map'] = Map.objects.filter(id__lt=self.get_object().id).last()
+        return context
+
+
+class DocumentDetailView(LoginRequiredMixin, DetailView, MultipleObjectMixin):
     model = Document
     paginate_by = 5
 
     def get_context_data(self, **kwargs):
         object_list = Map.objects.filter(document=self.get_object())
         context = super(DocumentDetailView, self).get_context_data(object_list=object_list)
-        print(context)
         return context
 
 
@@ -90,6 +100,7 @@ class FilterMapView(ListView):
         obj_list = MapFilter(self.request.GET, queryset=self.get_queryset())
         context = super(FilterMapView, self).get_context_data(object_list=obj_list.qs.order_by('added_at'))
         context['filter'] = obj_list
+
         return context
 
 
@@ -172,5 +183,36 @@ class AddMapForm(LoginRequiredMixin, CreateView):
                       {'map_form': map_form, 'people_form': people_form, 'archive_form': archive_form})
 
 
-def add_map_form(request):
-    MapFormset = modelformset_factory(Map, form=MapForm, extra=0)
+def csv_export(request):
+    all_maps = Map.objects.all()
+
+    response = HttpResponse('text/csv')
+    response['Content-Disposition'] = 'attachment; filename="mapy.csv"'
+
+    # response.write(u'\ufeff'.encode('utf8'))
+    writer = csv.writer(response)
+    writer.writerow(['Tytuł Pełny', 'Tytuł Krótki', 'Osoba Dodająca', 'Miejsce Wydania', 'Link do mapy'])
+
+    print(all_maps.last().filename.url)
+
+    for single_map in all_maps:
+        writer.writerow([
+            single_map.full_title, single_map.short_title, single_map.creator,
+            single_map.publication_place, single_map.filename.url
+                         ])
+
+    return response
+
+
+# def navigate_through_detail(objects, current_id):
+#
+#     context = {}
+#
+#     if objects.filter(id__gt=current_id).first() is not None:
+#         next_map = Map.objects.filter(id__gt=current_id).first()
+#         context['next_map'] = next_map
+#     if objects.filter(id__lt=current_id).last() is not None:
+#         prev_map = Map.objects.filter(id__lt=current_id).last()
+#         context['prev_map'] = prev_map
+#
+#     return context

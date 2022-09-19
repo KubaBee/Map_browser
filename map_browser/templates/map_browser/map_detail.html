@@ -1,7 +1,11 @@
 {% extends "map_browser/base.html" %}
 {% load static %}
 {% block title %}
-    <title>Przeglądaj mapy</title>
+    {% if object.full_title %}
+        <title>{{ object.full_title }}</title>
+    {% else %}
+        <title>Pzeglądaj Mapy</title>
+    {% endif %}
 {% endblock title %}
 
 {% block content %}
@@ -15,14 +19,27 @@
                 </div>
                 <div class="col d-flex justify-content-end">
                     {% if user in object.creator.all or user.is_superuser %}
-                        <span class="me-4"><a href="{% url 'edytuj' map.id %}"><img class="action-buttons-detail" style="max-width: 16px" src="{% static 'map_browser/images/pencil.png' %}" alt="Edytuj"></a></span>
-                        <span><a href="{% url 'usun' map.id %}"><img class="action-buttons-detail" style="max-width: 16px" src="{% static 'map_browser/images/bin.png' %}" alt="Usuń"></a></span>
+                        <span class="me-4"><a href="{% url 'edytuj' object.id %}"><img class="action-buttons-detail" style="max-width: 16px" src="{% static 'map_browser/images/pencil.png' %}" alt="Edytuj"></a></span>
+                        <span><a href="{% url 'usun' object.id %}"><img class="action-buttons-detail" style="max-width: 16px" src="{% static 'map_browser/images/bin.png' %}" alt="Usuń"></a></span>
                     {% endif %}
                 </div>
             </div>
         </div>
         <h5>{% for type in object.subject_type.all %}<span class="badge rounded-pill bg-secondary mt-3">{{ type }}</span> {% endfor %}</h5>
     </div>
+
+    {% if prev_map %}
+        <a class="" href="{% url 'map-detail' prev_map.id %}">&laquo; Poprzednia</a>
+    {% endif %}
+    {% if prev_map and next_map %}
+         |
+    {% endif %}
+    {% if next_map is not None %}
+        <a href="{% url 'map-detail' next_map.id %}">Następna &raquo;</a>
+    {% endif %}
+
+{#    {{ next_map }}#}
+{#    {{ prev_map }}#}
 
     <div class="row row-cols-md-2 row-cols-1">
         <div class="col">

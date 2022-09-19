@@ -8,7 +8,6 @@
 {% block content %}
 
     <div class="row">
-
         <div class="col-md-3 col-6 mb-3 offset-md-9 offset-6">
             <form method="get">
                 <div class="input-group">
@@ -21,21 +20,18 @@
             </form>
         </div>
     </div>
-
+    <div class="row row-cols-sm-1 row-cols-md-2 g-4">
     {% for doc in document_list %}
         <a class="card-as-link" href="{% url 'doc-detail' doc.id %}">
-            <div class="row">
-                <div class="col-sm-6">
                     <div class="card doc-card">
                         <div class="card-body">
                             <h5 class="card-title">{{ doc.title|truncatechars:100 }}</h5>
                             <p class="card-text">{{ doc.description|truncatechars:500 }}</p>
                         </div>
-                </div>
-          </div>
+            </div>
         </a>
     {% endfor %}
-
+    </div>
 
 
 {% endblock content %}
