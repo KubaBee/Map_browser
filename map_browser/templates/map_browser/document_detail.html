@@ -1,49 +1,75 @@
 {% extends "map_browser/base.html" %}
+{% load static %}
 {% block title %}
     <title>{{ object.title }}</title>
 {% endblock title %}
 {% block content %}
+
+{#  navigation between prev and next page  #}
+    <div class="row justify-content-between pb-3 pe-0">
+        <div class="col-4">
+        {% if prev_doc %}
+            <a href="{% url 'doc-detail' prev_doc.id %}">&laquo; Poprzedni</a>
+        {% endif %}
+        </div>
+
+        <div class="col-4 text-end">
+            {% if next_doc is not None %}
+                <a href="{% url 'doc-detail' next_doc.id %}">Następny &raquo;</a>
+            {% endif %}
+        </div>
+    </div>
+
     <div class="row">
         <h1>{{ object.title }}</h1>
-        <p>{{ object.added_at| date:"d/m/Y" }}</p>
-{#        {% if user in object.creator.all or user.is_superuser %}#}
-{#            <p><a href="{% url 'edytuj' map.id %}">Kliknij tutaj aby edtować</a></p>#}
-{#            <p><a href="{% url 'usun' map.id %}" style="color: darkred">Kliknij tutaj aby usunąć</a></p>#}
-{#        {% endif %}#}
-    </div>
-    <div class="row row-cols-md-2">
-
-    {% if object.doc_file %}
-        <div class="col">
-            <ul class="nav nav-tabs" role="tablist">
-                <li class="nav-item">
-                  <a class="nav-link active" data-bs-toggle="tab" href="#dokument">Dokumnet Oryginalny</a>
-                </li>
-                {% if object.translation_file %}
-                    <li class="nav-item">
-                      <a class="nav-link" data-bs-toggle="tab" href="#tlumaczenie">Tłumaczenie</a>
-                    </li>
-                {% endif %}
-            </ul>
-
-          <!-- Tab panes -->
-            <div class="tab-content">
-                <div id="dokument" class="container tab-pane active"><br>
-                    <div class="col pe-4">
-                        <object data="{{ object.doc_file.url }}" width="100%" height="700px"></object>
-                    </div>
+        <div>
+            <div class="row">
+                <div class="col d-flex">
+                    <span class="me-2">{{ object.added_at| date:"d/m/Y" }}</span>
                 </div>
-                {% if object.translation_file %}
-                    <div id="tlumaczenie" class="container tab-pane fade"><br>
-                        <div class="col pe-4">
-                            <object data="{{ object.translation_file.url }}" width="100%" height="700px"></object>
-                        </div>
-                    </div>
-                {% endif %}
+                <div class="col d-flex justify-content-end">
+                    {% if user in object.creator.all or user.is_superuser %}
+                        <span class="me-4"><a href="{% url 'edytuj-dokument' object.id %}"><img class="action-buttons-detail" style="max-width: 16px" src="{% static 'map_browser/images/pencil.png' %}" alt="Edytuj"></a></span>
+                        <span><a href="{% url 'usun-dokument' object.id %}"><img class="action-buttons-detail" style="max-width: 16px" src="{% static 'map_browser/images/bin.png' %}" alt="Usuń"></a></span>
+                    {% endif %}
+                </div>
             </div>
         </div>
-    {% endif %}
+        <h5>{% for type in object.subject_type.all %}<span class="badge rounded-pill bg-secondary mt-3">{{ type }}</span> {% endfor %}</h5>
+    </div>
 
+    <div class="row row-cols-md-2 row-cols-1">
+
+        {% if object.doc_file %}
+            <div class="col">
+                <ul class="nav nav-tabs" role="tablist">
+                    <li class="nav-item">
+                      <a class="nav-link active" data-bs-toggle="tab" href="#dokument">Dokumnet Oryginalny</a>
+                    </li>
+                    {% if object.translation_file %}
+                        <li class="nav-item">
+                          <a class="nav-link" data-bs-toggle="tab" href="#tlumaczenie">Tłumaczenie</a>
+                        </li>
+                    {% endif %}
+                </ul>
+
+              <!-- Tab panes -->
+                <div class="tab-content">
+                    <div id="dokument" class="container tab-pane active"><br>
+                        <div class="col">
+                            <object data="{{ object.doc_file.url }}" width="100%" height="700px"></object>
+                        </div>
+                    </div>
+                    {% if object.translation_file %}
+                        <div id="tlumaczenie" class="container tab-pane fade"><br>
+                            <div class="col">
+                                <object data="{{ object.translation_file.url }}" width="100%" height="700px"></object>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
 
 
         <div class="col">
@@ -53,68 +79,138 @@
                     {{ object.description }}
                 </p>
             {% endif %}
-            {% if object.link %}
-                <p><strong>Link do mapy:</strong></p>
-                <a href="{{ object.link }}">{{ object.link }}</a>
-            {% endif %}
-            {% if object.language_id %}
-                <p><strong>Język mapy:</strong>
-                    {% for lang in object.language_id.all %}
-                        {% if not forloop.last %}
-                            {{ lang }},
-                        {% else %}
-                            {{ lang }}
-                        {% endif %}
-                    {% endfor %}
-                </p>
-            {% endif %}
-            {% if object.creator %}
-                <p><strong>Osoby dodajce mapę:</strong>
-                    {% for creator in object.creator.all %}
-                        {{ creator }}
-                    {% endfor %}
-                </p>
-            {% endif %}
 
-            <h5><strong>Mapy Referencyjne</strong></h5>
-            {% if page_obj %}
-                <ul class="list-group">
-                {% for map in page_obj %}
-                    <li class="list-group-item"><a href={% url 'map-detail' map.id %}>{{ map.full_title }}</a></li>
-                {% endfor %}
-                </ul>
-            {% endif %}
-            {% if is_paginated %}
-                <nav aria-label="mapy-paginator" >
-                    <ul class="pagination justify-content-end mt-4">
-                        {% if page_obj.has_previous %}
-                            {% if not page_obj.previous_page_number == 1 %}
-                            <li class="page-item">
-                                <a class="page-link" href="?page=1">&laquo; 1</a>
-                            </li>
+            <div class="accordion" id="accordionPanelsStayOpenExample">
+                {% if object.language_id or object.authors or object.publication_place or object.created_at %}
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="mapaDane-headingOne">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#mapaDane-collapseOne" aria-expanded="true" aria-controls="mapaDane-collapseOne">
+                            Podstawowe Informacje
+                        </button>
+                    </h2>
+                    <div id="mapaDane-collapseOne" class="accordion-collapse collapse show" aria-labelledby="mapaDane-headingOne">
+                        <div class="accordion-body">
+                            {% if object.language_id %}
+                                <p><strong>Język mapy:</strong>
+                                    {% for lang in object.language_id.all %}
+                                        {% if not forloop.last %}
+                                            {{ lang }},
+                                        {% else %}
+                                            {{ lang }}
+                                        {% endif %}
+                                    {% endfor %}
+                                </p>
                             {% endif %}
-                            <li class="page-item">
-                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
-                            </li>
-                        {% endif %}
 
-                        <li class="page-item active" aria-current="page">
-                            <span class="page-link">{{ page_obj.number }}</span>
-                        </li>
-
-                        {% if page_obj.has_next %}
-                            <li class="page-item">
-                                <a class="page-link" href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
-                            </li>
-                            {% if not page_obj.next_page_number == page_obj.paginator.num_pages %}
-                                <li class="page-item">
-                                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }} &raquo; </a>
-                                </li>
+                            {% if object.authors.all %}
+                                {% if object.authors.all|length == 1 %}
+                                    <p><strong>Twórca Mapy:</strong>
+                                {% else %}
+                                    <p><strong>Twórcy Mapy:</strong>
+                                {% endif %}
+                                    {% for author in object.authors.all %}
+                                        {% if forloop.last %}
+                                            {{ author }}
+                                        {% else %}
+                                            {{ author }},
+                                        {% endif %}
+                                    {% endfor %}
+                                </p>
+                            {% else %}
+                                <p><strong>Autor nieznany</strong></p>
                             {% endif %}
-                        {% endif %}
-                    </ul>
-                </nav>
-            {% endif %}
+
+                            {% if object.publication_place %}
+                                <p><strong>Miejsce Wydania: </strong>{{ object.publication_place|linebreaksbr }} </p>
+                            {% endif %}
+
+                            {% if object.created_at %}
+                                <p><strong>Rok Wydania: </strong>{{ object.created_at }} </p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                {% if object.keyword_geo or object.keyword_name or object.keyword_subject %}
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="mapaDane-headingTwo">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#mapaDane-collapseTwo" aria-expanded="false" aria-controls="mapaDane-collapseTwo">
+                            Słowa Kluczowe
+                        </button>
+                    </h2>
+                    <div id="mapaDane-collapseTwo" class="accordion-collapse collapse" aria-labelledby="mapaDane-headingTwo">
+                        <div class="accordion-body">
+                            {% if object.keyword_geo %}
+                                <p><strong>Słowa kluczowe geograficzne:</strong>
+                                {{ object.keyword_geo }}</p>
+                            {% endif %}
+                            {% if object.keyword_name %}
+                                <p><strong>Słowa kluczowe imienne:</strong>
+                                    {{ object.keyword_name }}</p>
+                            {% endif %}
+                            {% if object.keyword_subject %}
+                                <p><strong>Słowa kluczowe rzeczowe:</strong>
+                                {{ object.keyword_subject }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if page_obj %}
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="mapaDane-headingThree">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#mapaDane-collapseThree" aria-expanded="false" aria-controls="mapaDane-collapseThree">
+                                Mapy Referencyjne
+                            </button>
+                        </h2>
+                        <div id="mapaDane-collapseThree" class="accordion-collapse collapse" aria-labelledby="mapaDane-headingThree">
+                            <div class="accordion-body">
+                                    <ul class="list-group mt-2">
+    {#                                    {% if page_obj %}#}
+                                            <ul class="list-group">
+                                            {% for map in page_obj %}
+                                                <li class="list-group-item"><a href={% url 'map-detail' map.id %}>{{ map.full_title }}</a></li>
+                                            {% endfor %}
+                                            </ul>
+    {#                                    {% endif %}#}
+                                        {% if is_paginated %}
+                                            <nav aria-label="mapy-paginator" >
+                                                <ul class="pagination justify-content-end mt-4">
+                                                    {% if page_obj.has_previous %}
+                                                        {% if not page_obj.previous_page_number == 1 %}
+                                                        <li class="page-item">
+                                                            <a class="page-link" href="?page=1">&laquo; 1</a>
+                                                        </li>
+                                                        {% endif %}
+                                                        <li class="page-item">
+                                                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+                                                        </li>
+                                                    {% endif %}
+
+                                                    <li class="page-item active" aria-current="page">
+                                                        <span class="page-link">{{ page_obj.number }}</span>
+                                                    </li>
+
+                                                    {% if page_obj.has_next %}
+                                                        <li class="page-item">
+                                                            <a class="page-link" href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+                                                        </li>
+                                                        {% if not page_obj.next_page_number == page_obj.paginator.num_pages %}
+                                                            <li class="page-item">
+                                                                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }} &raquo; </a>
+                                                            </li>
+                                                        {% endif %}
+                                                    {% endif %}
+                                                </ul>
+                                            </nav>
+                                        {% endif %}
+                                    </ul>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+        </div>
         </div>
     </div>
 {% endblock content %}

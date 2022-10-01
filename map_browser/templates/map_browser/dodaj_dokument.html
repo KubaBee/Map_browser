@@ -3,17 +3,17 @@
 {% load static  %}
     <script src="{% static 'map_browser/js/jquery-3.6.0.min.js' %}"></script>
 {% block title %}
-    <title>Dodaj mapę</title>
+    <title>Dodaj dokument</title>
 {% endblock title %}
 {% block content %}
     <form action="" method="POST" enctype="multipart/form-data">
         {%  csrf_token %}
         <div class="mb-3">
-{#            {% crispy map_form %}#}
+{#            {% crispy doc_form %}#}
 
             <ul class="nav nav-tabs">
                 <li class="nav-item">
-                    <a class="nav-link active" href="#informacje-o-mapie" data-bs-toggle="tab">Informacje o mapie</a>
+                    <a class="nav-link active" href="#informacje-o-dokumencie" data-bs-toggle="tab">Informacje o dokumencie</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#informacje-o-autorach-i-archiwim" data-bs-toggle="tab">Informacje o autorach i archiwim</a>
@@ -21,56 +21,75 @@
             </ul>
 
             <div class="tab-content card-body">
-                <div id="informacje-o-mapie" class="tab-pane active">
+                <div id="informacje-o-dokumencie" class="tab-pane active">
                     <div class="col-12 col-md-8">
-                        {{ map_form.full_title|as_crispy_field }}
+                        {{ doc_form.title|as_crispy_field }}
                     </div>
                     <div class="col-12 col-md-6">
-                        {{ map_form.short_title|as_crispy_field }}
+                        {{ doc_form.description|as_crispy_field }}
                     </div>
                     <div class="col-12 col-md-6">
-                        {{ map_form.creator|as_crispy_field }}
+                        {{ doc_form.creator|as_crispy_field }}
                     </div>
                     <div class="col-12 col-md-6">
-                        {{ map_form.subject_type|as_crispy_field }}
+                        {{ doc_form.receiver|as_crispy_field }}
+                    </div>
+                    <div class="col-12 col-md-6">
+                        {{ doc_form.created_at|as_crispy_field }}
+                    </div>
+                    <div class="col-12 col-md-6">
+                        {{ doc_form.language_id|as_crispy_field }}
+                    </div>
+                    <div class="col-12 col-md-4">
+                        {{ doc_form.doc_file|as_crispy_field }}
+                    </div>
+                    <div class="col-12 col-md-4">
+                        {{ doc_form.translation_file|as_crispy_field }}
+                    </div>
+                    <div class="col-12 col-md-4">
+                        {{ doc_form.is_statistic_data|as_crispy_field }}
+                    </div>
+                    <div class="col-12 col-md-4">
+                        {{ doc_form.is_map|as_crispy_field }}
                     </div>
 
                     <div class="col-12 col-md-4">
-                        {{ map_form.filename|as_crispy_field }}
+                        {{ doc_form.link|as_crispy_field }}
                     </div>
-                    {{ map_form.publishing_address|as_crispy_field }}
-                    {{ map_form.scale|as_crispy_field }}
-                    {{ map_form.subject|as_crispy_field }}
-                    {{ map_form.creation_type|as_crispy_field }}
-                    <div class="row">
-                        <div class="col-12 col-md-4">
-                            {{ map_form.keyword_name|as_crispy_field }}
-                        </div>
-                        <div class="col-12 col-md-4">
-                            {{ map_form.keyword_subject|as_crispy_field }}
-                        </div>
-                        <div class="col-12 col-md-4">
-                            {{ map_form.keyword_geo|as_crispy_field }}
-                        </div>
+
+                    <div class="col-12 col-md-4">
+                        {{ doc_form.volume|as_crispy_field }}
+                    </div>
+                    <div class="col-12 col-md-4">
+                        {{ doc_form.doc_format|as_crispy_field }}
+                    </div>
+                    <div class="col-12 col-md-4">
+                        {{ doc_form.source_type|as_crispy_field }}
+                    </div>
+                    <div class="col-12 col-md-4">
+                        {{ doc_form.source_reference|as_crispy_field }}
                     </div>
                     <div class="row">
-                        <div class="col-12 col-md-6">
-                            {{ map_form.description|as_crispy_field }}
+                        <div class="col-12 col-md-4">
+                            {{ doc_form.keyword_name|as_crispy_field }}
                         </div>
-                        <div class="col-12 col-md-6">
-                            {{ map_form.additional_notes|as_crispy_field }}
+                        <div class="col-12 col-md-4">
+                            {{ doc_form.keyword_subject|as_crispy_field }}
+                        </div>
+                        <div class="col-12 col-md-4">
+                            {{ doc_form.keyword_geo|as_crispy_field }}
                         </div>
                     </div>
                 </div>
 
                 <div id="informacje-o-autorach-i-archiwim" class="tab-pane">
-                    {{ map_form.authors|as_crispy_field }}
+                    {{ doc_form.authors|as_crispy_field }}
                     <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#authorModal">Dodaj nowego autora</button>
-                    {{ map_form.archive_id|as_crispy_field }}
+                    {{ doc_form.archive_id|as_crispy_field }}
                     <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#archiveModal">Dodaj nowe archiwum</button>
                 </div>
                 <div class="d-flex flex-row-reverse">
-                    <button type="submit" name="map_form" class="btn btn-secondary">Zapisz</button>
+                    <button type="submit" name="doc_form" class="btn btn-secondary">Zapisz</button>
                 </div>
             </div>
         </div>
@@ -132,24 +151,25 @@
         let save_btn = document.getElementById('save_people_form');
         save_btn.innerHTML = '<div class="spinner-border" role="status"> <span class="visually-hidden">Loading...</span> </div>'
 
-        let select = document.getElementById('id_map_form-authors')
+        let select = document.getElementById('id_doc_form-authors')
         let first_name = document.getElementById("id_people_form-first_name").value
         let last_name = document.getElementById("id_people_form-last_name").value
         $.ajax({
             type:'POST',
-            url:'{% url "dodaj_mape" %}',
+            url:'{% url "dodaj-dokument" %}',
             data:
             {
                 csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
                 'people_form-first_name':$("#id_people_form-first_name").val(),
                 'people_form-last_name':$("#id_people_form-last_name").val(),
                 'people_form': ''
+
             },
             success:function() {
                 $('#authorModal').modal('hide');
                 save_btn.innerHTML = 'Save'
                 let opt = document.createElement('option');
-                opt.value = $('#id_map_form-authors option:last').val();
+                opt.value = $('#id_doc_form-authors option:last').val();
                 opt.value = parseInt(opt.value) + 1
                 opt.innerHTML = first_name + " " +last_name;
                 select.appendChild(opt);
@@ -170,14 +190,14 @@
         save_btn.innerHTML = '<div class="spinner-border" role="status"> <span class="visually-hidden">Loading...</span> </div>'
         save_btn.setAttribute('disabled', true)
 
-        let select = document.getElementById('id_map_form-archive_id')
+        let select = document.getElementById('id_doc_form-archive_id')
         let archive_name = document.getElementById("id_archive_form-archive_name").value
         let archive_team = document.getElementById("id_archive_form-archive_team").value
         let archive_unit = document.getElementById("id_archive_form-archive_unit").value
         let archive_number = document.getElementById("id_archive_form-archive_number").value
         $.ajax({
             type:'POST',
-            url:'{% url "dodaj_mape" %}',
+            url:'{% url "dodaj-dokument" %}',
             data:
             {
                 csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
@@ -196,7 +216,7 @@
             })
 
         let opt = document.createElement('option');
-        opt.value = $('#id_map_form-archive_id option:last').val();
+        opt.value = $('#id_doc_form-archive_id option:last').val();
         opt.value = parseInt(opt.value) + 1
         opt.innerHTML = archive_name + "/" + archive_team  + "/" + archive_unit + "/" + archive_number;
         select.appendChild(opt);

@@ -15,7 +15,7 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-          <div class="container-fluid">
+          <div class="container-fluid ms-0 ms-md-4 me-0 me-md-4">
                 <a class="navbar-brand" href="{% url 'przegladaj-mapy' %}">
 {#                    <img src="{% static 'map_browser/images/agh_logo.png' %}" class="nav_img" alt="Logo AGH">#}
                     <img src="{% static 'map_browser/images/umcs_logo.png' %}" class="nav_img" alt="Logo UMCS">
@@ -47,7 +47,7 @@
                                       <a class="nav-link dropdown-toggle active" href="{% url 'dodaj_mape' %}" id="dodaj" role="button" data-bs-toggle="dropdown" aria-expanded="false">Dodaj </a>
                                       <ul class="dropdown-menu" aria-labelledby="dodaj">
                                           <li><a class="dropdown-item" href="{% url 'dodaj_mape' %}">Mapę</a></li>
-                                          <li><a class="dropdown-item" href="#">Dokument</a></li>
+                                          <li><a class="dropdown-item" href="{% url 'dodaj-dokument' %}">Dokument</a></li>
                                       </ul>
                                   </li>
                           {% endif %}
@@ -65,7 +65,7 @@
           </div>
     </nav>
 
-    <main id="container" class=" me-md-5 ms-md-5 me-2 ms-2">
+    <main id="container" class="me-md-5 ms-md-5 me-2 ms-2">
     {% if messages %}
         {% for message in messages %}
             <div class="alert alert-{{ message.tags }}">{{ message }}</div>

@@ -1,7 +1,7 @@
 import requests
 from django.shortcuts import render, redirect, reverse
 from django.views.generic import CreateView, UpdateView, DeleteView
-from .forms import MapForm, PeopleForm, ArchiveForm
+from .forms import MapForm, PeopleForm, ArchiveForm, DocumentForm
 from .models import Map, Archive, People, Document
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic.list import ListView, MultipleObjectMixin
@@ -53,7 +53,6 @@ class DocumentListView(ListView, MultipleObjectMixin):
         title = self.request.GET.get('title')
         if title:
             context.update({'title': title})
-        print(context)
         return context
 
     # dodaj szukanie po dokumentsach
@@ -78,6 +77,7 @@ class MapDetailView(LoginRequiredMixin, DetailView):
             context['next_map'] = Map.objects.filter(id__gt=self.get_object().id).first()
         if Map.objects.filter(id__lt=self.get_object().id).first() is not None:
             context['prev_map'] = Map.objects.filter(id__lt=self.get_object().id).last()
+
         return context
 
 
@@ -88,6 +88,12 @@ class DocumentDetailView(LoginRequiredMixin, DetailView, MultipleObjectMixin):
     def get_context_data(self, **kwargs):
         object_list = Map.objects.filter(document=self.get_object())
         context = super(DocumentDetailView, self).get_context_data(object_list=object_list)
+
+        if Document.objects.filter(id__gt=self.get_object().id).first() is not None:
+            context['next_doc'] = Document.objects.filter(id__gt=self.get_object().id).first()
+        if Document.objects.filter(id__lt=self.get_object().id).first() is not None:
+            context['prev_doc'] = Document.objects.filter(id__lt=self.get_object().id).last()
+        print(context)
         return context
 
 
@@ -138,6 +144,20 @@ class DeleteMapView(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy('przegladaj-mapy')
 
 
+class EditDocumentForm(LoginRequiredMixin, UpdateView):
+    model = Document
+    fields = ('title', 'description', 'keyword_geo', 'keyword_name', 'keyword_subject')
+    template_name_suffix = '_edit'
+
+    def get_success_url(self):
+        return reverse('doc-detail', kwargs={'pk': self.object.pk})
+
+
+class DeleteDocumentView(LoginRequiredMixin, DeleteView):
+    model = Document
+    success_url = reverse_lazy('przegladaj-dokumenty')
+
+
 class AddMapForm(LoginRequiredMixin, CreateView):
     template_name = 'map_browser/dodaj_mape.html'
 
@@ -175,33 +195,81 @@ class AddMapForm(LoginRequiredMixin, CreateView):
             # on success redirect to the detail page of newly created object
             return redirect(reverse('map-detail', kwargs={'pk': obj.pk}))
 
-        print(map_form['short_title'].value())
-
         messages.warning(request, 'Mapa nie została dodana')
 
         return render(request, 'map_browser/dodaj_mape.html',
                       {'map_form': map_form, 'people_form': people_form, 'archive_form': archive_form})
 
 
-def csv_export(request):
+class AddDocumentForm(LoginRequiredMixin, CreateView):
+    template_name = 'map_browser/dodaj_dokument.html'
+
+    def get(self, request, *args, **kwargs):
+        return self.render_to_response({'doc_form': DocumentForm(prefix='doc_form'),
+                                        'people_form': PeopleForm(prefix='people_form'),
+                                        'archive_form': ArchiveForm(prefix='archive_form')})
+
+    def post(self, request, *args, **kwargs):
+        doc_form = _get_form_with_file(request, DocumentForm, 'doc_form')
+        people_form = _get_form(request, PeopleForm, 'people_form')
+        archive_form = _get_form(request, ArchiveForm, 'archive_form')
+
+        if people_form.is_bound and people_form.is_valid():
+            values = people_form.cleaned_data
+            obj, created = People.objects.get_or_create(
+                first_name=values['first_name'],
+                last_name=values['last_name']
+            )
+            messages.success(request, f'Autor {obj.first_name} {obj.last_name} został dodany')
+
+        if archive_form.is_bound and archive_form.is_valid():
+            values = archive_form.cleaned_data
+            Archive.objects.get_or_create(
+                archive_name=values['archive_name'],
+                archive_team=values['archive_team'],
+                archive_unit=values['archive_unit'],
+                archive_number=values['archive_number']
+            )
+            messages.success(request, 'Archiwum zostało dodane')
+
+        if doc_form.is_bound and doc_form.is_valid():
+            obj = doc_form.save()
+            messages.success(request, 'Dokument został dodany')
+            # on success redirect to the detail page of newly created object
+            return redirect(reverse('doc-detail', kwargs={'pk': obj.pk}))
+
+        messages.warning(request, 'Dokument nie został dodany')
+
+        return render(request, 'map_browser/dodaj_dokument.html',
+                      {'doc_form': doc_form, 'people_form': people_form, 'archive_form': archive_form})
+
+
+def map_csv_export(request):
     all_maps = Map.objects.all()
 
     response = HttpResponse('text/csv')
     response['Content-Disposition'] = 'attachment; filename="mapy.csv"'
 
-    # response.write(u'\ufeff'.encode('utf8'))
     writer = csv.writer(response)
-    writer.writerow(['Tytuł Pełny', 'Tytuł Krótki', 'Osoba Dodająca', 'Miejsce Wydania', 'Link do mapy'])
-
-    print(all_maps.last().filename.url)
+    writer.writerow(['Sygnatura Czasowa', 'Tytuł Pełny', 'Tytuł Krótki', 'Osoba Dodająca', 'Miejsce Wydania',
+                     'Link do mapy', 'Autorzy'])
 
     for single_map in all_maps:
         writer.writerow([
-            single_map.full_title, single_map.short_title, single_map.creator,
-            single_map.publication_place, single_map.filename.url
-                         ])
+            single_map.added_at, single_map.full_title, single_map.short_title, single_map.creator,
+            single_map.publication_place, single_map.filename.url, [author if author is not None else " " for author in
+                                                                    single_map.authors.all()]
+        ])
 
     return response
+
+
+
+
+
+
+
+
 
 
 # def navigate_through_detail(objects, current_id):

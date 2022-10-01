@@ -4,6 +4,7 @@ from django.conf import settings
 from PIL import Image
 from django.core.files.storage import default_storage as storage
 from io import BytesIO
+from django.core.validators import FileExtensionValidator
 from django.core.files.base import ContentFile
 
 
@@ -64,12 +65,12 @@ class Map(models.Model):
     language_id = models.ManyToManyField(Languages, blank=True, null=True)
     archive_id = models.ForeignKey(Archive, blank=True, null=True, on_delete=models.SET("N/A"))
     publication_place = models.ForeignKey(PublicationPlaces, blank=True, null=True, on_delete=models.SET("N/A"))
-    added_at = models.DateTimeField(auto_now_add=True) # bez exportu
-    creator = models.ManyToManyField(settings.AUTH_USER_MODEL) # bez exportu
+    added_at = models.DateTimeField(auto_now_add=True)  # bez exportu
+    creator = models.ManyToManyField(settings.AUTH_USER_MODEL)  # bez exportu
     full_title = models.CharField(max_length=500, blank=True)
     short_title = models.CharField(max_length=500, blank=True)
     publishing_address = models.CharField(max_length=300, blank=True)
-    scale = models.CharField(blank=True, default='1', max_length=500) # add scale with ints
+    scale = models.CharField(blank=True, default='1', max_length=500)  # add scale with ints
     subject = models.CharField(max_length=500, blank=True)
     creation_type = models.CharField(max_length=500, blank=True)
     subject_type = models.ManyToManyField(SubjectTypes, blank=True, null=True)
@@ -104,7 +105,7 @@ class Map(models.Model):
         thumb_extension = thumb_extension.lower()
         thumb_filename = thumb_name + '_copy' + thumb_extension
 
-        if thumb_extension == '.jpg': # add PNG option
+        if thumb_extension == '.jpg':  # add PNG option
             FTYPE = 'JPEG'
         else:
             return False
@@ -136,8 +137,11 @@ class Document(models.Model):
     is_statistic_data = models.BooleanField(blank=True, verbose_name="Czy znajdują się dane statystyczne?")
     is_map = models.BooleanField(blank=True, verbose_name="Czy znajdują się mapy tekstowe?")
     link = models.URLField(verbose_name="Link do dokumentu")
-    doc_file = models.FileField(verbose_name="Dokument", blank=True, upload_to='documents/')
-    translation_file = models.FileField(verbose_name="Tłumaczenie", blank=True, upload_to='translations/')
+    doc_file = models.FileField(verbose_name="Dokument", blank=True, upload_to='documents/',
+                                validators=[FileExtensionValidator(['pdf'], message="Podany format nie jest obsługiwany. Akceptowane są tylko pliki .pdf")])
+    translation_file = models.FileField(verbose_name="Tłumaczenie", blank=True, upload_to='translations/',
+                                        validators=[FileExtensionValidator(['pdf'], message="Podany format nie jest obsługiwany. Akceptowane są tylko pliki .pdf")],
+                                        )
     volume = models.IntegerField(verbose_name="Liczba/objętość", blank=True)
     doc_format = models.CharField(max_length=150, blank=True, verbose_name="Forma dokumentu")
     source_type = models.CharField(max_length=150, blank=True, verbose_name="Typ źródła")

@@ -15,12 +15,47 @@ class CustomMMCF(forms.ModelMultipleChoiceField):
             return f"{creator.last_name} {creator.first_name}"
 
 
+class PeopleForm(forms.ModelForm):
+    class Meta:
+        model = models.People
+        fields = '__all__'
+
+        labels = {
+            "first_name": "Imie",
+            "last_name": "Nazwisko",
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def clean(self):
+        cleaned_data = super().clean()
+        first_name = bool(cleaned_data.get('first_name', False))
+        last_name = bool(cleaned_data.get('last_name', False))
+        if first_name is False and last_name is False:
+            raise ValidationError("Obydwie wartości nie mogą być puste")
+        return cleaned_data
+
+
+class ArchiveForm(forms.ModelForm):
+    class Meta:
+        model = models.Archive
+        fields = ['archive_name', 'archive_team', 'archive_unit', 'archive_number']
+
+        labels = {
+            "archive_name": "Nazwa Archiwum",
+            "archive_team": "Zespół Archiwalny",
+            "archive_unit": "Jednostka Archiwalna",
+            "archive_number": "Numer",
+        }
+
+
 class MapForm(forms.ModelForm):
     class Meta:
         model = models.Map
         fields = ['filename', 'creator', 'archive_id', 'full_title', 'short_title', 'publishing_address',
                   'scale', 'subject', 'subject_type', 'authors', 'creation_type',
-                  'description', 'keyword_name', 'keyword_subject', 'keyword_geo', 'additional_notes']
+                  'description', 'keyword_name', 'keyword_subject', 'keyword_geo', 'additional_notes', 'language_id']
 
         labels = {
             "full_title": "Tytuł Pełny",
@@ -39,7 +74,41 @@ class MapForm(forms.ModelForm):
             "additional_notes": "Dodatkowe Informacje",
             "archive_id": "Archiwum",
             "authors": "Autorzy",
+            "language_id": "Język Mapy"
         }
+
+
+class DocumentForm(forms.ModelForm):
+    class Meta:
+        model = models.Document
+        fields = ["title", "description", "authors", "creator", "created_at", "language_id", "receiver",
+                  "archive_id", "keyword_name", "keyword_subject", "keyword_geo", "source_reference",
+                  "is_statistic_data", "is_map", "link", "doc_file", "translation_file", "volume", "doc_format",
+                  "source_type"]
+
+        labels = {
+            "title": "Tytuł Pełny",
+            "description": "Opis",
+            "authors": "Autorzy",
+            "creator": "Osoba Dodająca",
+            "created_at": "Data Powstania",
+            "language_id": "Język Dokumentu",
+            "receiver": "Adresat",
+            "archive_id": "Archiwum",
+            "keyword_name": "Słowa Kluczowe Imienne",
+            "keyword_subject": "Słowa Kluczowe Rzeczowe",
+            "keyword_geo": "Słowa Kluczowe Geograficzne",
+            "source_reference": "Odwołanie do źróła",
+            "is_statistic_data": "Zawiera dane statystyczne",
+            "is_map": "Zawiera mapę",
+            "link": "Link do dokumentu",
+            "doc_file": "Dokument",
+            "translation_file": "Tłumaczenie",
+            "volume": "Objętość (liczba stron)",
+            "doc_format": "Format dokumentu",
+            "source_type": "Typ Źródła",
+        }
+
 
 
     # creator = CustomMMCF(
@@ -62,39 +131,10 @@ class MapForm(forms.ModelForm):
     #         HTML("""<button type="submit" name="{{ map_form.prefix }}" class="btn btn-primary">Submit</button>"""))
 
 
-class ArchiveForm(forms.ModelForm):
-    class Meta:
-        model = models.Archive
-        fields = ['archive_name', 'archive_team', 'archive_unit', 'archive_number']
-
-        labels = {
-            "archive_name": "Nazwa Archiwum",
-            "archive_team": "Zespół Archiwalny",
-            "archive_unit": "Jednostka Archiwalna",
-            "archive_number": "Numer",
-        }
 
 
-class PeopleForm(forms.ModelForm):
-    class Meta:
-        model = models.People
-        fields = '__all__'
 
-        labels = {
-            "first_name": "Imie",
-            "last_name": "Nazwisko",
-        }
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-    def clean(self):
-        cleaned_data = super().clean()
-        first_name = bool(cleaned_data.get('first_name', False))
-        last_name = bool(cleaned_data.get('last_name', False))
-        if first_name is False and last_name is False:
-            raise ValidationError("Obydwie wartości nie mogą być puste")
-        return cleaned_data
 
 
 
