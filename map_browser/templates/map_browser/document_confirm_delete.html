@@ -8,6 +8,6 @@
     {% csrf_token %}
     <p class="align-middle">Czy na pewno chcesz usunąć dokument "{{ object.title }}"?</p>
     <button class="btn btn-primary" type="submit" value="Confirm">Usuń</button>
-    <button class="btn btn-outline-secondary" type="button"><a style="text-decoration: none" href="{% url 'doc-detail' object.pk %}">Wróc</a></button>
+    <button class="btn btn-outline-secondary" type="button"><a style="text-decoration: none" href="{% url 'szczegoly-dokumenty' object.pk %}">Wróc</a></button>
 </form>
 {% endblock content %}

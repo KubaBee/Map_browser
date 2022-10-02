@@ -1,3 +1,4 @@
+import datetime
 import requests
 from django.shortcuts import render, redirect, reverse
 from django.views.generic import CreateView, UpdateView, DeleteView
@@ -136,7 +137,7 @@ class EditMapForm(LoginRequiredMixin, UpdateView):
     template_name_suffix = '_edit'
 
     def get_success_url(self):
-        return reverse('map-detail', kwargs={'pk': self.object.pk})
+        return reverse('szczegoly-mapy', kwargs={'pk': self.object.pk})
 
 
 class DeleteMapView(LoginRequiredMixin, DeleteView):
@@ -150,7 +151,7 @@ class EditDocumentForm(LoginRequiredMixin, UpdateView):
     template_name_suffix = '_edit'
 
     def get_success_url(self):
-        return reverse('doc-detail', kwargs={'pk': self.object.pk})
+        return reverse('szczegoly-dokumenty', kwargs={'pk': self.object.pk})
 
 
 class DeleteDocumentView(LoginRequiredMixin, DeleteView):
@@ -193,7 +194,7 @@ class AddMapForm(LoginRequiredMixin, CreateView):
             obj = map_form.save()
             messages.success(request, 'Mapa została dodana')
             # on success redirect to the detail page of newly created object
-            return redirect(reverse('map-detail', kwargs={'pk': obj.pk}))
+            return redirect(reverse('szczegoly-mapy', kwargs={'pk': obj.pk}))
 
         messages.warning(request, 'Mapa nie została dodana')
 
@@ -220,7 +221,11 @@ class AddDocumentForm(LoginRequiredMixin, CreateView):
                 first_name=values['first_name'],
                 last_name=values['last_name']
             )
-            messages.success(request, f'Autor {obj.first_name} {obj.last_name} został dodany')
+
+            if created:
+                messages.success(request, f'Autor {obj.first_name} {obj.last_name} został dodany')
+            else:
+                messages.error(request, f'Autor {obj.first_name} {obj.last_name} już istnieje')
 
         if archive_form.is_bound and archive_form.is_valid():
             values = archive_form.cleaned_data
@@ -236,7 +241,7 @@ class AddDocumentForm(LoginRequiredMixin, CreateView):
             obj = doc_form.save()
             messages.success(request, 'Dokument został dodany')
             # on success redirect to the detail page of newly created object
-            return redirect(reverse('doc-detail', kwargs={'pk': obj.pk}))
+            return redirect(reverse('szczegoly-dokumenty', kwargs={'pk': obj.pk}))
 
         messages.warning(request, 'Dokument nie został dodany')
 
@@ -248,7 +253,7 @@ def map_csv_export(request):
     all_maps = Map.objects.all()
 
     response = HttpResponse('text/csv')
-    response['Content-Disposition'] = 'attachment; filename="mapy.csv"'
+    response['Content-Disposition'] = f'attachment; filename="Raport Map_{datetime.datetime.now()}.csv"'
 
     writer = csv.writer(response)
     writer.writerow(['Sygnatura Czasowa', 'Tytuł Pełny', 'Tytuł Krótki', 'Osoba Dodająca', 'Miejsce Wydania',
@@ -264,12 +269,24 @@ def map_csv_export(request):
     return response
 
 
+def doc_csv_export(request):
+    all_docs = Document.objects.all()
 
+    response = HttpResponse('text/csv')
+    response['Content-Disposition'] = f'attachment; filename="Raport Dokumentów_{datetime.datetime.now()}.csv"'
 
+    writer = csv.writer(response)
+    writer.writerow(['Sygnatura Czasowa', 'Tytuł', 'Osoba Dodająca',
+                     'Link do dokumentu', 'Link do tłumacznenia', 'Autorzy'])
 
+    for single_doc in all_docs:
+        print(single_doc.added_at, single_doc.title, single_doc.creator, single_doc.doc_file.url, single_doc.translation_file)
+        writer.writerow([
+            single_doc.added_at, single_doc.title, single_doc.creator, single_doc.doc_file.url,
+            single_doc.translation_file.url, [author if author is not None else " " for author in single_doc.authors.all()],
+        ])
 
-
-
+    return response
 
 
 # def navigate_through_detail(objects, current_id):
@@ -284,3 +301,4 @@ def map_csv_export(request):
 #         context['prev_map'] = prev_map
 #
 #     return context
+

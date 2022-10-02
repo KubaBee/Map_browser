@@ -18,7 +18,7 @@ class People(models.Model):
     def __str__(self):
         return f'{self.last_name} {self.first_name}'
 
-    unique_together = [['first_name', 'last_name']]
+    unique_together = [['last_name', 'first_name']]
 
 
 class Archive(models.Model):
@@ -142,7 +142,7 @@ class Document(models.Model):
     translation_file = models.FileField(verbose_name="Tłumaczenie", blank=True, upload_to='translations/',
                                         validators=[FileExtensionValidator(['pdf'], message="Podany format nie jest obsługiwany. Akceptowane są tylko pliki .pdf")],
                                         )
-    volume = models.IntegerField(verbose_name="Liczba/objętość", blank=True)
+    volume = models.IntegerField(verbose_name="Liczba/objętość", blank=True, null=True)
     doc_format = models.CharField(max_length=150, blank=True, verbose_name="Forma dokumentu")
     source_type = models.CharField(max_length=150, blank=True, verbose_name="Typ źródła")
 

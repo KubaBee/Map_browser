@@ -135,6 +135,7 @@
         let select = document.getElementById('id_map_form-authors')
         let first_name = document.getElementById("id_people_form-first_name").value
         let last_name = document.getElementById("id_people_form-last_name").value
+
         $.ajax({
             type:'POST',
             url:'{% url "dodaj_mape" %}',

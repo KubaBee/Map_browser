@@ -21,8 +21,8 @@ class PeopleForm(forms.ModelForm):
         fields = '__all__'
 
         labels = {
-            "first_name": "Imie",
             "last_name": "Nazwisko",
+            "first_name": "Imie",
         }
 
     def __init__(self, *args, **kwargs):

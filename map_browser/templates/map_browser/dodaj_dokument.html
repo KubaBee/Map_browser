@@ -146,14 +146,15 @@
 {#  2nd dynamic modal  #}
     <script type="text/javascript">
     $(document).on('submit','#people_form', function(e){
-        e.preventDefault();
 
+        e.preventDefault();
         let save_btn = document.getElementById('save_people_form');
         save_btn.innerHTML = '<div class="spinner-border" role="status"> <span class="visually-hidden">Loading...</span> </div>'
 
         let select = document.getElementById('id_doc_form-authors')
         let first_name = document.getElementById("id_people_form-first_name").value
         let last_name = document.getElementById("id_people_form-last_name").value
+
         $.ajax({
             type:'POST',
             url:'{% url "dodaj-dokument" %}',
@@ -168,14 +169,19 @@
             success:function() {
                 $('#authorModal').modal('hide');
                 save_btn.innerHTML = 'Save'
-                let opt = document.createElement('option');
-                opt.value = $('#id_doc_form-authors option:last').val();
-                opt.value = parseInt(opt.value) + 1
-                opt.innerHTML = first_name + " " +last_name;
-                select.appendChild(opt);
+                save_btn.removeAttribute('disabled')
+
+                console.log({{ created }})
+
+
+
             }
             })
-
+            let opt = document.createElement('option');
+            opt.value = $('#id_doc_form-authors option:last').val();
+            opt.value = parseInt(opt.value) + 1
+            opt.innerHTML = last_name + " " + first_name;
+            select.appendChild(opt);
 
     });
     </script>
@@ -221,6 +227,7 @@
         opt.innerHTML = archive_name + "/" + archive_team  + "/" + archive_unit + "/" + archive_number;
         select.appendChild(opt);
         console.log(opt.value, opt.innerHTML)
+
     });
     </script>
 {% endblock content %}

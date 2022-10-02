@@ -7,7 +7,7 @@
 {% block content %}
     <div class="row justify-content-between mb-3">
         <div class="col">
-            <a href="{% url 'map-export' %}" class="btn btn-outline-secondary" type="submit">Pobierz raport map</a>
+            <a href="{% url 'eksport-map' %}" class="btn btn-outline-secondary" type="submit">Pobierz raport map</a>
         </div>
         {#    search    #}
         <div class="col-md-3 col-6">
@@ -27,7 +27,7 @@
         {% if map_list %}
             <div id="box" class="row row-cols-sm-1 row-cols-md-3 g-4">
             {% for map in map_list %}
-                <a class="card-as-link" href="{% url 'map-detail' map.pk %}">
+                <a class="card-as-link" href="{% url 'szczegoly-mapy' map.pk %}">
                 <div class="card map-card md-m-4 sm-m-1">
                     <img src="{{ map.thumbnail.url }}" class="mapa card-img-top" alt="map_image">
                     <div class="card-body">
