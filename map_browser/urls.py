@@ -4,8 +4,8 @@ from .models import Map
 
 urlpatterns = [
     path('', views.default_redirect, name='pusty'),
-    path('wyszykaj-mape/', views.FilterMapView.as_view(), name='wyszukaj'),
-    # path('kontakt/', views.contact, name='kontakt'),
+    path('wyszykaj-mape/', views.FilterMapView.as_view(), name='wyszukaj-mape'),
+    path('wyszykaj-dokument/', views.FilterDocumentView.as_view(), name='wyszukaj-dokument'),
     path('map/<int:pk>/', views.MapDetailView.as_view(), name='szczegoly-mapy'),
     path('dodaj-mape/', views.AddMapForm.as_view(), name='dodaj_mape'),
     path('edytuj-mape/<int:pk>', views.EditMapForm.as_view(), name='edytuj-mape'),

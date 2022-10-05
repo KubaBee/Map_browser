@@ -11,7 +11,7 @@ from django.contrib import messages
 from django.forms.models import modelformset_factory
 from django.urls import reverse_lazy
 from django.db.models import Q
-from .filters import MapFilter
+from .filters import MapFilter, DocumentFilter
 from django.http import HttpResponseRedirect, HttpResponse
 from itertools import chain
 from django.core.paginator import Paginator
@@ -100,12 +100,25 @@ class DocumentDetailView(LoginRequiredMixin, DetailView, MultipleObjectMixin):
 
 class FilterMapView(ListView):
     model = Map
-    template_name = 'map_browser/wyszukaj.html'
+    template_name = 'map_browser/map-search.html'
     paginate_by = 6
 
     def get_context_data(self, **kwargs):
         obj_list = MapFilter(self.request.GET, queryset=self.get_queryset())
         context = super(FilterMapView, self).get_context_data(object_list=obj_list.qs.order_by('added_at'))
+        context['filter'] = obj_list
+
+        return context
+
+
+class FilterDocumentView(ListView):
+    model = Document
+    template_name = 'map_browser/document-search.html'
+    paginate_by = 6
+
+    def get_context_data(self, **kwargs):
+        obj_list = DocumentFilter(self.request.GET, queryset=self.get_queryset())
+        context = super(FilterDocumentView, self).get_context_data(object_list=obj_list.qs.order_by('added_at'))
         context['filter'] = obj_list
 
         return context

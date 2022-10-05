@@ -59,7 +59,8 @@ def send_activate_account_email(request, user, email):
     })
     email = EmailMessage(mail_title, mail_body, to=[email])
     if email.send():
-        messages.success(request, f"Utworzono konto dla {user.username} oraz wysłano email weryfikacyjny na podany adres!")
+        messages.success(request,
+                         f"Utworzono konto dla {user.username} oraz wysłano email weryfikacyjny na podany adres!")
     else:
         messages.error(request, f'Wystąpił błąd podczas wysyłania wiadomości email')
 
@@ -101,7 +102,3 @@ def send_activate_account_email(request, user, email):
 
 class LogoutViewMy(LoginRequiredMixin, auth_views.LogoutView):
     login_url = 'login'
-
-
-
-

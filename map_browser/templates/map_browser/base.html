@@ -31,17 +31,22 @@
                           <li class="nav-item">
                               <a class="nav-link active" aria-current="page" href="{% url 'przegladaj-dokumenty' %}">Dokumenty</a>
                           </li>
-                          <li class="nav-item">
-                              <a class="nav-link active" href="{% url 'wyszukaj' %}">Wyszukaj</a>
+                          {% if user.is_superuser %}
+                              <li class="nav-item">
+                                  <a class="nav-link active" href="{% url 'admin:index' %}">Admin Panel</a>
+                              </li>
+                          {% endif %}
+                          <li class="nav-item dropdown">
+                              <a class="nav-link dropdown-toggle active" href="{% url 'wyszukaj-mape' %}" id="wyszukaj" role="button" data-bs-toggle="dropdown" aria-expanded="false">Wyszukaj </a>
+                              <ul class="dropdown-menu" aria-labelledby="wyszukaj">
+                                  <li><a class="dropdown-item" href="{% url 'wyszukaj-mape' %}">Mapę</a></li>
+                                  <li><a class="dropdown-item" href="{% url 'wyszukaj-dokument' %}">Dokument</a></li>
+                              </ul>
                           </li>
 {#                          <li class="nav-item">#}
 {#                              <a class="nav-link active" href="{% url 'kontakt' %}">Kontakt</a>#}
 {#                          </li>#}
-                        {% if user.is_superuser %}
-                            <li class="nav-item">
-                                <a class="nav-link active" href="{% url 'admin:index' %}">Admin Panel</a>
-                            </li>
-                        {% endif %}
+
                               {% if user.is_authenticated %}
                                   <li class="nav-item dropdown">
                                       <a class="nav-link dropdown-toggle active" href="{% url 'dodaj_mape' %}" id="dodaj" role="button" data-bs-toggle="dropdown" aria-expanded="false">Dodaj </a>
