@@ -169,18 +169,28 @@ main{
     border-bottom: 2px solid #000;
 }
 
-.card-as-link{
+#placeholder_no_file{
+    max-width: 100%;
+}
+
+.card{
     transition: ease-in-out 0.3s;
     color: #5a5a5a;
     background-color: var(--main-color-bg);
-    text-decoration: none;
     z-index: 1;
 }
 
+.card-as-link{
+    text-decoration: none;
+}
+
 .card-as-link:hover{
+    text-decoration-style: solid;
+}
+
+.card:hover{
     color: #5A4181;
     transform: scale(1.02);
-    text-decoration-style: solid;
     transition: ease-in-out 0.3s;
     z-index: 20;
     text-decoration: none;
