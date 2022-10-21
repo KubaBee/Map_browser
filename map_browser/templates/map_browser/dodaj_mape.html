@@ -35,9 +35,14 @@
                         {{ map_form.subject_type|as_crispy_field }}
                     </div>
 
-                    <div class="col-12 col-md-4">
+                    <div class="col-12 col-md-5">
                         {{ map_form.filename|as_crispy_field }}
                     </div>
+
+                    <div class="col-12 col-md-5">
+                        {{ map_form.link|as_crispy_field }}
+                    </div>
+
                     {{ map_form.publishing_address|as_crispy_field }}
                     {{ map_form.scale|as_crispy_field }}
                     {{ map_form.subject|as_crispy_field }}
@@ -133,8 +138,8 @@
         save_btn.innerHTML = '<div class="spinner-border" role="status"> <span class="visually-hidden">Loading...</span> </div>'
 
         let select = document.getElementById('id_map_form-authors')
-        let first_name = document.getElementById("id_people_form-first_name").value
-        let last_name = document.getElementById("id_people_form-last_name").value
+        let first_name = document.getElementById("id_people_form-first_name")
+        let last_name = document.getElementById("id_people_form-last_name")
 
         $.ajax({
             type:'POST',
@@ -152,8 +157,16 @@
                 let opt = document.createElement('option');
                 opt.value = $('#id_map_form-authors option:last').val();
                 opt.value = parseInt(opt.value) + 1
-                opt.innerHTML = first_name + " " +last_name;
+                opt.innerHTML = first_name.value + " " +last_name.value;
                 select.appendChild(opt);
+                first_name.value = null
+                last_name.value = null
+            },
+
+            error:function (){
+                $('#authorModal').modal('hide');
+                save_btn.innerHTML = 'Save'
+                save_btn.removeAttribute('disabled')
             }
             })
 
@@ -172,10 +185,10 @@
         save_btn.setAttribute('disabled', true)
 
         let select = document.getElementById('id_map_form-archive_id')
-        let archive_name = document.getElementById("id_archive_form-archive_name").value
-        let archive_team = document.getElementById("id_archive_form-archive_team").value
-        let archive_unit = document.getElementById("id_archive_form-archive_unit").value
-        let archive_number = document.getElementById("id_archive_form-archive_number").value
+        let archive_name = document.getElementById("id_archive_form-archive_name")
+        let archive_team = document.getElementById("id_archive_form-archive_team")
+        let archive_unit = document.getElementById("id_archive_form-archive_unit")
+        let archive_number = document.getElementById("id_archive_form-archive_number")
         $.ajax({
             type:'POST',
             url:'{% url "dodaj_mape" %}',
@@ -190,18 +203,28 @@
 
             },
             success:function(){
-                  $('#archiveModal').modal('hide');
-                  save_btn.innerHTML = "Save"
-                  save_btn.removeAttribute('disabled')
-                    }
+                $('#archiveModal').modal('hide');
+                save_btn.innerHTML = "Save"
+                save_btn.removeAttribute('disabled')
+                let opt = document.createElement('option');
+                opt.value = $('#id_map_form-archive_id option:last').val();
+                opt.value = parseInt(opt.value) + 1
+                opt.innerHTML = archive_name.value + "/" + archive_team.value  + "/" + archive_unit.value + "/" + archive_number.value;
+                select.appendChild(opt);
+                archive_name.value = null
+                archive_team.value = null
+                archive_unit.value = null
+                archive_number.value = null
+            },
+
+            error:function () {
+                $('#authorModal').modal('hide');
+                save_btn.innerHTML = 'Save'
+                save_btn.removeAttribute('disabled')
+            }
             })
 
-        let opt = document.createElement('option');
-        opt.value = $('#id_map_form-archive_id option:last').val();
-        opt.value = parseInt(opt.value) + 1
-        opt.innerHTML = archive_name + "/" + archive_team  + "/" + archive_unit + "/" + archive_number;
-        select.appendChild(opt);
-        console.log(opt.value, opt.innerHTML)
+
     });
     </script>
 {% endblock content %}

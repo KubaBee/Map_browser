@@ -65,6 +65,11 @@ def send_activate_account_email(request, user, email):
         messages.error(request, f'Wystąpił błąd podczas wysyłania wiadomości email')
 
 
+class LogoutViewMy(LoginRequiredMixin, auth_views.LogoutView):
+    login_url = 'login'
+
+
+
 # dodaj wysyłąnie emaila po naciśnięciu przycisku -> przekieruj do strony i zmień hasło
 # def reset_pwd(request):
 #     User = get_user_model()
@@ -100,5 +105,3 @@ def send_activate_account_email(request, user, email):
 #         messages.error(request, f'Wystąpił błąd podczas wysyłania wiadomości email')
 
 
-class LogoutViewMy(LoginRequiredMixin, auth_views.LogoutView):
-    login_url = 'login'

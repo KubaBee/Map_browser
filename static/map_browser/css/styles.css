@@ -130,7 +130,13 @@ main{
     min-height: 100px;
 }
 
+.placeholder_doc{
+    text-align: center;
+}
 
+.placeholder_doc > img{
+    max-width: 50%;
+}
 /*PAGINATOR*/
 .pagination > li > a
 {
@@ -186,6 +192,10 @@ main{
 
 .card-as-link:hover{
     text-decoration-style: solid;
+}
+
+.selectmultiple {
+    height: 200px;
 }
 
 .card:hover{

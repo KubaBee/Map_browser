@@ -6,7 +6,7 @@ from django.core.files.storage import default_storage as storage
 from io import BytesIO
 from django.core.validators import FileExtensionValidator
 from django.core.files.base import ContentFile
-
+from django.http import HttpResponse
 
 # Create your models here.
 
@@ -59,6 +59,7 @@ class SubjectTypes(models.Model):
 class Map(models.Model):
     filename = models.ImageField(upload_to='maps/')
     thumbnail = models.ImageField(upload_to='thumbnails/')
+    link = models.URLField(verbose_name="Link do Mapy", null=True, blank=True)
     authors = models.ManyToManyField(People, null=True)
     corrector_id = models.ForeignKey(People, blank=True, null=True,
                                      on_delete=models.SET("N/A"), related_name="%(class)s_corrector")
@@ -94,19 +95,20 @@ class Map(models.Model):
 
         if not self.make_thumbnail():
             raise Exception("Error when creating a thumbnail")
-
         super(Map, self).save(*args, **kwargs)
 
     def make_thumbnail(self):
 
         img = Image.open(self.filename)
-        img.thumbnail((916, 624), Image.ANTIALIAS)
+        img.thumbnail((916, 624))
         thumb_name, thumb_extension = os.path.splitext(self.filename.name)
         thumb_extension = thumb_extension.lower()
         thumb_filename = thumb_name + '_copy' + thumb_extension
 
-        if thumb_extension == '.jpg':  # add PNG option
+        if thumb_extension == '.jpg':
             FTYPE = 'JPEG'
+        elif thumb_extension == '.png':
+            FTYPE = "PNG"
         else:
             return False
 
@@ -136,7 +138,7 @@ class Document(models.Model):
     source_reference = models.ManyToManyField(Map, blank=True, verbose_name="Odwołanie do mapy źródłowej")
     is_statistic_data = models.BooleanField(blank=True, verbose_name="Czy znajdują się dane statystyczne?")
     is_map = models.BooleanField(blank=True, verbose_name="Czy znajdują się mapy tekstowe?")
-    link = models.URLField(verbose_name="Link do dokumentu")
+    link = models.URLField(verbose_name="Link do dokumentu", null=True, blank=True)
     doc_file = models.FileField(verbose_name="Dokument", blank=True, upload_to='documents/',
                                 validators=[FileExtensionValidator(['pdf'], message="Podany format nie jest obsługiwany. Akceptowane są tylko pliki .pdf")])
     translation_file = models.FileField(verbose_name="Tłumaczenie", blank=True, upload_to='translations/',

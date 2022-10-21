@@ -55,12 +55,14 @@ class MapForm(forms.ModelForm):
         model = models.Map
         fields = ['filename', 'creator', 'archive_id', 'full_title', 'short_title', 'publishing_address',
                   'scale', 'subject', 'subject_type', 'authors', 'creation_type',
-                  'description', 'keyword_name', 'keyword_subject', 'keyword_geo', 'additional_notes', 'language_id']
+                  'description', 'keyword_name', 'keyword_subject', 'keyword_geo', 'additional_notes', 'language_id',
+                  'link']
 
         labels = {
             "full_title": "Tytuł Pełny",
             "short_title": "Tytuł Skrócony",
             "filename": "Plik Mapy",
+            "link": "Link do Mapy",
             "creator": "Osoba Dodająca",
             "publishing_address": "Miejsce Wydania",
             "scale": "Skala (mianownik)",
@@ -75,6 +77,10 @@ class MapForm(forms.ModelForm):
             "archive_id": "Archiwum",
             "authors": "Autorzy",
             "language_id": "Język Mapy"
+        }
+
+        help_texts = {
+            "link": "Wypełnij to pole TYLKO jeśli mapa jest przechowywana w zewnętrzynym zasobie"
         }
 
 
@@ -107,6 +113,10 @@ class DocumentForm(forms.ModelForm):
             "volume": "Objętość (liczba stron)",
             "doc_format": "Format dokumentu",
             "source_type": "Typ Źródła",
+        }
+
+        help_texts = {
+            "link": "Wypełnij to pole TYLKO jeśli dokument jest przechowywany w zewnętrzynym zasobie"
         }
 
 

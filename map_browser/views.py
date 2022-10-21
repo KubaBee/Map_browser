@@ -12,7 +12,7 @@ from django.forms.models import modelformset_factory
 from django.urls import reverse_lazy
 from django.db.models import Q
 from .filters import MapFilter, DocumentFilter
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponseServerError
 from itertools import chain
 from django.core.paginator import Paginator
 import csv
@@ -191,7 +191,8 @@ class AddMapForm(LoginRequiredMixin, CreateView):
                 first_name=values['first_name'],
                 last_name=values['last_name']
             )
-            messages.success(request, f'Autor {obj.first_name} {obj.last_name} został dodany')
+            if not created:
+                return HttpResponseServerError()
 
         if archive_form.is_bound and archive_form.is_valid():
             values = archive_form.cleaned_data
@@ -201,7 +202,8 @@ class AddMapForm(LoginRequiredMixin, CreateView):
                 archive_unit=values['archive_unit'],
                 archive_number=values['archive_number']
             )
-            messages.success(request, 'Archiwum zostało dodane')
+            if not created:
+                return HttpResponseServerError()
 
         if map_form.is_bound and map_form.is_valid():
             obj = map_form.save()
@@ -235,20 +237,19 @@ class AddDocumentForm(LoginRequiredMixin, CreateView):
                 last_name=values['last_name']
             )
 
-            if created:
-                messages.success(request, f'Autor {obj.first_name} {obj.last_name} został dodany')
-            else:
-                messages.error(request, f'Autor {obj.first_name} {obj.last_name} już istnieje')
+            if not created:
+                return HttpResponseServerError()
 
         if archive_form.is_bound and archive_form.is_valid():
             values = archive_form.cleaned_data
-            Archive.objects.get_or_create(
+            obj, created = Archive.objects.get_or_create(
                 archive_name=values['archive_name'],
                 archive_team=values['archive_team'],
                 archive_unit=values['archive_unit'],
                 archive_number=values['archive_number']
             )
-            messages.success(request, 'Archiwum zostało dodane')
+            if not created:
+                return HttpResponseServerError()
 
         if doc_form.is_bound and doc_form.is_valid():
             obj = doc_form.save()
@@ -300,6 +301,14 @@ def doc_csv_export(request):
         ])
 
     return response
+
+
+# def custom_page_not_found_view(request, exception):
+#     return render(request, "errors/404.html")
+#
+#
+# def custom_error_view(request, exception=None):
+#     return render(request, "errors/500.html")
 
 
 # def navigate_through_detail(objects, current_id):

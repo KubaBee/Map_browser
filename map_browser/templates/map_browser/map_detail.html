@@ -12,15 +12,16 @@
     <div class="row justify-content-between pb-3 pe-0">
         <div class="col-4">
         {% if prev_map %}
-            <a href="{% url 'szczegoly-mapy' prev_map.id %}">&laquo; Poprzednia</a>
+{#            <a href="{% url 'szczegoly-mapy' prev_map.id %}">&laquo; Poprzednia</a>#}
+            <button onclick="location.href='{% url 'szczegoly-mapy' prev_map.id %}'" type="button" class="btn btn-outline-dark btn-sm">
+         &laquo; Poprzedni</button>
         {% endif %}
         </div>
-{#        {% if prev_map and next_map %}#}
-{#            |#}
-{#        {% endif %}#}
         <div class="col-4 text-end">
             {% if next_map is not None %}
-                <a href="{% url 'szczegoly-mapy' next_map.id %}">Następna &raquo;</a>
+{#                <a href="{% url 'szczegoly-mapy' next_map.id %}">Następna &raquo;</a>#}
+                <button onclick="location.href='{% url 'szczegoly-mapy' next_map.id %}'" type="button" class="btn btn-outline-dark btn-sm">
+         Następna &raquo;</button>
             {% endif %}
         </div>
     </div>
@@ -47,7 +48,15 @@
     <div class="row row-cols-md-2 row-cols-1 pe-md-0 ps-md-0 pe-3 ps-3">
         <div class="col">
            <img src="{{ object.thumbnail.url }}" class="img-fluid" alt="detail_image">
-            <p>Zdjęcie wyświelone powyżej jest tylko miniaturką, <a target="_blank" href="{{ object.filename.url }}" download="" >kliknij tutaj aby zobaczyć mapę w pełnej rozdzielczości</a></p>
+            {% if not object.link %}
+                <div class="alert alert-warning" role="alert">
+                    <strong>Miniaturka!</strong> Zdjęcie wyświelone powyżej jest tylko miniaturką, <a target="_blank" href="{{ object.filename.url }}" download="" >kliknij tutaj aby zobaczyć mapę w pełnej rozdzielczości</a>
+                </div>
+            {% else %}
+                <div class="alert alert-secondary" role="alert">
+                    <strong>Zewnętrzny serwis!</strong> Mapa wyświelona powyżej jest przechowywana w zewnętrznym serwisie, <a target="_blank" href="{{ object.filename.url }}" download="" >kliknij tutaj aby do niej przejść</a>
+                </div>
+            {% endif %}
         </div>
         <div class="col">
             {% if object.description %}
@@ -56,7 +65,6 @@
                     {{ object.description|linebreaksbr }}
                 </p>
             {% endif %}
-
             <div class="accordion" id="accordionPanelsStayOpenExample">
                 {% if object.language_id or object.authors or object.publication_place or object.created_at %}
                 <div class="accordion-item">

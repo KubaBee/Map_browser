@@ -26,6 +26,9 @@ urlpatterns = [
     path('user/', include('users.urls')),
 ]
 
+# handler404 = 'map_browser.views.custom_page_not_found_view'
+# handler500 = 'map_browser.views.custom_error_view'
+
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
