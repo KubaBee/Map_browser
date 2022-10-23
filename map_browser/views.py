@@ -149,7 +149,7 @@ class EditMapForm(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     template_name_suffix = '_edit'
 
     def test_func(self):
-        return self.get_object().creator == self.request.user
+        return self.get_object().creator == self.request.user or self.request.user.is_superuser
 
     def get_success_url(self):
         return reverse('szczegoly-mapy', kwargs={'pk': self.object.pk})
@@ -160,7 +160,7 @@ class DeleteMapView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     success_url = reverse_lazy('przegladaj-mapy')
 
     def test_func(self):
-        return self.get_object().creator == self.request.user
+        return self.get_object().creator == self.request.user or self.request.user.is_superuser
 
 
 class EditDocumentForm(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
@@ -169,7 +169,7 @@ class EditDocumentForm(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     template_name_suffix = '_edit'
 
     def test_func(self):
-        return self.get_object().creator == self.request.user
+        return self.get_object().creator == self.request.user or self.request.user.is_superuser
 
     def get_success_url(self):
         return reverse('szczegoly-dokumenty', kwargs={'pk': self.object.pk})
@@ -180,7 +180,7 @@ class DeleteDocumentView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     success_url = reverse_lazy('przegladaj-dokumenty')
 
     def test_func(self):
-        return self.get_object().creator == self.request.user
+        return self.get_object().creator == self.request.user or self.request.user.is_superuser
 
 
 class AddMapForm(LoginRequiredMixin, CreateView):
