@@ -31,7 +31,7 @@ class RegisterUserFrom(UserCreationForm):
                 Div(FloatingField('first_name', 'last_name'), css_class='col-md-6'),
                 css_class='row',
             ),
-            Submit('submit', 'Submit'),
+            Submit('submit', 'Zarejestruj się'),
         )
 
 
