@@ -314,13 +314,16 @@ def doc_csv_export(request):
     return response
 
 
-# def custom_page_not_found_view(request, exception):
-#     return render(request, "errors/404.html")
-#
-#
-# def custom_error_view(request, exception=None):
-#     return render(request, "errors/500.html")
+def custom_page_not_found_view(request, exception=None):
+    return render(request, "map_browser/404.html")
 
+
+def custom_error_view(request, exception=None):
+    return render(request, "map_browser/500.html")
+
+
+def custom_forbidden_view(request, exception=None):
+    return render(request, "map_browser/403.html")
 
 # def navigate_through_detail(objects, current_id):
 #
