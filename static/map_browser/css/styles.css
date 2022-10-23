@@ -2,7 +2,7 @@
     --main-color-bg: #fefefe;
     --main-color-footer: #B49E7F;
     --main-color-buttons: #B49E7F;
-    --sec-color-buttons: #5c636a;
+    --sec-color-buttons: #6c757d;
 }
 
 
@@ -16,34 +16,54 @@ html, body{
     background-color: var(--main-color-bg);
 }
 
-.btn-secondary{
+.btn-primary{
     background-color: var(--main-color-buttons);
     border-color: var(--main-color-buttons);
 }
 
-.btn-secondary:hover{
+.btn-outline-primary{
+    color: #927d5d;
+    border-color: var(--main-color-buttons);
+}
+
+.btn-outline-primary:hover{
+    color: white;
+    background-color: var(--main-color-buttons);
+    border-color: var(--main-color-buttons);
+}
+
+.btn-outline-primary:focus, .btn-primary:focus{
+    box-shadow: 0 0 0 0.25rem rgb(180 158 127 / 50%) !important;
+}
+
+.btn-outline-primary:focus, .btn-primary:focus{
     background-color: #8E806A;
     border-color: #8E806A;
 }
 
-.btn-secondary:focus+.btn-secondary, .btn-secondary:focus {
+.btn-primary:hover{
+    background-color: #8E806A;
+    border-color: #8E806A;
+}
+
+.btn-check:focus+.btn-primary, .btn-primary:focus {
     color: #fff;
     background-color: #8E806A;
     border-color: #8E806A;
     box-shadow: 0 0 0 0.25rem rgb(0 0 0 / 50%);
 }
 
-.btn-primary{
+.btn-secondary{
     background-color: var(--sec-color-buttons);
     border: none;
 }
 
-.btn-primary:hover{
-    background-color: #222;
+.btn-secondary:hover{
+    background-color: #6c757d;
     border-color: var(--sec-color-buttons);
 }
 
-.btn-check:focus+.btn-primary, .btn-primary:focus {
+.btn-check:focus+.btn-secondary, .btn-secondary:focus {
     color: #fff;
     background-color: #222;
     border-color: #222;

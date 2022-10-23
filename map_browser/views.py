@@ -145,8 +145,7 @@ def _get_form_with_file(request, form_class, prefix):
 
 class EditMapForm(LoginRequiredMixin, UpdateView):
     model = Map
-    fields = ('full_title', 'description', 'filename', 'keyword_geo', 'keyword_name', 'keyword_subject', 'scale',
-              'subject', 'source_text', 'creation_type',)
+    form_class = MapForm
     template_name_suffix = '_edit'
 
     def get_success_url(self):
@@ -160,8 +159,9 @@ class DeleteMapView(LoginRequiredMixin, DeleteView):
 
 class EditDocumentForm(LoginRequiredMixin, UpdateView):
     model = Document
-    fields = ('title', 'description', 'keyword_geo', 'keyword_name', 'keyword_subject')
+    form_class = DocumentForm
     template_name_suffix = '_edit'
+
 
     def get_success_url(self):
         return reverse('szczegoly-dokumenty', kwargs={'pk': self.object.pk})

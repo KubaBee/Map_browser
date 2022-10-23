@@ -43,6 +43,10 @@
                         {{ map_form.link|as_crispy_field }}
                     </div>
 
+                    <div class="col-12 col-md-5">
+                        {{ map_form.language_id|as_crispy_field }}
+                    </div>
+
                     {{ map_form.publishing_address|as_crispy_field }}
                     {{ map_form.scale|as_crispy_field }}
                     {{ map_form.subject|as_crispy_field }}
@@ -75,7 +79,7 @@
                     <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#archiveModal">Dodaj nowe archiwum</button>
                 </div>
                 <div class="d-flex flex-row-reverse">
-                    <button type="submit" name="map_form" class="btn btn-secondary">Zapisz</button>
+                    <button type="submit" name="map_form" class="btn btn-primary">Zapisz</button>
                 </div>
             </div>
         </div>
@@ -93,7 +97,7 @@
                             {{ people_form.first_name|as_crispy_field }}
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zamknij</button>
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Zamknij</button>
                             <button type="submit" name="{{ people_form.prefix }}" id="save_people_form" class="btn btn-primary">Zapisz</button>
                         </div>
                     </form>
@@ -116,7 +120,7 @@
                                 {{ archive_form.archive_number|as_crispy_field }}
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zamknij</button>
+                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Zamknij</button>
                                 <button type="submit" name="{{ archive_form.prefix }}" id="save_archive_form" class="btn btn-primary">Zapisz</button>
                             </div>
                         </form>

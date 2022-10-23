@@ -53,10 +53,9 @@ class ArchiveForm(forms.ModelForm):
 class MapForm(forms.ModelForm):
     class Meta:
         model = models.Map
-        fields = ['filename', 'creator', 'archive_id', 'full_title', 'short_title', 'publishing_address',
-                  'scale', 'subject', 'subject_type', 'authors', 'creation_type',
-                  'description', 'keyword_name', 'keyword_subject', 'keyword_geo', 'additional_notes', 'language_id',
-                  'link']
+        fields = ['full_title', 'short_title', 'creator', 'subject_type', 'filename', 'link', 'archive_id',
+                  'publishing_address', 'scale', 'subject', 'authors', 'creation_type',
+                  'description', 'keyword_name', 'keyword_subject', 'keyword_geo', 'additional_notes', 'language_id']
 
         labels = {
             "full_title": "Tytuł Pełny",

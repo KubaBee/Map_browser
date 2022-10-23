@@ -10,7 +10,9 @@
         {% endfor %}
     {% endfor %}
     <form method="post" enctype="multipart/form-data">{% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Update">
+        {{ form|crispy }}
+        <div class="d-flex flex-row-reverse">
+            <button type="submit" name="map_form" class="btn btn-primary">Zapisz</button>
+        </div>
     </form>
 {% endblock content %}
