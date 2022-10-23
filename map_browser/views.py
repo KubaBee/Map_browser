@@ -143,33 +143,44 @@ def _get_form_with_file(request, form_class, prefix):
     return form_class(data, file, prefix=prefix)
 
 
-class EditMapForm(LoginRequiredMixin, UpdateView):
+class EditMapForm(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Map
     form_class = MapForm
     template_name_suffix = '_edit'
+
+    def test_func(self):
+        return self.get_object().creator == self.request.user
 
     def get_success_url(self):
         return reverse('szczegoly-mapy', kwargs={'pk': self.object.pk})
 
 
-class DeleteMapView(LoginRequiredMixin, DeleteView):
+class DeleteMapView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Map
     success_url = reverse_lazy('przegladaj-mapy')
 
+    def test_func(self):
+        return self.get_object().creator == self.request.user
 
-class EditDocumentForm(LoginRequiredMixin, UpdateView):
+
+class EditDocumentForm(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Document
     form_class = DocumentForm
     template_name_suffix = '_edit'
 
+    def test_func(self):
+        return self.get_object().creator == self.request.user
 
     def get_success_url(self):
         return reverse('szczegoly-dokumenty', kwargs={'pk': self.object.pk})
 
 
-class DeleteDocumentView(LoginRequiredMixin, DeleteView):
+class DeleteDocumentView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Document
     success_url = reverse_lazy('przegladaj-dokumenty')
+
+    def test_func(self):
+        return self.get_object().creator == self.request.user
 
 
 class AddMapForm(LoginRequiredMixin, CreateView):
