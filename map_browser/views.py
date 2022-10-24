@@ -5,6 +5,7 @@ from django.views.generic import CreateView, UpdateView, DeleteView
 from .forms import MapForm, PeopleForm, ArchiveForm, DocumentForm
 from .models import Map, Archive, People, Document
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.decorators import login_required
 from django.views.generic.list import ListView, MultipleObjectMixin
 from django.views.generic.detail import DetailView
 from django.contrib import messages
@@ -29,7 +30,6 @@ class MapListView(ListView, MultipleObjectMixin):
         title = self.request.GET.get('title')
         if title:
             context.update({'title': title})
-        print(context)
         return context
 
     # dodaj szukanie po mapach
@@ -94,7 +94,6 @@ class DocumentDetailView(LoginRequiredMixin, DetailView, MultipleObjectMixin):
             context['next_doc'] = Document.objects.filter(id__gt=self.get_object().id).first()
         if Document.objects.filter(id__lt=self.get_object().id).first() is not None:
             context['prev_doc'] = Document.objects.filter(id__lt=self.get_object().id).last()
-        print(context)
         return context
 
 
@@ -274,6 +273,7 @@ class AddDocumentForm(LoginRequiredMixin, CreateView):
                       {'doc_form': doc_form, 'people_form': people_form, 'archive_form': archive_form})
 
 
+@login_required
 def map_csv_export(request):
     all_maps = Map.objects.all()
 
@@ -290,10 +290,10 @@ def map_csv_export(request):
             single_map.publication_place, single_map.filename.url, [author if author is not None else " " for author in
                                                                     single_map.authors.all()]
         ])
-
     return response
 
 
+@login_required
 def doc_csv_export(request):
     all_docs = Document.objects.all()
 
@@ -305,7 +305,6 @@ def doc_csv_export(request):
                      'Link do dokumentu', 'Link do tłumacznenia', 'Autorzy'])
 
     for single_doc in all_docs:
-        print(single_doc.added_at, single_doc.title, single_doc.creator, single_doc.doc_file.url, single_doc.translation_file)
         writer.writerow([
             single_doc.added_at, single_doc.title, single_doc.creator, single_doc.doc_file.url,
             single_doc.translation_file.url, [author if author is not None else " " for author in single_doc.authors.all()],
