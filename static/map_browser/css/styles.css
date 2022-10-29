@@ -112,7 +112,7 @@ nav{
 }
 
 main{
-    min-height: 90vh;
+    min-height: 69vh;
 }
 
 /*#container{*/
@@ -260,6 +260,10 @@ footer a{
 
 a{
     color: black;
+}
+
+a:hover{
+    color: #e5e5e5;
 }
 
 footer{

@@ -36,6 +36,4 @@ tqdm==4.63.1
 tzdata==2021.5
 urllib3==1.26.8
 whitenoise==6.0.0
-
-
 django-filter~=22.1

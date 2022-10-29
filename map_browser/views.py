@@ -1,5 +1,4 @@
 import datetime
-import requests
 from django.shortcuts import render, redirect, reverse
 from django.views.generic import CreateView, UpdateView, DeleteView
 from .forms import MapForm, PeopleForm, ArchiveForm, DocumentForm
@@ -9,13 +8,10 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic.list import ListView, MultipleObjectMixin
 from django.views.generic.detail import DetailView
 from django.contrib import messages
-from django.forms.models import modelformset_factory
 from django.urls import reverse_lazy
 from django.db.models import Q
 from .filters import MapFilter, DocumentFilter
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseServerError
-from itertools import chain
-from django.core.paginator import Paginator
 import csv
 
 
@@ -106,7 +102,6 @@ class FilterMapView(ListView):
         obj_list = MapFilter(self.request.GET, queryset=self.get_queryset())
         context = super(FilterMapView, self).get_context_data(object_list=obj_list.qs.order_by('added_at'))
         context['filter'] = obj_list
-
         return context
 
 
@@ -131,7 +126,7 @@ def default_redirect(request):
     return redirect('przegladaj-mapy')
 
 
-def _get_form(request, form_class, prefix):
+def _get_form(request, form_class, prefix: str):
     data = request.POST if prefix in request.POST else None
     return form_class(data, prefix=prefix)
 
@@ -309,7 +304,6 @@ def doc_csv_export(request):
             single_doc.added_at, single_doc.title, single_doc.creator, single_doc.doc_file.url,
             single_doc.translation_file.url, [author if author is not None else " " for author in single_doc.authors.all()],
         ])
-
     return response
 
 
