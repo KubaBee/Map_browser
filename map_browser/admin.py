@@ -1,5 +1,13 @@
 from django.contrib import admin
-from .models import Map, SubjectTypes, PublicationPlaces, Languages, Archive, People, Document
+from .models import (
+    Map,
+    SubjectTypes,
+    PublicationPlaces,
+    Languages,
+    Archive,
+    People,
+    Document,
+)
 
 # Register your models here.
 

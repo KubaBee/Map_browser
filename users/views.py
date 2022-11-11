@@ -1,8 +1,10 @@
-import requests
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from .forms import RegisterUserFrom
-from django.contrib.auth import views as auth_views, login, logout, get_user_model, authenticate
+from django.contrib.auth import (
+    views as auth_views,
+    get_user_model,
+)
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.template.loader import render_to_string
 from django.contrib.sites.shortcuts import get_current_site
@@ -22,7 +24,9 @@ def register(request):
                 user.save()
                 username = form.cleaned_data.get('username')
                 # messages.success(request, f"Utworzono konto dla {username}")
-                send_activate_account_email(request, user, form.cleaned_data.get('email'))
+                send_activate_account_email(
+                    request, user, form.cleaned_data.get('email')
+                )
                 return redirect('login')
         else:
             form = RegisterUserFrom()
@@ -50,24 +54,28 @@ def activate_account(request, uidb64, token):
 
 def send_activate_account_email(request, user, email):
     mail_title = "Potwierdź swój adres e-mail"
-    mail_body = render_to_string('users/activate_email_body.html', {
-        'user': user,
-        'domain': get_current_site(request).domain,
-        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-        'token': account_token.make_token(user=user),
-        'protocol': 'https' if request.is_secure() else 'http'
-    })
+    mail_body = render_to_string(
+        'users/activate_email_body.html',
+        {
+            'user': user,
+            'domain': get_current_site(request).domain,
+            'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+            'token': account_token.make_token(user=user),
+            'protocol': 'https' if request.is_secure() else 'http',
+        },
+    )
     email = EmailMessage(mail_title, mail_body, to=[email])
     if email.send():
-        messages.success(request,
-                         f"Utworzono konto dla {user.username} oraz wysłano email weryfikacyjny na podany adres!")
+        messages.success(
+            request,
+            f"Utworzono konto dla {user.username} oraz wysłano email weryfikacyjny na podany adres!",
+        )
     else:
         messages.error(request, f'Wystąpił błąd podczas wysyłania wiadomości email')
 
 
 class LogoutViewMy(LoginRequiredMixin, auth_views.LogoutView):
     login_url = 'login'
-
 
 
 # dodaj wysyłąnie emaila po naciśnięciu przycisku -> przekieruj do strony i zmień hasło
@@ -103,5 +111,3 @@ class LogoutViewMy(LoginRequiredMixin, auth_views.LogoutView):
 #         messages.success(request, "Wysłano email do zmiany hasła. Jeśli nie widzisz go w głównej skrzynce, sprawdź też spam")
 #     else:
 #         messages.error(request, f'Wystąpił błąd podczas wysyłania wiadomości email')
-
-

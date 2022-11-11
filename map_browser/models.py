@@ -2,13 +2,9 @@ import os.path
 from django.db import models
 from django.conf import settings
 from PIL import Image
-from django.core.files.storage import default_storage as storage
 from io import BytesIO
 from django.core.validators import FileExtensionValidator
 from django.core.files.base import ContentFile
-from django.http import HttpResponse
-
-# Create your models here.
 
 
 class People(models.Model):
@@ -30,7 +26,9 @@ class Archive(models.Model):
     def __str__(self):
         return f'{self.archive_name}/{self.archive_team}/{self.archive_unit}/{self.archive_number}'
 
-    unique_together = [['archive_name', 'archive_team', 'archive_unit', 'archive_number']]
+    unique_together = [
+        ['archive_name', 'archive_team', 'archive_unit', 'archive_number']
+    ]
 
 
 class Languages(models.Model):
@@ -61,17 +59,28 @@ class Map(models.Model):
     thumbnail = models.ImageField(upload_to='thumbnails/')
     link = models.URLField(verbose_name="Link do Mapy", null=True, blank=True)
     authors = models.ManyToManyField(People, null=True)
-    corrector_id = models.ForeignKey(People, blank=True, null=True,
-                                     on_delete=models.SET("N/A"), related_name="%(class)s_corrector")
+    corrector_id = models.ForeignKey(
+        People,
+        blank=True,
+        null=True,
+        on_delete=models.SET("N/A"),
+        related_name="%(class)s_corrector",
+    )
     language_id = models.ManyToManyField(Languages, blank=True, null=True)
-    archive_id = models.ForeignKey(Archive, blank=True, null=True, on_delete=models.SET("N/A"))
-    publication_place = models.ForeignKey(PublicationPlaces, blank=True, null=True, on_delete=models.SET("N/A"))
+    archive_id = models.ForeignKey(
+        Archive, blank=True, null=True, on_delete=models.SET("N/A")
+    )
+    publication_place = models.ForeignKey(
+        PublicationPlaces, blank=True, null=True, on_delete=models.SET("N/A")
+    )
     added_at = models.DateTimeField(auto_now_add=True)  # bez exportu
     creator = models.ManyToManyField(settings.AUTH_USER_MODEL)  # bez exportu
     full_title = models.CharField(max_length=500, blank=True)
     short_title = models.CharField(max_length=500, blank=True)
     publishing_address = models.CharField(max_length=300, blank=True)
-    scale = models.CharField(blank=True, default='1', max_length=500)  # add scale with ints
+    scale = models.CharField(
+        blank=True, default='1', max_length=500
+    )  # add scale with ints
     subject = models.CharField(max_length=500, blank=True)
     creation_type = models.CharField(max_length=500, blank=True)
     subject_type = models.ManyToManyField(SubjectTypes, blank=True, null=True)
@@ -127,26 +136,67 @@ class Document(models.Model):
     description = models.TextField(blank=True, verbose_name="Opis dokumentu")
     added_at = models.DateTimeField(auto_now_add=True)
     authors = models.ManyToManyField(People, null=True, verbose_name="Autorzy")
-    creator = models.ManyToManyField(settings.AUTH_USER_MODEL, verbose_name="Osoba wprowadzająca dane")
-    created_at = models.CharField(blank=True, max_length=150, verbose_name="Data powstania")
+    creator = models.ManyToManyField(
+        settings.AUTH_USER_MODEL, verbose_name="Osoba wprowadzająca dane"
+    )
+    created_at = models.CharField(
+        blank=True, max_length=150, verbose_name="Data powstania"
+    )
     language_id = models.ManyToManyField(Languages, blank=True, verbose_name="Język/i")
-    receiver = models.ManyToManyField(People, blank=True, verbose_name="Adresat", related_name="receiver_id")
-    archive_id = models.ForeignKey(Archive, blank=True, on_delete=models.SET("N/A"), verbose_name="Archiwum")
-    keyword_name = models.CharField(max_length=500, blank=True, verbose_name="Słowa kluczowe imienne")
-    keyword_subject = models.CharField(max_length=500, blank=True, verbose_name="Słowa kluczowe rzeczowe")
-    keyword_geo = models.CharField(max_length=500, blank=True, verbose_name="Słowa kluczowe geograficzne")
-    source_reference = models.ManyToManyField(Map, blank=True, verbose_name="Odwołanie do mapy źródłowej")
-    is_statistic_data = models.BooleanField(blank=True, verbose_name="Czy znajdują się dane statystyczne?")
-    is_map = models.BooleanField(blank=True, verbose_name="Czy znajdują się mapy tekstowe?")
+    receiver = models.ManyToManyField(
+        People, blank=True, verbose_name="Adresat", related_name="receiver_id"
+    )
+    archive_id = models.ForeignKey(
+        Archive, blank=True, on_delete=models.SET("N/A"), verbose_name="Archiwum"
+    )
+    keyword_name = models.CharField(
+        max_length=500, blank=True, verbose_name="Słowa kluczowe imienne"
+    )
+    keyword_subject = models.CharField(
+        max_length=500, blank=True, verbose_name="Słowa kluczowe rzeczowe"
+    )
+    keyword_geo = models.CharField(
+        max_length=500, blank=True, verbose_name="Słowa kluczowe geograficzne"
+    )
+    source_reference = models.ManyToManyField(
+        Map, blank=True, verbose_name="Odwołanie do mapy źródłowej"
+    )
+    is_statistic_data = models.BooleanField(
+        blank=True, verbose_name="Czy znajdują się dane statystyczne?"
+    )
+    is_map = models.BooleanField(
+        blank=True, verbose_name="Czy znajdują się mapy tekstowe?"
+    )
     link = models.URLField(verbose_name="Link do dokumentu", null=True, blank=True)
-    doc_file = models.FileField(verbose_name="Dokument", blank=True, upload_to='documents/',
-                                validators=[FileExtensionValidator(['pdf'], message="Podany format nie jest obsługiwany. Akceptowane są tylko pliki .pdf")])
-    translation_file = models.FileField(verbose_name="Tłumaczenie", blank=True, upload_to='translations/',
-                                        validators=[FileExtensionValidator(['pdf'], message="Podany format nie jest obsługiwany. Akceptowane są tylko pliki .pdf")],
-                                        )
+    doc_file = models.FileField(
+        verbose_name="Dokument",
+        blank=True,
+        upload_to='documents/',
+        validators=[
+            FileExtensionValidator(
+                ['pdf'],
+                message="Podany format nie jest obsługiwany. Akceptowane są tylko pliki .pdf",
+            )
+        ],
+    )
+    translation_file = models.FileField(
+        verbose_name="Tłumaczenie",
+        blank=True,
+        upload_to='translations/',
+        validators=[
+            FileExtensionValidator(
+                ['pdf'],
+                message="Podany format nie jest obsługiwany. Akceptowane są tylko pliki .pdf",
+            )
+        ],
+    )
     volume = models.IntegerField(verbose_name="Liczba/objętość", blank=True, null=True)
-    doc_format = models.CharField(max_length=150, blank=True, verbose_name="Forma dokumentu")
-    source_type = models.CharField(max_length=150, blank=True, verbose_name="Typ źródła")
+    doc_format = models.CharField(
+        max_length=150, blank=True, verbose_name="Forma dokumentu"
+    )
+    source_type = models.CharField(
+        max_length=150, blank=True, verbose_name="Typ źródła"
+    )
 
     def __str__(self):
         return self.title

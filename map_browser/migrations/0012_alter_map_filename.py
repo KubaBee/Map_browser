@@ -6,7 +6,10 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('map_browser', '0011_map_added_at_map_source_text_alter_map_created_at_and_more'),
+        (
+            'map_browser',
+            '0011_map_added_at_map_source_text_alter_map_created_at_and_more',
+        ),
     ]
 
     operations = [

@@ -52,32 +52,63 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='map',
             name='archive_id',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='map_browser.archive'),
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to='map_browser.archive',
+            ),
         ),
         migrations.AddField(
             model_name='map',
             name='author1_id',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='%(class)s_first', to='map_browser.people'),
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name='%(class)s_first',
+                to='map_browser.people',
+            ),
         ),
         migrations.AddField(
             model_name='map',
             name='author2_id',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='%(class)s_second', to='map_browser.people'),
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name='%(class)s_second',
+                to='map_browser.people',
+            ),
         ),
         migrations.AddField(
             model_name='map',
             name='author3_id',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='%(class)s_third', to='map_browser.people'),
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name='%(class)s_third',
+                to='map_browser.people',
+            ),
         ),
         migrations.AddField(
             model_name='map',
             name='corrector_id',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='%(class)s_corrector', to='map_browser.people'),
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name='%(class)s_corrector',
+                to='map_browser.people',
+            ),
         ),
         migrations.AddField(
             model_name='map',
             name='created_at',
-            field=models.DateTimeField(auto_now_add=True, default=django.utils.timezone.now),
+            field=models.DateTimeField(
+                auto_now_add=True, default=django.utils.timezone.now
+            ),
             preserve_default=False,
         ),
         migrations.AddField(
@@ -88,7 +119,11 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='map',
             name='creator',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AddField(
             model_name='map',
@@ -124,12 +159,22 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='map',
             name='language_id',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='map_browser.languages'),
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to='map_browser.languages',
+            ),
         ),
         migrations.AddField(
             model_name='map',
             name='publication_place',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='map_browser.publicationplaces'),
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to='map_browser.publicationplaces',
+            ),
         ),
         migrations.AddField(
             model_name='map',

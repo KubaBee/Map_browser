@@ -13,7 +13,15 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='SubjectTypes',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    'id',
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID',
+                    ),
+                ),
                 ('name', models.CharField(blank=True, max_length=50)),
             ],
         ),
@@ -24,6 +32,8 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='map',
             name='creation_type',
-            field=models.ManyToManyField(blank=True, null=True, to='map_browser.subjecttypes'),
+            field=models.ManyToManyField(
+                blank=True, null=True, to='map_browser.subjecttypes'
+            ),
         ),
     ]

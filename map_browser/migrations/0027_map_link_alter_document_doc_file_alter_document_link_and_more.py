@@ -19,7 +19,17 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='document',
             name='doc_file',
-            field=models.FileField(blank=True, upload_to='documents/', validators=[django.core.validators.FileExtensionValidator(['pdf'], message='Podany format nie jest obsługiwany. Akceptowane są tylko pliki .pdf')], verbose_name='Dokument'),
+            field=models.FileField(
+                blank=True,
+                upload_to='documents/',
+                validators=[
+                    django.core.validators.FileExtensionValidator(
+                        ['pdf'],
+                        message='Podany format nie jest obsługiwany. Akceptowane są tylko pliki .pdf',
+                    )
+                ],
+                verbose_name='Dokument',
+            ),
         ),
         migrations.AlterField(
             model_name='document',
@@ -29,11 +39,23 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='document',
             name='translation_file',
-            field=models.FileField(blank=True, upload_to='translations/', validators=[django.core.validators.FileExtensionValidator(['pdf'], message='Podany format nie jest obsługiwany. Akceptowane są tylko pliki .pdf')], verbose_name='Tłumaczenie'),
+            field=models.FileField(
+                blank=True,
+                upload_to='translations/',
+                validators=[
+                    django.core.validators.FileExtensionValidator(
+                        ['pdf'],
+                        message='Podany format nie jest obsługiwany. Akceptowane są tylko pliki .pdf',
+                    )
+                ],
+                verbose_name='Tłumaczenie',
+            ),
         ),
         migrations.AlterField(
             model_name='document',
             name='volume',
-            field=models.IntegerField(blank=True, null=True, verbose_name='Liczba/objętość'),
+            field=models.IntegerField(
+                blank=True, null=True, verbose_name='Liczba/objętość'
+            ),
         ),
     ]

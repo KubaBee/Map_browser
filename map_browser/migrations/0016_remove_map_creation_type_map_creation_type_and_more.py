@@ -26,6 +26,8 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='map',
             name='subject_type',
-            field=models.ManyToManyField(blank=True, null=True, to='map_browser.subjecttypes'),
+            field=models.ManyToManyField(
+                blank=True, null=True, to='map_browser.subjecttypes'
+            ),
         ),
     ]

@@ -18,6 +18,8 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='document',
             name='translation_file',
-            field=models.FileField(blank=True, upload_to='', verbose_name='Tłumaczenie'),
+            field=models.FileField(
+                blank=True, upload_to='', verbose_name='Tłumaczenie'
+            ),
         ),
     ]

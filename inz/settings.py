@@ -14,6 +14,7 @@ from pathlib import Path
 import os
 import storages.base
 import django_heroku
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,12 +24,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY')
-#os.environ['SECRET_KEY']
+# os.environ['SECRET_KEY']
 
 # 'django-insecure-bs^kyth^2+@jm-es_j_0kmutoz2v3eztv)w=@fa^n2t07ww8&3'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = (os.getenv('DEBUG_VALUE') == 'TRUE')
+DEBUG = os.getenv('DEBUG_VALUE') == 'TRUE'
 
 ALLOWED_HOSTS = ['https://map-browser.herokuapp.com/', 'http://127.0.0.1:8000/']
 
@@ -65,8 +66,7 @@ ROOT_URLCONF = 'inz.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
-        ,
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

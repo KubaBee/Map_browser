@@ -217,8 +217,10 @@ main{
     text-decoration-style: solid;
 }
 
-.selectmultiple {
-    height: 200px;
+@media screen and (min-width: 1024px){
+    .selectmultiple {
+        height: 200px;
+    }
 }
 
 .card:hover{

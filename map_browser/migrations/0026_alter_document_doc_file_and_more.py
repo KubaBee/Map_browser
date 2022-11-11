@@ -13,11 +13,15 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='document',
             name='doc_file',
-            field=models.FileField(blank=True, upload_to='documents/', verbose_name='Dokument'),
+            field=models.FileField(
+                blank=True, upload_to='documents/', verbose_name='Dokument'
+            ),
         ),
         migrations.AlterField(
             model_name='document',
             name='translation_file',
-            field=models.FileField(blank=True, upload_to='translations/', verbose_name='Tłumaczenie'),
+            field=models.FileField(
+                blank=True, upload_to='translations/', verbose_name='Tłumaczenie'
+            ),
         ),
     ]

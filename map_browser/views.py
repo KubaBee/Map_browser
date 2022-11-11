@@ -11,7 +11,7 @@ from django.contrib import messages
 from django.urls import reverse_lazy
 from django.db.models import Q
 from .filters import MapFilter, DocumentFilter
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseServerError
+from django.http import HttpResponse, HttpResponseServerError
 import csv
 
 
@@ -71,7 +71,9 @@ class MapDetailView(LoginRequiredMixin, DetailView):
         context = super(MapDetailView, self).get_context_data(**kwargs)
 
         if Map.objects.filter(id__gt=self.get_object().id).first() is not None:
-            context['next_map'] = Map.objects.filter(id__gt=self.get_object().id).first()
+            context['next_map'] = Map.objects.filter(
+                id__gt=self.get_object().id
+            ).first()
         if Map.objects.filter(id__lt=self.get_object().id).first() is not None:
             context['prev_map'] = Map.objects.filter(id__lt=self.get_object().id).last()
 
@@ -84,12 +86,18 @@ class DocumentDetailView(LoginRequiredMixin, DetailView, MultipleObjectMixin):
 
     def get_context_data(self, **kwargs):
         object_list = Map.objects.filter(document=self.get_object())
-        context = super(DocumentDetailView, self).get_context_data(object_list=object_list)
+        context = super(DocumentDetailView, self).get_context_data(
+            object_list=object_list
+        )
 
         if Document.objects.filter(id__gt=self.get_object().id).first() is not None:
-            context['next_doc'] = Document.objects.filter(id__gt=self.get_object().id).first()
+            context['next_doc'] = Document.objects.filter(
+                id__gt=self.get_object().id
+            ).first()
         if Document.objects.filter(id__lt=self.get_object().id).first() is not None:
-            context['prev_doc'] = Document.objects.filter(id__lt=self.get_object().id).last()
+            context['prev_doc'] = Document.objects.filter(
+                id__lt=self.get_object().id
+            ).last()
         return context
 
 
@@ -100,7 +108,9 @@ class FilterMapView(ListView):
 
     def get_context_data(self, **kwargs):
         obj_list = MapFilter(self.request.GET, queryset=self.get_queryset())
-        context = super(FilterMapView, self).get_context_data(object_list=obj_list.qs.order_by('added_at'))
+        context = super(FilterMapView, self).get_context_data(
+            object_list=obj_list.qs.order_by('added_at')
+        )
         context['filter'] = obj_list
         return context
 
@@ -112,7 +122,9 @@ class FilterDocumentView(ListView):
 
     def get_context_data(self, **kwargs):
         obj_list = DocumentFilter(self.request.GET, queryset=self.get_queryset())
-        context = super(FilterDocumentView, self).get_context_data(object_list=obj_list.qs.order_by('added_at'))
+        context = super(FilterDocumentView, self).get_context_data(
+            object_list=obj_list.qs.order_by('added_at')
+        )
         context['filter'] = obj_list
 
         return context
@@ -143,7 +155,10 @@ class EditMapForm(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     template_name_suffix = '_edit'
 
     def test_func(self):
-        return self.get_object().creator == self.request.user or self.request.user.is_superuser
+        return (
+            self.get_object().creator == self.request.user
+            or self.request.user.is_superuser
+        )
 
     def get_success_url(self):
         return reverse('szczegoly-mapy', kwargs={'pk': self.object.pk})
@@ -154,7 +169,10 @@ class DeleteMapView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     success_url = reverse_lazy('przegladaj-mapy')
 
     def test_func(self):
-        return self.get_object().creator == self.request.user or self.request.user.is_superuser
+        return (
+            self.get_object().creator == self.request.user
+            or self.request.user.is_superuser
+        )
 
 
 class EditDocumentForm(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
@@ -163,7 +181,10 @@ class EditDocumentForm(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     template_name_suffix = '_edit'
 
     def test_func(self):
-        return self.get_object().creator == self.request.user or self.request.user.is_superuser
+        return (
+            self.get_object().creator == self.request.user
+            or self.request.user.is_superuser
+        )
 
     def get_success_url(self):
         return reverse('szczegoly-dokumenty', kwargs={'pk': self.object.pk})
@@ -174,16 +195,23 @@ class DeleteDocumentView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     success_url = reverse_lazy('przegladaj-dokumenty')
 
     def test_func(self):
-        return self.get_object().creator == self.request.user or self.request.user.is_superuser
+        return (
+            self.get_object().creator == self.request.user
+            or self.request.user.is_superuser
+        )
 
 
 class AddMapForm(LoginRequiredMixin, CreateView):
     template_name = 'map_browser/dodaj_mape.html'
 
     def get(self, request, *args, **kwargs):
-        return self.render_to_response({'map_form': MapForm(prefix='map_form'),
-                                        'people_form': PeopleForm(prefix='people_form'),
-                                        'archive_form': ArchiveForm(prefix='archive_form')})
+        return self.render_to_response(
+            {
+                'map_form': MapForm(prefix='map_form'),
+                'people_form': PeopleForm(prefix='people_form'),
+                'archive_form': ArchiveForm(prefix='archive_form'),
+            }
+        )
 
     def post(self, request, *args, **kwargs):
         map_form = _get_form_with_file(request, MapForm, 'map_form')
@@ -193,8 +221,7 @@ class AddMapForm(LoginRequiredMixin, CreateView):
         if people_form.is_bound and people_form.is_valid():
             values = people_form.cleaned_data
             obj, created = People.objects.get_or_create(
-                first_name=values['first_name'],
-                last_name=values['last_name']
+                first_name=values['first_name'], last_name=values['last_name']
             )
             if not created:
                 return HttpResponseServerError()
@@ -205,7 +232,7 @@ class AddMapForm(LoginRequiredMixin, CreateView):
                 archive_name=values['archive_name'],
                 archive_team=values['archive_team'],
                 archive_unit=values['archive_unit'],
-                archive_number=values['archive_number']
+                archive_number=values['archive_number'],
             )
             if not created:
                 return HttpResponseServerError()
@@ -218,17 +245,28 @@ class AddMapForm(LoginRequiredMixin, CreateView):
 
         messages.warning(request, 'Mapa nie została dodana')
 
-        return render(request, 'map_browser/dodaj_mape.html',
-                      {'map_form': map_form, 'people_form': people_form, 'archive_form': archive_form})
+        return render(
+            request,
+            'map_browser/dodaj_mape.html',
+            {
+                'map_form': map_form,
+                'people_form': people_form,
+                'archive_form': archive_form,
+            },
+        )
 
 
 class AddDocumentForm(LoginRequiredMixin, CreateView):
     template_name = 'map_browser/dodaj_dokument.html'
 
     def get(self, request, *args, **kwargs):
-        return self.render_to_response({'doc_form': DocumentForm(prefix='doc_form'),
-                                        'people_form': PeopleForm(prefix='people_form'),
-                                        'archive_form': ArchiveForm(prefix='archive_form')})
+        return self.render_to_response(
+            {
+                'doc_form': DocumentForm(prefix='doc_form'),
+                'people_form': PeopleForm(prefix='people_form'),
+                'archive_form': ArchiveForm(prefix='archive_form'),
+            }
+        )
 
     def post(self, request, *args, **kwargs):
         doc_form = _get_form_with_file(request, DocumentForm, 'doc_form')
@@ -238,8 +276,7 @@ class AddDocumentForm(LoginRequiredMixin, CreateView):
         if people_form.is_bound and people_form.is_valid():
             values = people_form.cleaned_data
             obj, created = People.objects.get_or_create(
-                first_name=values['first_name'],
-                last_name=values['last_name']
+                first_name=values['first_name'], last_name=values['last_name']
             )
 
             if not created:
@@ -251,7 +288,7 @@ class AddDocumentForm(LoginRequiredMixin, CreateView):
                 archive_name=values['archive_name'],
                 archive_team=values['archive_team'],
                 archive_unit=values['archive_unit'],
-                archive_number=values['archive_number']
+                archive_number=values['archive_number'],
             )
             if not created:
                 return HttpResponseServerError()
@@ -264,8 +301,15 @@ class AddDocumentForm(LoginRequiredMixin, CreateView):
 
         messages.warning(request, 'Dokument nie został dodany')
 
-        return render(request, 'map_browser/dodaj_dokument.html',
-                      {'doc_form': doc_form, 'people_form': people_form, 'archive_form': archive_form})
+        return render(
+            request,
+            'map_browser/dodaj_dokument.html',
+            {
+                'doc_form': doc_form,
+                'people_form': people_form,
+                'archive_form': archive_form,
+            },
+        )
 
 
 @login_required
@@ -273,18 +317,38 @@ def map_csv_export(request):
     all_maps = Map.objects.all()
 
     response = HttpResponse('text/csv')
-    response['Content-Disposition'] = f'attachment; filename="Raport Map_{datetime.datetime.now()}.csv"'
+    response[
+        'Content-Disposition'
+    ] = f'attachment; filename="Raport Map_{datetime.datetime.now()}.csv"'
 
     writer = csv.writer(response)
-    writer.writerow(['Sygnatura Czasowa', 'Tytuł Pełny', 'Tytuł Krótki', 'Osoba Dodająca', 'Miejsce Wydania',
-                     'Link do mapy', 'Autorzy'])
+    writer.writerow(
+        [
+            'Sygnatura Czasowa',
+            'Tytuł Pełny',
+            'Tytuł Krótki',
+            'Osoba Dodająca',
+            'Miejsce Wydania',
+            'Link do mapy',
+            'Autorzy',
+        ]
+    )
 
     for single_map in all_maps:
-        writer.writerow([
-            single_map.added_at, single_map.full_title, single_map.short_title, single_map.creator,
-            single_map.publication_place, single_map.filename.url, [author if author is not None else " " for author in
-                                                                    single_map.authors.all()]
-        ])
+        writer.writerow(
+            [
+                single_map.added_at,
+                single_map.full_title,
+                single_map.short_title,
+                single_map.creator,
+                single_map.publication_place,
+                single_map.filename.url,
+                [
+                    author if author is not None else " "
+                    for author in single_map.authors.all()
+                ],
+            ]
+        )
     return response
 
 
@@ -293,17 +357,36 @@ def doc_csv_export(request):
     all_docs = Document.objects.all()
 
     response = HttpResponse('text/csv')
-    response['Content-Disposition'] = f'attachment; filename="Raport Dokumentów_{datetime.datetime.now()}.csv"'
+    response[
+        'Content-Disposition'
+    ] = f'attachment; filename="Raport Dokumentów_{datetime.datetime.now()}.csv"'
 
     writer = csv.writer(response)
-    writer.writerow(['Sygnatura Czasowa', 'Tytuł', 'Osoba Dodająca',
-                     'Link do dokumentu', 'Link do tłumacznenia', 'Autorzy'])
+    writer.writerow(
+        [
+            'Sygnatura Czasowa',
+            'Tytuł',
+            'Osoba Dodająca',
+            'Link do dokumentu',
+            'Link do tłumacznenia',
+            'Autorzy',
+        ]
+    )
 
     for single_doc in all_docs:
-        writer.writerow([
-            single_doc.added_at, single_doc.title, single_doc.creator, single_doc.doc_file.url,
-            single_doc.translation_file.url, [author if author is not None else " " for author in single_doc.authors.all()],
-        ])
+        writer.writerow(
+            [
+                single_doc.added_at,
+                single_doc.title,
+                single_doc.creator,
+                single_doc.doc_file.url,
+                single_doc.translation_file.url,
+                [
+                    author if author is not None else " "
+                    for author in single_doc.authors.all()
+                ],
+            ]
+        )
     return response
 
 
@@ -318,6 +401,7 @@ def custom_error_view(request, exception=None):
 def custom_forbidden_view(request, exception=None):
     return render(request, "map_browser/403.html")
 
+
 # def navigate_through_detail(objects, current_id):
 #
 #     context = {}
@@ -330,4 +414,3 @@ def custom_forbidden_view(request, exception=None):
 #         context['prev_map'] = prev_map
 #
 #     return context
-

@@ -17,6 +17,8 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='map',
             name='language_id',
-            field=models.ManyToManyField(blank=True, null=True, to='map_browser.languages'),
+            field=models.ManyToManyField(
+                blank=True, null=True, to='map_browser.languages'
+            ),
         ),
     ]
