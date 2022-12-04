@@ -312,6 +312,14 @@ class AddDocumentForm(LoginRequiredMixin, CreateView):
         )
 
 
+def check_url_existence(self):
+
+    if self and hasattr(self, 'url'):
+        return self.url
+    else:
+        return "Brak zedfiniowanego linku dla tego obiektu"
+
+
 @login_required
 def map_csv_export(request):
     all_maps = Map.objects.all()
@@ -342,7 +350,7 @@ def map_csv_export(request):
                 single_map.short_title,
                 single_map.creator,
                 single_map.publication_place,
-                single_map.filename.url,
+                check_url_existence(single_map),
                 [
                     author if author is not None else " "
                     for author in single_map.authors.all()
@@ -379,8 +387,8 @@ def doc_csv_export(request):
                 single_doc.added_at,
                 single_doc.title,
                 single_doc.creator,
-                single_doc.doc_file.url,
-                single_doc.translation_file.url,
+                check_url_existence(single_doc.doc_file),
+                check_url_existence(single_doc.translation_file),
                 [
                     author if author is not None else " "
                     for author in single_doc.authors.all()
