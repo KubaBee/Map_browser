@@ -6,8 +6,8 @@ from django.core.exceptions import ValidationError
 class CustomMMCF(forms.ModelMultipleChoiceField):
     def label_from_instance(self, creator):
         if (
-            creator.__class__.__name__ == 'People'
-            or creator.__class__.__name__ == "User"
+                creator.__class__.__name__ == 'People'
+                or creator.__class__.__name__ == "User"
         ):
             return f"{creator.last_name} {creator.first_name}"
 
@@ -48,6 +48,11 @@ class ArchiveForm(forms.ModelForm):
 
 
 class MapForm(forms.ModelForm):
+    related_docs = forms.ModelMultipleChoiceField(queryset=models.Document.objects.all(),
+                                                  required=False,
+                                                  widget=forms.SelectMultiple,
+                                                  label="Powiązane Dokumenty")
+
     class Meta:
         model = models.Map
         fields = [
@@ -135,7 +140,7 @@ class DocumentForm(forms.ModelForm):
             "keyword_name": "Słowa Kluczowe Imienne",
             "keyword_subject": "Słowa Kluczowe Rzeczowe",
             "keyword_geo": "Słowa Kluczowe Geograficzne",
-            "source_reference": "Odwołanie do źróła",
+            "source_reference": "Odwołanie do źróła kartograficznego",
             "is_statistic_data": "Zawiera dane statystyczne",
             "is_map": "Zawiera mapę",
             "link": "Link do dokumentu",
@@ -149,6 +154,13 @@ class DocumentForm(forms.ModelForm):
         help_texts = {
             "link": "Wypełnij to pole TYLKO jeśli dokument jest przechowywany w zewnętrzynym zasobie"
         }
+
+
+class RelatedDocs(forms.Form):
+    related_doc = forms.ModelMultipleChoiceField(
+        queryset=models.Document.objects.all(),
+        widget=forms.SelectMultiple()
+    )
 
     # creator = CustomMMCF(
     #     queryset=get_user_model().objects.all(),

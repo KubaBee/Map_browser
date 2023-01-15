@@ -12,8 +12,8 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 import os
-import storages.base
-import django_heroku
+from django.conf import settings
+# import django_heroku
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 
@@ -31,7 +31,12 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG_VALUE') == 'TRUE'
 
-ALLOWED_HOSTS = ['https://map-browser.herokuapp.com/', 'http://127.0.0.1:8000/']
+# if not settings.DEBUG:
+#     DJANGO_SETTINGS_MODULE =
+# else:
+#     DJANGO_SETTINGS_MODULE = inz.prod_settings
+
+ALLOWED_HOSTS = ['https://map-browser.herokuapp.com/', 'http://127.0.0.1:8000/', '127.0.0.1']
 
 # Application definition
 
@@ -161,18 +166,18 @@ LOGIN_REDIRECT_URL = 'przegladaj-mapy'
 
 LOGIN_URL = '/user/login/'
 
-AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
-AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
-AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
-# AWS_LOCATION = 'thumbnails/'
-AWS_S3_SIGNATURE_VERSION = 's3v4'
-AWS_S3_REGION_NAME = 'eu-central-1'
+# AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+# AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+# AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
+# # AWS_LOCATION = 'thumbnails/'
+# AWS_S3_SIGNATURE_VERSION = 's3v4'
+# AWS_S3_REGION_NAME = 'eu-central-1'
+#
+# AWS_S3_FILE_OVERWRITE = False
+# AWS_DEFAULT_ACL = None
+#
+# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
-AWS_S3_FILE_OVERWRITE = False
-AWS_DEFAULT_ACL = None
-
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-
-django_heroku.settings(locals())
+# django_heroku.settings(locals())
 
 ##################

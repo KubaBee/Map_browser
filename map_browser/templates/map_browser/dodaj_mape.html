@@ -46,7 +46,9 @@
                     <div class="col-12 col-md-5">
                         {{ map_form.language_id|as_crispy_field }}
                     </div>
-
+                    <div class="col-12 col-md-4">
+                            {{ map_form.related_docs|as_crispy_field }}
+                    </div>
                     {{ map_form.publishing_address|as_crispy_field }}
                     {{ map_form.scale|as_crispy_field }}
                     {{ map_form.subject|as_crispy_field }}

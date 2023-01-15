@@ -21,5 +21,4 @@ urlpatterns = [
     ),
     path('register/', views.register, name='register'),
     path('activate/<uidb64>/<token>/', views.activate_account, name='activate')
-    # path('password-reset/', views.reset_pwd, name='pwd_reset'),
 ]
