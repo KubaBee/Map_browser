@@ -15,24 +15,25 @@ from .token import account_token
 
 
 def register(request):
-    if request.user.is_anonymous:
-        if request.method == 'POST':
-            form = RegisterUserFrom(request.POST)
-            if form.is_valid():
-                user = form.save(commit=False)
-                user.is_active = False
-                user.save()
-                username = form.cleaned_data.get('username')
-                # messages.success(request, f"Utworzono konto dla {username}")
-                send_activate_account_email(
-                    request, user, form.cleaned_data.get('email')
-                )
-                return redirect('login')
-        else:
-            form = RegisterUserFrom()
-        return render(request, 'users/register.html', {'form': form})
-    else:
-        return redirect('przegladaj-mapy')
+    # if request.user.is_anonymous:
+    #     if request.method == 'POST':
+    #         form = RegisterUserFrom(request.POST)
+    #         if form.is_valid():
+    #             user = form.save(commit=False)
+    #             user.is_active = False
+    #             user.save()
+    #             username = form.cleaned_data.get('username')
+    #             # messages.success(request, f"Utworzono konto dla {username}")
+    #             send_activate_account_email(
+    #                 request, user, form.cleaned_data.get('email')
+    #             )
+    #             return redirect('login')
+    #     else:
+    #         form = RegisterUserFrom()
+    #     return render(request, 'users/register.html', {'form': form})
+    # else:
+    #     return redirect('przegladaj-mapy')
+    return render(request, 'users/temporary_unavailable.html')
 
 
 def activate_account(request, uidb64, token):
