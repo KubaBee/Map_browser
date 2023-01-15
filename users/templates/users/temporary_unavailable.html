@@ -1,0 +1,13 @@
+{% extends "map_browser/base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block title %}
+    <title>Tymczasowo Niedostępne</title>
+{% endblock title %}
+{% block content %}
+
+ <p class="text-center error-header">Tymczasowo Nieostępne</p>
+ <p class="text-center">Drogi użytkowniku z uwagi na prace prowadzone obecnie w aplikacji możliwość rejestracji została tymczasowo zablokowana.</p>
+    <p class="text-center">Jeżeli potrzebujesz dostępu do funkcji dostępnych tylko dla zalogowanych użytkowników, wyślij wiadomość na <a href="mailto:mapbrowser30@gmail.com?subject=Prośba o stworzenie konta użytkownika"><b>ten adres email.</b></a></p>
+
+{% endblock content %}

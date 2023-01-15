@@ -29,11 +29,14 @@ class RegisterUserFrom(UserCreationForm):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.fields['username'].help_text = None
-        self.fields['username'].label = "Username*"
+        self.fields['username'].label = "Nazwa użytkownika*"
         self.fields['email'].label = "Email*"
-        self.fields['password1'].label = "Password*"
+        self.fields['password1'].label = "Hasło*"
         self.fields['password1'].help_text = None
-        self.fields['password2'].label = "Confirm Password*"
+        self.fields['password2'].label = "Potwierdź hasło*"
+        self.fields['password2'].help_text = "Wprowadź to samo hasło co poprzednio, w celu weryfikacji."
+        self.fields['first_name'].label = 'Imię'
+        self.fields['last_name'].label = 'Nazwisko'
         self.helper.layout = Layout(
             Div(
                 Div(
