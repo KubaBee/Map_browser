@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 from pathlib import Path
 import os
 import storages.base
-import django_heroku
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 
@@ -29,9 +28,10 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # 'django-insecure-bs^kyth^2+@jm-es_j_0kmutoz2v3eztv)w=@fa^n2t07ww8&3'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG_VALUE') == 'TRUE'
+#DEBUG = os.getenv('DEBUG_VALUE') == 'TRUE'
+DEBUG = False
 
-ALLOWED_HOSTS = ['https://map-browser.herokuapp.com/', 'http://127.0.0.1:8000/']
+ALLOWED_HOSTS = ['https://map-browser.herokuapp.com/', 'http://127.0.0.1:8000/', '.szukaj.geohist.umcs.pl/', 'http://212.182.10.15/', 'szukaj.geohist.umcs.pl']
 
 # Application definition
 
@@ -46,7 +46,6 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'crispy_forms',
     'crispy_bootstrap5',
-    'storages',
     'django_filters',
     'map_browser.templatetags',
 ]
@@ -88,8 +87,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'map_browser_v2',
-        'USER': 'postgres',
-        'PASSWORD': os.getenv("API_PASSWORD"),
+        'USER': 'jpszczola',
+        'PASSWORD': os.getenv('DB_PASSWORD'),
         'HOST': 'localhost',
         'PORT': '',
     }
@@ -126,7 +125,8 @@ USE_I18N = True
 
 USE_TZ = True
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles/')
+STATIC_ROOT = "/var/www/szukaj.geohist.umcs.pl/static"
+STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_URL = '/static/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
@@ -136,7 +136,8 @@ STATICFILES_DIRS = [
 ]
 
 MEDIA_URL = 'media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+#MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+MEDIA_ROOT = "/var/www/szukaj.geohist.umcs.pl/media"
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
@@ -161,18 +162,16 @@ LOGIN_REDIRECT_URL = 'przegladaj-mapy'
 
 LOGIN_URL = '/user/login/'
 
-AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
-AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
-AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
+#AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+#AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+#AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
 # AWS_LOCATION = 'thumbnails/'
-AWS_S3_SIGNATURE_VERSION = 's3v4'
-AWS_S3_REGION_NAME = 'eu-central-1'
+#AWS_S3_SIGNATURE_VERSION = 's3v4'
+#AWS_S3_REGION_NAME = 'eu-central-1'
 
-AWS_S3_FILE_OVERWRITE = False
-AWS_DEFAULT_ACL = None
+#AWS_S3_FILE_OVERWRITE = False
+#AWS_DEFAULT_ACL = None
 
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-
-django_heroku.settings(locals())
+#DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 ##################

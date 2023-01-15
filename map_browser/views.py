@@ -1,7 +1,7 @@
 import datetime
 from django.shortcuts import render, redirect, reverse
 from django.views.generic import CreateView, UpdateView, DeleteView
-from .forms import MapForm, PeopleForm, ArchiveForm, DocumentForm
+from .forms import MapForm, PeopleForm, ArchiveForm, DocumentForm, RelatedDocs
 from .models import Map, Archive, People, Document
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
@@ -239,6 +239,8 @@ class AddMapForm(LoginRequiredMixin, CreateView):
 
         if map_form.is_bound and map_form.is_valid():
             obj = map_form.save()
+            test = Document.objects.last()
+            obj.document_set.add(test)
             messages.success(request, 'Mapa została dodana')
             # on success redirect to the detail page of newly created object
             return redirect(reverse('szczegoly-mapy', kwargs={'pk': obj.pk}))
