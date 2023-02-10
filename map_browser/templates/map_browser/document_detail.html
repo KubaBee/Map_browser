@@ -109,7 +109,7 @@
                              aria-labelledby="mapaDane-headingOne">
                             <div class="accordion-body">
                                 {% if object.language_id %}
-                                    <p><strong>Język mapy:</strong>
+                                    <p><strong>Język Dokumentu:</strong>
                                         {% for lang in object.language_id.all %}
                                             {% if not forloop.last %}
                                                 {{ lang }},
@@ -122,9 +122,9 @@
 
                                 {% if object.authors.all %}
                                     {% if object.authors.all|length == 1 %}
-                                        <p><strong>Twórca Mapy:</strong>
+                                        <p><strong>Autor:</strong>
                                             {% else %}
-                                        <p><strong>Twórcy Mapy:</strong>
+                                        <p><strong>Autorzy:</strong>
                                     {% endif %}
                                 {% for author in object.authors.all %}
                                     {% if forloop.last %}

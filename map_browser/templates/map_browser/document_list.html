@@ -1,5 +1,6 @@
 {% extends "map_browser/base.html" %}
 {% load crispy_forms_filters %}
+{% load templatehelper %}
 {% load crispy_forms_tags %}
 {% load static %}
 {% block title %}
@@ -35,6 +36,35 @@
         </a>
     {% endfor %}
     </div>
+    {% if is_paginated %}
+    <nav aria-label="dokumenty-paginator" >
+        <ul class="pagination justify-content-end mt-4">
+            {% if page_obj.has_previous %}
+                {% if not page_obj.previous_page_number == 1 %}
+                <li class="page-item">
+                    <a class="page-link" href="{% relative_url i 'page' request.GET.urlencode %}&page=1">&laquo; 1</a>
+                </li>
+                {% endif %}
+                <li class="page-item">
+                    <a class="page-link" href="{% relative_url i 'page' request.GET.urlencode %}&page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+                </li>
+            {% endif %}
 
+            <li class="page-item active" aria-current="page">
+                <span class="page-link">{{ page_obj.number }}</span>
+            </li>
 
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="{% relative_url i 'page' request.GET.urlencode %}&page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+                </li>
+                {% if not page_obj.next_page_number == page_obj.paginator.num_pages %}
+                    <li class="page-item">
+                        <a class="page-link" href="{% relative_url i 'page' request.GET.urlencode %}&page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }} &raquo; </a>
+                    </li>
+                {% endif %}
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
 {% endblock content %}

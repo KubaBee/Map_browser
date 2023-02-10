@@ -1,7 +1,7 @@
 import datetime
 from django.shortcuts import render, redirect, reverse
 from django.views.generic import CreateView, UpdateView, DeleteView
-from .forms import MapForm, PeopleForm, ArchiveForm, DocumentForm, RelatedDocs
+from .forms import MapForm, PeopleForm, ArchiveForm, DocumentForm
 from .models import Map, Archive, People, Document
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required

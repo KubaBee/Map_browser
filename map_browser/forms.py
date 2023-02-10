@@ -156,11 +156,11 @@ class DocumentForm(forms.ModelForm):
         }
 
 
-class RelatedDocs(forms.Form):
-    related_doc = forms.ModelMultipleChoiceField(
-        queryset=models.Document.objects.all(),
-        widget=forms.SelectMultiple()
-    )
+# class RelatedDocs(forms.Form):
+#     related_doc = forms.ModelMultipleChoiceField(
+#         queryset=models.Document.objects.all(),
+#         widget=forms.SelectMultiple()
+#     )
 
     # creator = CustomMMCF(
     #     queryset=get_user_model().objects.all(),
