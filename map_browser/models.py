@@ -183,13 +183,18 @@ class Document(models.Model):
         verbose_name="Tłumaczenie",
         blank=True,
         upload_to='translations/',
+    )
+    thumbnail = models.ImageField(
+        upload_to='doc_thumbnails/',
+        blank=False,
+        null=True,
         validators=[
             FileExtensionValidator(
-                ['pdf'],
-                message="Podany format nie jest obsługiwany. Akceptowane są tylko pliki .pdf",
+                ['jpg', 'jpeg', 'png'],
+                message="Podany format nie jest obsługiwany. Akceptowane są tylko pliki .png lub .jpg",
             )
-        ],
-    )
+        ],)
+
     volume = models.IntegerField(verbose_name="Liczba/objętość", blank=True, null=True)
     doc_format = models.CharField(
         max_length=150, blank=True, verbose_name="Forma dokumentu"

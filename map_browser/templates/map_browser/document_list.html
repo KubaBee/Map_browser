@@ -27,12 +27,12 @@
     <div class="row row-cols-sm-1 row-cols-md-3 g-4">
     {% for doc in document_list %}
         <a class="card-as-link" href="{% url 'szczegoly-dokumenty' doc.id %}">
-                    <div class="card doc-card">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ doc.title|truncatechars:100 }}</h5>
-                            <p class="card-text">{{ doc.description|truncatechars:250 }}</p>
-                        </div>
-                    </div>
+            <div class="card doc-card">
+                {% if doc.thumbnail %}<img src="{{ doc.thumbnail.url }}" class="mapa card-img-top" alt="map_image">{% endif %}
+                <div class="card-body">
+                        <p class="card-text">{{ doc.title|truncatechars:100 }}</p>
+                </div>
+            </div>
         </a>
     {% endfor %}
     </div>

@@ -28,12 +28,12 @@
             <div id="box" class="row row-cols-sm-1 row-cols-md-3 g-4">
             {% for map in map_list %}
                 <a class="card-as-link" href="{% url 'szczegoly-mapy' map.pk %}">
-                <div class="card map-card md-m-4 sm-m-1">
-                    <img src="{{ map.thumbnail.url }}" class="mapa card-img-top" alt="map_image">
-                    <div class="card-body">
-                            <p class="card-text">{{ map.full_title|truncatechars:100 }}</p>
+                    <div class="card map-card md-m-4 sm-m-1">
+                        <img src="{{ map.thumbnail.url }}" class="mapa card-img-top" alt="map_image">
+                        <div class="card-body">
+                                <p class="card-text">{{ map.full_title|truncatechars:100 }}</p>
+                        </div>
                     </div>
-                </div>
                 </a>
             {% endfor %}
             </div>
