@@ -24,16 +24,39 @@
             </form>
         </div>
     </div>
-    <div class="row row-cols-sm-1 row-cols-md-3 g-4">
+{#    <div class="row row-cols-sm-1 row-cols-md-3 g-4">#}
+{#    {% for doc in document_list %}#}
+{#        <a class="card-as-link" href="{% url 'szczegoly-dokumenty' doc.id %}">#}
+{#            <div class="card doc-card">#}
+{#                {% if doc.thumbnail %}<img src="{{ doc.thumbnail.url }}" class="mapa card-img-top" alt="map_image">{% endif %}#}
+{#                <div class="card-body">#}
+{#                        <p class="card-text">{{ doc.title|truncatechars:100 }}</p>#}
+{#                </div>#}
+{#            </div>#}
+{#        </a>#}
+{#    {% endfor %}#}
+{#    </div>#}
+    <div class="row row-cols-sm-1 row-cols-md-1 row-cols-lg-2 g-4">
     {% for doc in document_list %}
-        <a class="card-as-link" href="{% url 'szczegoly-dokumenty' doc.id %}">
-            <div class="card doc-card">
-                {% if doc.thumbnail %}<img src="{{ doc.thumbnail.url }}" class="mapa card-img-top" alt="map_image">{% endif %}
-                <div class="card-body">
-                        <p class="card-text">{{ doc.title|truncatechars:100 }}</p>
+            <a class="card-as-link" href="{% url 'szczegoly-dokumenty' doc.id %}">
+                <div class="card">
+                    <div class="row g-0">
+                        <div class="col-md-4 ">
+                            {% if doc.thumbnail %}
+                                <img src="{{ doc.thumbnail.url }}" class="img-fluid rounded-start doc-thumbnail" alt="Miniaturka Dokumentu">
+                            {% else %}
+                                <img src="{% static "map_browser/images/placeholder.png" %}" class="img-fluid rounded-start doc-thumbnail" alt="Miniaturka Dokumentu">
+                            {% endif %}
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ doc.title|truncatechars:100 }}</h5>
+                                <p class="card-text">{{ doc.description|truncatechars:300 }}</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </a>
+            </a>
     {% endfor %}
     </div>
     {% if is_paginated %}

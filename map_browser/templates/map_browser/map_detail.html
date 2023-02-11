@@ -107,6 +107,8 @@
 
                             {% if object.publication_place %}
                                 <p><strong>Miejsce Wydania: </strong>{{ object.publication_place|linebreaksbr }} </p>
+                            {% elif object.publishing_address %}
+                                <p><strong>Miejsce Wydania: </strong>{{ object.publishing_address|linebreaksbr }} </p>
                             {% endif %}
 
                             {% if object.created_at %}

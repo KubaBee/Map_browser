@@ -11,7 +11,7 @@ html {
 }
 
 html, body{
-    scrollbar-color: #c4c4c4 transparenr;
+    scrollbar-color: #c4c4c4 transparent;
     scrollbar-width: thin;
     background-color: var(--main-color-bg);
 }
@@ -124,6 +124,11 @@ main{
     padding: 10px;
     /*max-width: 100%;*/
     width: 100%; /* You can set the dimensions to whatever you want */
+    height: 300px;
+    object-fit: cover;
+}
+
+.doc-thumbnail {
     height: 300px;
     object-fit: cover;
 }
