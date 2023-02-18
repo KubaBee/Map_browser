@@ -239,8 +239,6 @@ class AddMapForm(LoginRequiredMixin, CreateView):
 
         if map_form.is_bound and map_form.is_valid():
             obj = map_form.save()
-            test = Document.objects.last()
-            obj.document_set.add(test)
             messages.success(request, 'Mapa została dodana')
             # on success redirect to the detail page of newly created object
             return redirect(reverse('szczegoly-mapy', kwargs={'pk': obj.pk}))
