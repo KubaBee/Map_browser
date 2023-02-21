@@ -51,7 +51,8 @@ class MapForm(forms.ModelForm):
     related_docs = forms.ModelMultipleChoiceField(queryset=models.Document.objects.all(),
                                                   required=False,
                                                   widget=forms.SelectMultiple,
-                                                  label="Powiązane Dokumenty")
+                                                  label="Powiązane Dokumenty",
+                                                  help_text="Aby odznaczyć lub zaznaczyć więcej niż jeden przytrzymaj CTRL")
 
     class Meta:
         model = models.Map
