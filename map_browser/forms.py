@@ -74,6 +74,7 @@ class MapForm(forms.ModelForm):
             'keyword_geo',
             'additional_notes',
             'language_id',
+            'related_docs'
         ]
 
         labels = {
@@ -95,11 +96,17 @@ class MapForm(forms.ModelForm):
             "archive_id": "Archiwum",
             "authors": "Autorzy",
             "language_id": "Język Mapy",
+            "related_docs": 'Powiązane Dokumenty'
         }
 
         help_texts = {
             "link": "Wypełnij to pole TYLKO jeśli mapa jest przechowywana w zewnętrzynym zasobie"
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance.pk:
+            self.fields['related_docs'].initial = self.instance.document_set.all()
 
 
 class DocumentForm(forms.ModelForm):

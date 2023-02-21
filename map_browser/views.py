@@ -13,6 +13,7 @@ from django.db.models import Q
 from .filters import MapFilter, DocumentFilter
 from django.http import HttpResponse, HttpResponseServerError
 import csv
+from django.forms.models import inlineformset_factory
 
 
 class MapListView(ListView, MultipleObjectMixin):
@@ -149,7 +150,7 @@ def _get_form_with_file(request, form_class, prefix):
     return form_class(data, file, prefix=prefix)
 
 
-class EditMapForm(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+class EditMapView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Map
     form_class = MapForm
     template_name_suffix = '_edit'
@@ -162,6 +163,18 @@ class EditMapForm(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def get_success_url(self):
         return reverse('szczegoly-mapy', kwargs={'pk': self.object.pk})
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields['related_docs'].queryset = Document.objects.all()
+        return form
+
+    def form_valid(self, form):
+        related_docs = list(form.cleaned_data['related_docs'].values_list('pk', flat=True))
+        self.object.document_set.clear()
+        for single_id in related_docs:
+            self.object.document_set.add(single_id)
+        return super(EditMapView, self).form_valid(form)
 
 
 class DeleteMapView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
@@ -238,7 +251,10 @@ class AddMapForm(LoginRequiredMixin, CreateView):
                 return HttpResponseServerError()
 
         if map_form.is_bound and map_form.is_valid():
+            related_docs = list(map_form.cleaned_data['related_docs'].values_list('pk', flat=True))
             obj = map_form.save()
+            for single_id in related_docs:
+                obj.document_set.add(single_id)
             messages.success(request, 'Mapa została dodana')
             # on success redirect to the detail page of newly created object
             return redirect(reverse('szczegoly-mapy', kwargs={'pk': obj.pk}))

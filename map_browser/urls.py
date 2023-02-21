@@ -11,7 +11,7 @@ urlpatterns = [
     ),
     path('map/<int:pk>/', views.MapDetailView.as_view(), name='szczegoly-mapy'),
     path('dodaj-mape/', views.AddMapForm.as_view(), name='dodaj_mape'),
-    path('edytuj-mape/<int:pk>/', views.EditMapForm.as_view(), name='edytuj-mape'),
+    path('edytuj-mape/<int:pk>/', views.EditMapView.as_view(), name='edytuj-mape'),
     path('usun-mape/<int:pk>/', views.DeleteMapView.as_view(), name='usun-mape'),
     path(
         'edytuj-dokument/<int:pk>/',
