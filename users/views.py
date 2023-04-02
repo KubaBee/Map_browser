@@ -14,6 +14,7 @@ from django.core.mail import EmailMessage
 from .token import account_token
 
 
+# TODO: Once you uncomment remember to add evn variable on prod env (email + pwd)
 def register(request):
     # if request.user.is_anonymous:
     #     if request.method == 'POST':

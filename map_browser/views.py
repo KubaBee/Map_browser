@@ -13,7 +13,6 @@ from django.db.models import Q
 from .filters import MapFilter, DocumentFilter
 from django.http import HttpResponse, HttpResponseServerError
 import csv
-from django.forms.models import inlineformset_factory
 
 
 class MapListView(ListView, MultipleObjectMixin):

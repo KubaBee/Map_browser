@@ -69,10 +69,10 @@ class LoginUserForm(AuthenticationForm):
                 FloatingField(
                     'username',
                     'password',
-                    HTML(
-                        """<p>Nie masz jeszcze konta? 
-            <a href="{% url 'register' %}">Załóż je!</a></p>"""
-                    ),
+            #         HTML(
+            #             """<p>Nie masz jeszcze konta?
+            # <a href="{% url 'register' %}">Załóż je!</a></p>"""
+            #         ),
                 ),
             ),
             # Submit('submit', 'Zaloguj się')
