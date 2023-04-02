@@ -64,7 +64,7 @@ class DocumentListView(ListView, MultipleObjectMixin):
             return qs
 
 
-class MapDetailView(LoginRequiredMixin, DetailView):
+class MapDetailView(DetailView):
     model = Map
 
     def get_context_data(self, **kwargs):
@@ -81,7 +81,7 @@ class MapDetailView(LoginRequiredMixin, DetailView):
         return context
 
 
-class DocumentDetailView(LoginRequiredMixin, DetailView, MultipleObjectMixin):
+class DocumentDetailView(DetailView, MultipleObjectMixin):
     model = Document
     paginate_by = 5
 
