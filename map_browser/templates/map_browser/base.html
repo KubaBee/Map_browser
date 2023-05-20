@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Kształtowanie granic niepodległej Polski w świetle dokumentów kartograficznych">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="icon" type="image/x-icon" href="{% static 'map_browser/images/favicon.ico' %}">
     {% block title %}
@@ -85,11 +86,17 @@
     <footer>
         <div class="container footer p-4 mt-4">
             <div class="row mt-3 text-center">
-                <p>Kształtowanie granic niepodległej Polski w świetle dokumentów kartograficznych / Shaping the borders of independent Poland in the light of cartographic documents / Utváření hranic nezávislého Polska ve světle kartografických dokumentů / Die Gestaltung der Grenzen des unabhängigen Polens im Lichte der kartographischen Dokumente</p>
+                <p><i>Projekt Kształtowanie granic niepodległej Polski w świetle dokumentów kartograficznych</i> finansowany w ramach programu Ministra Nauki i Szkolnictwa Wyższego (obecnie Ministra Edukacji i Nauki) pod nazwą „Szlakami Polski Niepodległej” w latach 2018 – 2023, nr projektu 01SPN 17 0032 18, kwota finansowania: 1 228 485 zł.</p>
             </div>
-            <div class="row">
-                <div class="col text-center">
-                    <a href="https://www.umcs.pl/pl/katedra-geomatyki-i-kartografii,17416.htm" class="">Uniwersytet Marii Curie-Skłodowskiej</a>
+            <div class="row text-center">
+                <div class="col-md-4 col-12">
+                    <a href="https://www.umcs.pl/pl/katedra-geomatyki-i-kartografii,17416.htm"><img src="{% static 'map_browser/images/logo_UMCS.png' %}" class="img-fluid footer-image" alt="Logo UMCS"></a>
+                </div>
+                <div class="col-md-4 col-12">
+                    <a href="https://www.gov.pl/web/edukacja-i-nauka/szkolnictwo-wyzsze-i-nauka6"><img src="{% static 'map_browser/images/06_znak_uproszczony_kolor_ciemne_tlo.png' %}" class="img-fluid footer-image" alt="Logo Ministerstwo Nauki i Szkolnictwa Wyższego"></a>
+                </div>
+                <div class="col-md-4 col-12">
+                    <img src="{% static 'map_browser/images/szlakami_polski.png' %}" class="img-fluid footer-image" alt="Logo Szlakami Polski Niepodległej">
                 </div>
             </div>
         </div>

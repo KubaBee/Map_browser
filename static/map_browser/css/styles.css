@@ -279,3 +279,7 @@ footer{
     border-radius: 10px 10px 0 0;
     filter: drop-shadow(0 0 0.5rem #8f8f8f);
 }
+
+.footer-image{
+    max-height: 150px;
+}
