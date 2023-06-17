@@ -27,8 +27,10 @@
     </div>
 
     <div class="row">
-        <h1>{{ object.full_title }}</h1>
-        <h6>{{ object.short_title }}</h6>
+        <h2>{{ object.full_title }}</h2>
+        {% if object.short_title %}
+            <h6>{{ object.short_title }}</h6>
+        {% endif %}
         <div>
             <div class="row">
                 <div class="col d-flex">
@@ -65,6 +67,12 @@
                     {{ object.description|linebreaksbr }}
                 </p>
             {% endif %}
+            {% if object.additional_notes %}
+                <h5><strong>Dodatkowe Informacje</strong></h5>
+                <p>
+                    {{ object.additional_notes|linebreaksbr }}
+                </p>
+            {% endif %}
             <div class="accordion" id="accordionPanelsStayOpenExample">
                 {% if object.language_id or object.authors or object.publication_place or object.created_at %}
                 <div class="accordion-item">
@@ -89,9 +97,9 @@
 
                             {% if object.authors.all %}
                                 {% if object.authors.all|length == 1 %}
-                                    <p><strong>Twórca Mapy:</strong>
+                                    <p><strong>Twórca mapy:</strong>
                                 {% else %}
-                                    <p><strong>Twórcy Mapy:</strong>
+                                    <p><strong>Twórcy mapy:</strong>
                                 {% endif %}
                                     {% for author in object.authors.all %}
                                         {% if forloop.last %}
@@ -106,13 +114,42 @@
                             {% endif %}
 
                             {% if object.publication_place %}
-                                <p><strong>Miejsce Wydania: </strong>{{ object.publication_place|linebreaksbr }} </p>
-                            {% elif object.publishing_address %}
-                                <p><strong>Miejsce Wydania: </strong>{{ object.publishing_address|linebreaksbr }} </p>
+                                <p><strong>Wydawnictwo: </strong>{{ object.publication_place|linebreaksbr }} </p>
                             {% endif %}
-
+                            {% if object.publishing_address %}
+                                <p><strong>Miejsce wydania: </strong>{{ object.publishing_address|linebreaksbr }} </p>
+                            {% endif %}
                             {% if object.created_at %}
-                                <p><strong>Rok Wydania: </strong>{{ object.created_at }} </p>
+                                <p><strong>Rok wydania: </strong>{{ object.created_at }} </p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                {% if object.corrector_id or object.archive_id %}
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="mapaDane-headingThree">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#mapaDane-collapseThree" aria-expanded="false" aria-controls="mapaDane-collapseThree">
+                            Dodatkowe Informacje
+                        </button>
+                    </h2>
+                    <div id="mapaDane-collapseThree" class="accordion-collapse collapse" aria-labelledby="mapaDane-headingThree">
+                        <div class="accordion-body">
+                            {% if object.corrector_id %}
+                                <p><strong>Korektor:</strong>
+                                {{ object.corrector_id }}</p>
+                            {% endif %}
+                            {% if object.archive_id %}
+                                <p><strong>Archiwum:</strong>
+                                {{ object.archive_id }}</p>
+                            {% endif %}
+                            {% if object.scale %}
+                                <p><strong>Skala:</strong>
+                                1:{{ object.scale }}</p>
+                            {% endif %}
+                            {% if object.source_text %}
+                                <p><strong>Tekst źródłowy:</strong>
+                                {{ object.source_text }}</p>
                             {% endif %}
                         </div>
                     </div>
@@ -143,15 +180,14 @@
                     </div>
                 </div>
                 {% endif %}
-
                 {% if object.document_set.count > 0 %}
                 <div class="accordion-item">
-                    <h2 class="accordion-header" id="mapaDane-headingThree">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#mapaDane-collapseThree" aria-expanded="false" aria-controls="mapaDane-collapseThree">
+                    <h2 class="accordion-header" id="mapaDane-headingFour">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#mapaDane-collapseFour" aria-expanded="false" aria-controls="mapaDane-collapseFour">
                             Powiązane Dokumenty
                         </button>
                     </h2>
-                    <div id="mapaDane-collapseThree" class="accordion-collapse collapse" aria-labelledby="mapaDane-headingThree">
+                    <div id="mapaDane-collapseFour" class="accordion-collapse collapse" aria-labelledby="mapaDane-headingFour">
                         <div class="accordion-body">
                                 <ul class="list-group mt-2">
                                 {% for doc in object.document_set.all %}

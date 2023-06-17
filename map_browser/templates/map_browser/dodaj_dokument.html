@@ -22,54 +22,60 @@
 
             <div class="tab-content card-body">
                 <div id="informacje-o-dokumencie" class="tab-pane active">
-                    <div class="col-12 col-md-8">
+                    <div class="col-12 col-md-12">
                         {{ doc_form.title|as_crispy_field }}
                     </div>
-                    <div class="col-12 col-md-6">
-                        {{ doc_form.description|as_crispy_field }}
+                    <div class="row">
+                        <div class="col-12 col-md-6">
+                            {{ doc_form.creator|as_crispy_field }}
+                        </div>
+                        <div class="col-12 col-md-6">
+                            {{ doc_form.receiver|as_crispy_field }}
+                        </div>
                     </div>
-                    <div class="col-12 col-md-6">
-                        {{ doc_form.creator|as_crispy_field }}
+                    <div class="row">
+                        <div class="col-12 col-md-6">
+                            {{ doc_form.language_id|as_crispy_field }}
+                        </div>
+                        <div class="col-12 col-md-6">
+                            {{ doc_form.source_reference|as_crispy_field }}
+                        </div>
                     </div>
-                    <div class="col-12 col-md-6">
-                        {{ doc_form.receiver|as_crispy_field }}
+                    <div class="row">
+                        <div class="col-12 col-md-4">
+                            {{ doc_form.doc_file|as_crispy_field }}
+                        </div>
+                        <div class="col-12 col-md-4">
+                            {{ doc_form.translation_file|as_crispy_field }}
+                        </div>
+                        <div class="col-12 col-md-4">
+                            {{ doc_form.thumbnail|as_crispy_field }}
+                        </div>
                     </div>
-                    <div class="col-12 col-md-6">
-                        {{ doc_form.created_at|as_crispy_field }}
+                    <div class="row">
+                        <div class="col-12 col-md-6">
+                            {{ doc_form.link|as_crispy_field }}
+                        </div>
+                        <div class="col-12 col-md-3 align-self-center">
+                            {{ doc_form.is_statistic_data|as_crispy_field }}
+                        </div>
+                        <div class="col-12 col-md-3 align-self-center">
+                            {{ doc_form.is_map|as_crispy_field }}
+                        </div>
                     </div>
-                    <div class="col-12 col-md-6">
-                        {{ doc_form.language_id|as_crispy_field }}
-                    </div>
-
-                    <div class="col-12 col-md-5">
-                        {{ doc_form.doc_file|as_crispy_field }}
-                    </div>
-                    <div class="col-12 col-md-5">
-                        {{ doc_form.translation_file|as_crispy_field }}
-                    </div>
-                    <div class="col-12 col-md-5">
-                        {{ doc_form.thumbnail|as_crispy_field }}
-                    </div>
-                    <div class="col-12 col-md-5">
-                        {{ doc_form.link|as_crispy_field }}
-                    </div>
-
-                    <div class="col-12 col-md-4">
-                        {{ doc_form.is_statistic_data|as_crispy_field }}
-                        {{ doc_form.is_map|as_crispy_field }}
-                    </div>
-
-                    <div class="col-12 col-md-4">
-                        {{ doc_form.volume|as_crispy_field }}
-                    </div>
-                    <div class="col-12 col-md-4">
-                        {{ doc_form.doc_format|as_crispy_field }}
-                    </div>
-                    <div class="col-12 col-md-4">
-                        {{ doc_form.source_type|as_crispy_field }}
-                    </div>
-                    <div class="col-12 col-md-4">
-                        {{ doc_form.source_reference|as_crispy_field }}
+                    <div class="row">
+                        <div class="col-12 col-md-3">
+                            {{ doc_form.volume|as_crispy_field }}
+                        </div>
+                        <div class="col-12 col-md-3">
+                            {{ doc_form.doc_format|as_crispy_field }}
+                        </div>
+                        <div class="col-12 col-md-3">
+                            {{ doc_form.source_type|as_crispy_field }}
+                        </div>
+                        <div class="col-12 col-md-3">
+                            {{ doc_form.created_at|as_crispy_field }}
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-12 col-md-4">
@@ -81,14 +87,19 @@
                         <div class="col-12 col-md-4">
                             {{ doc_form.keyword_geo|as_crispy_field }}
                         </div>
+                        <div class="col-12 col-md-6">
+                            {{ doc_form.description|as_crispy_field }}
+                        </div>
                     </div>
                 </div>
 
                 <div id="informacje-o-autorach-i-archiwim" class="tab-pane">
                     {{ doc_form.authors|as_crispy_field }}
                     <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#authorModal">Dodaj nowego autora</button>
-                    {{ doc_form.archive_id|as_crispy_field }}
-                    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#archiveModal">Dodaj nowe archiwum</button>
+                    <div class="mt-3">
+                        {{ doc_form.archive_id|as_crispy_field }}
+                        <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#archiveModal">Dodaj nowe archiwum</button>
+                    </div>
                 </div>
                 <div class="d-flex flex-row-reverse">
                     <button type="submit" name="doc_form" class="btn btn-primary">Zapisz</button>

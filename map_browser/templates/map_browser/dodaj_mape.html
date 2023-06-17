@@ -22,37 +22,58 @@
 
             <div class="tab-content card-body">
                 <div id="informacje-o-mapie" class="tab-pane active">
-                    <div class="col-12 col-md-8">
+                    <div class="col-12 col-md-12">
                         {{ map_form.full_title|as_crispy_field }}
                     </div>
-                    <div class="col-12 col-md-6">
+                    <div class="col-12 col-md-12">
                         {{ map_form.short_title|as_crispy_field }}
                     </div>
-                    <div class="col-12 col-md-6">
-                        {{ map_form.creator|as_crispy_field }}
+                    <div class="row">
+                        <div class="col-12 col-md-6">
+                            {{ map_form.creator|as_crispy_field }}
+                        </div>
+                        <div class="col-12 col-md-6">
+                                {{ map_form.related_docs|as_crispy_field }}
+                        </div>
                     </div>
-                    <div class="col-12 col-md-6">
-                        {{ map_form.subject_type|as_crispy_field }}
+                    <div class="row">
+                        <div class="col-12 col-md-6">
+                            {{ map_form.subject_type|as_crispy_field }}
+                        </div>
+                        <div class="col-12 col-md-6">
+                            {{ map_form.language_id|as_crispy_field }}
+                        </div>
                     </div>
-
-                    <div class="col-12 col-md-5">
-                        {{ map_form.filename|as_crispy_field }}
+                    <div class="row">
+                        <div class="col-12 col-md-6">
+                            {{ map_form.filename|as_crispy_field }}
+                        </div>
+                        <div class="col-12 col-md-6">
+                            {{ map_form.link|as_crispy_field }}
+                        </div>
                     </div>
-
-                    <div class="col-12 col-md-5">
-                        {{ map_form.link|as_crispy_field }}
+                    <div class="row">
+                        <div class="col-12 col-md-2">
+                            {{ map_form.created_at|as_crispy_field }}
+                        </div>
+                        <div class="col-12 col-md-5">
+                            {{ map_form.publishing_address|as_crispy_field }}
+                        </div>
+                        <div class="col-12 col-md-5">
+                            {{ map_form.publication_place|as_crispy_field }}
+                        </div>
                     </div>
-
-                    <div class="col-12 col-md-5">
-                        {{ map_form.language_id|as_crispy_field }}
+                    <div class="row">
+                        <div class="col-12 col-md-2">
+                            {{ map_form.scale|as_crispy_field }}
+                        </div>
+                        <div class="col-12 col-md-5">
+                            {{ map_form.subject|as_crispy_field }}
+                        </div>
+                        <div class="col-12 col-md-5">
+                        {{ map_form.creation_type|as_crispy_field }}
+                        </div>
                     </div>
-                    <div class="col-12 col-md-4">
-                            {{ map_form.related_docs|as_crispy_field }}
-                    </div>
-                    {{ map_form.publishing_address|as_crispy_field }}
-                    {{ map_form.scale|as_crispy_field }}
-                    {{ map_form.subject|as_crispy_field }}
-                    {{ map_form.creation_type|as_crispy_field }}
                     <div class="row">
                         <div class="col-12 col-md-4">
                             {{ map_form.keyword_name|as_crispy_field }}
@@ -76,9 +97,12 @@
 
                 <div id="informacje-o-autorach-i-archiwim" class="tab-pane">
                     {{ map_form.authors|as_crispy_field }}
-                    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#authorModal">Dodaj nowego autora</button>
-                    {{ map_form.archive_id|as_crispy_field }}
-                    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#archiveModal">Dodaj nowe archiwum</button>
+                    {{ map_form.corrector_id|as_crispy_field }}
+                    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#authorModal">Dodaj nowego autora / korektora</button>
+                    <div class="mt-4">
+                        {{ map_form.archive_id|as_crispy_field }}
+                        <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#archiveModal">Dodaj nowe archiwum</button>
+                    </div>
                 </div>
                 <div class="d-flex flex-row-reverse">
                     <button type="submit" name="map_form" class="btn btn-primary">Zapisz</button>
@@ -90,7 +114,7 @@
           <div class="modal-dialog">
                 <div class="modal-content">
                       <div class="modal-header">
-                        <h5 class="modal-title" id="authorModalLabel">Dodaj nowego autora</h5>
+                        <h5 class="modal-title" id="authorModalLabel">Dodaj nowego autora / korektora</h5>
                       </div>
                     <form method="POST" id="people_form">
                         {%  csrf_token %}
@@ -140,10 +164,11 @@
     $(document).on('submit','#people_form', function(e){
         e.preventDefault();
 
-        let save_btn = document.getElementById('save_people_form');
+        const save_btn = document.getElementById('save_people_form');
         save_btn.innerHTML = '<div class="spinner-border" role="status"> <span class="visually-hidden">Loading...</span> </div>'
 
-        let select = document.getElementById('id_map_form-authors')
+        const select = document.getElementById('id_map_form-authors')
+        const select_corrector = document.getElementById('id_map_form-corrector_id')
         let first_name = document.getElementById("id_people_form-first_name")
         let last_name = document.getElementById("id_people_form-last_name")
 
@@ -160,11 +185,13 @@
             success:function() {
                 $('#authorModal').modal('hide');
                 save_btn.innerHTML = 'Save'
-                let opt = document.createElement('option');
-                opt.value = $('#id_map_form-authors option:last').val();
-                opt.value = parseInt(opt.value) + 1
-                opt.innerHTML = first_name.value + " " +last_name.value;
-                select.appendChild(opt);
+                let new_option = document.createElement('option');
+                new_option.value = $('#id_map_form-authors option:last').val();
+                new_option.value = parseInt(new_option.value) + 1
+                new_option.innerHTML = last_name.value + " " +first_name.value;
+                let new_option_clone = new_option.cloneNode(true)
+                select_corrector.appendChild(new_option);
+                select.appendChild(new_option_clone);
                 first_name.value = null
                 last_name.value = null
             },

@@ -70,9 +70,7 @@ class Map(models.Model):
     archive_id = models.ForeignKey(
         Archive, blank=True, null=True, on_delete=models.SET("N/A")
     )
-    publication_place = models.ForeignKey(
-        PublicationPlaces, blank=True, null=True, on_delete=models.SET("N/A")
-    )
+    publication_place = models.CharField(max_length=100, blank=True, null=True)
     added_at = models.DateTimeField(auto_now_add=True)  # bez exportu
     creator = models.ManyToManyField(settings.AUTH_USER_MODEL)  # bez exportu
     full_title = models.CharField(max_length=500, blank=True)
@@ -89,7 +87,7 @@ class Map(models.Model):
     keyword_subject = models.CharField(max_length=500, blank=True)
     keyword_geo = models.CharField(max_length=500, blank=True)
     additional_notes = models.TextField(blank=True)
-    created_at = models.CharField(blank=True, max_length=150)
+    created_at = models.CharField(blank=True, null=True, max_length=150)
     source_text = models.CharField(blank=True, max_length=500)
 
     def __str__(self):

@@ -51,8 +51,12 @@ class MapForm(forms.ModelForm):
     related_docs = forms.ModelMultipleChoiceField(queryset=models.Document.objects.all(),
                                                   required=False,
                                                   widget=forms.SelectMultiple,
-                                                  label="Powiązane Dokumenty",
-                                                  help_text="Aby odznaczyć lub zaznaczyć więcej niż jeden przytrzymaj CTRL")
+                                                  label="Powiązane Dokumenty")
+
+    created_at = forms.CharField(label='Data utworzenia',
+                                 widget=forms.TextInput(attrs={'placeholder': '1900'}))
+
+    publication_place = None
 
     class Meta:
         model = models.Map
@@ -60,6 +64,9 @@ class MapForm(forms.ModelForm):
             'full_title',
             'short_title',
             'creator',
+            'corrector_id',
+            'publication_place',
+            'created_at',
             'subject_type',
             'filename',
             'link',
@@ -79,29 +86,33 @@ class MapForm(forms.ModelForm):
         ]
 
         labels = {
-            "full_title": "Tytuł Pełny",
-            "short_title": "Tytuł Skrócony",
-            "filename": "Plik Mapy",
-            "link": "Link do Mapy",
-            "creator": "Osoba Dodająca",
-            "publishing_address": "Miejsce Wydania",
+            "full_title": "Tytuł",
+            "short_title": "Tytuł alternatywny",
+            "filename": "Plik mapy",
+            "link": "Link do mapy",
+            "creator": "Osoba dodająca",
+            "corrector_id": "Korektor",
+            "publishing_address": "Miejsce wydania",
+            "publication_place": "Wydawnictwo",
             "scale": "Skala (mianownik)",
-            "subject": "Przedmiot Mapy",
+            "subject": "Przedmiot mapy",
             "subject_type": "Rodzaj",
             "creation_type": "Rodzaj mapy ze względu na sposób wykonania",
             "description": "Opis",
-            "keyword_name": "Słowa Kluczowe Imienne",
-            "keyword_subject": "Słowa Kluczowe Rzeczowe",
-            "keyword_geo": "Słowa Kluczowe Geograficzne",
-            "additional_notes": "Dodatkowe Informacje",
+            "keyword_name": "Słowa kluczowe imienne",
+            "keyword_subject": "Słowa kluczowe rzeczowe",
+            "keyword_geo": "Słowa kluczowe geograficzne",
+            "additional_notes": "Dodatkowe informacje",
             "archive_id": "Archiwum",
             "authors": "Autorzy",
-            "language_id": "Język Mapy",
-            "related_docs": 'Powiązane Dokumenty'
+            "language_id": "Język",
+            "related_docs": 'Powiązane dokumenty'
         }
 
         help_texts = {
-            "link": "Wypełnij to pole TYLKO jeśli mapa jest przechowywana w zewnętrzynym zasobie"
+            "link": "Wypełnij to pole TYLKO jeśli mapa jest przechowywana w zewnętrzynym zasobie",
+            "creator": "Aby odznaczyć lub zaznaczyć więcej niż jeden przytrzymaj CTRL",
+            "filename": "Wybierz plik mapy jeśli ma ona być przechowywana w aplikacji"
         }
 
     def __init__(self, *args, **kwargs):
@@ -138,18 +149,18 @@ class DocumentForm(forms.ModelForm):
         ]
 
         labels = {
-            "title": "Tytuł Pełny",
+            "title": "Tytuł",
             "description": "Opis",
             "authors": "Autorzy",
-            "creator": "Osoba Dodająca",
-            "created_at": "Data Powstania",
-            "language_id": "Język Dokumentu",
+            "creator": "Osoba dodająca",
+            "created_at": "Data powstania",
+            "language_id": "Język dokumentu",
             "receiver": "Adresat",
             "thumbnail": "Miniaturka",
             "archive_id": "Archiwum",
-            "keyword_name": "Słowa Kluczowe Imienne",
-            "keyword_subject": "Słowa Kluczowe Rzeczowe",
-            "keyword_geo": "Słowa Kluczowe Geograficzne",
+            "keyword_name": "Słowa kluczowe imienne",
+            "keyword_subject": "Słowa kluczowe rzeczowe",
+            "keyword_geo": "Słowa kluczowe geograficzne",
             "source_reference": "Odwołanie do źróła kartograficznego",
             "is_statistic_data": "Zawiera dane statystyczne",
             "is_map": "Zawiera mapę",
@@ -158,13 +169,12 @@ class DocumentForm(forms.ModelForm):
             "translation_file": "Tłumaczenie",
             "volume": "Objętość (liczba stron)",
             "doc_format": "Format dokumentu",
-            "source_type": "Typ Źródła",
+            "source_type": "Typ źródła",
         }
 
         help_texts = {
             "link": "Wypełnij to pole TYLKO jeśli dokument jest przechowywany w zewnętrzynym zasobie"
         }
-
 
 # class RelatedDocs(forms.Form):
 #     related_doc = forms.ModelMultipleChoiceField(
@@ -172,21 +182,21 @@ class DocumentForm(forms.ModelForm):
 #         widget=forms.SelectMultiple()
 #     )
 
-    # creator = CustomMMCF(
-    #     queryset=get_user_model().objects.all(),
-    #     widget=forms.CheckboxSelectMultiple
-    # )
+# creator = CustomMMCF(
+#     queryset=get_user_model().objects.all(),
+#     widget=forms.CheckboxSelectMultiple
+# )
 
-    # def __init__(self, *args, **kwargs):
-    #     super().__init__(*args, **kwargs)
-    #     self.helper = FormHelper()
-    #     self.helper.layout = Layout(
-    #         TabHolder(
-    #             Tab('Informacje o mapie', 'short_title', 'full_title', 'creator', 'subject', 'scale', 'filename',
-    #                 'description', 'publishing_address', 'subject_type', 'creation_type', 'keyword_name',
-    #                 'keyword_subject', 'keyword_geo', 'additional_notes'),
-    #             Tab('Informacje o autorach i archiwim', 'authors', HTML(
-    #                 """<button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#authorModal">Add new author</button>"""),
-    #                 'archive_id',
-    #                 HTML("""<button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#archiveModal">Dodaj nowe archiwum</button>"""))),
-    #         HTML("""<button type="submit" name="{{ map_form.prefix }}" class="btn btn-primary">Submit</button>"""))
+# def __init__(self, *args, **kwargs):
+#     super().__init__(*args, **kwargs)
+#     self.helper = FormHelper()
+#     self.helper.layout = Layout(
+#         TabHolder(
+#             Tab('Informacje o mapie', 'short_title', 'full_title', 'creator', 'subject', 'scale', 'filename',
+#                 'description', 'publishing_address', 'subject_type', 'creation_type', 'keyword_name',
+#                 'keyword_subject', 'keyword_geo', 'additional_notes'),
+#             Tab('Informacje o autorach i archiwim', 'authors', HTML(
+#                 """<button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#authorModal">Add new author</button>"""),
+#                 'archive_id',
+#                 HTML("""<button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#archiveModal">Dodaj nowe archiwum</button>"""))),
+#         HTML("""<button type="submit" name="{{ map_form.prefix }}" class="btn btn-primary">Submit</button>"""))
