@@ -159,9 +159,16 @@
                     </h2>
                     <div id="mapaDane-collapseFour" class="accordion-collapse collapse" aria-labelledby="mapaDane-headingFour">
                         <div class="accordion-body">
-                            {% if object.receiver %}
+                            {% if object.receiver.count > 0 %}
                                 <p><strong>Adresat:</strong>
-                                {{ object.receiver }}</p>
+                                    {%  for receiver in object.receiver.all %}
+                                        {% if forloop.last %}
+                                            {{ receiver }}
+                                        {% else %}
+                                            {{ receiver }},
+                                        {% endif %}
+                                    {% endfor %}
+                                </p>
                             {% endif %}
                             {% if object.archive_id %}
                                 <p><strong>Archiwum:</strong>
