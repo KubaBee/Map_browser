@@ -51,7 +51,7 @@ class MapForm(forms.ModelForm):
     related_docs = forms.ModelMultipleChoiceField(queryset=models.Document.objects.all(),
                                                   required=False,
                                                   widget=forms.SelectMultiple,
-                                                  label="Powiązane Dokumenty")
+                                                  label="Powiązane dokumenty")
 
     created_at = forms.CharField(label='Data utworzenia',
                                  widget=forms.TextInput(attrs={'placeholder': '1900'}))
