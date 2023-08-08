@@ -1,7 +1,7 @@
 {% extends "map_browser/base.html" %}
 {% load templatehelper %}
 {% load crispy_forms_tags %}
-
+{% load static %}
 {% block title %}
     <title>Wyszukaj</title>
 {% endblock title %}
@@ -24,18 +24,41 @@
         </div>
         <div class="col-md-8">
             <div class="tab-pane fade show active" id="maps" role="tabpanel" aria-labelledby="maps-tab">
-                <div id="box" class="row row-cols-sm-1 row-cols-md-3 g-4">
-                {% for doc in object_list %}
-                    <a class="card-as-link" href="{% url 'szczegoly-dokumenty' doc.id %}">
-                        <div class="card doc-card">
-                            <div class="card-body">
-                                <h5 class="card-title">{{ doc.title|truncatechars:100 }}</h5>
-                                <p class="card-text">{{ doc.description|truncatechars:250 }}</p>
+                {% if document_list %}
+                    <div id="box" class="row row-cols-sm-1 row-cols-md-2 g-4">
+                    {% for doc in object_list %}
+                        <a class="card-as-link" href="{% url 'szczegoly-dokumenty' doc.id %}">
+                            <div class="card">
+                                <div class="row g-0">
+                                    <div class="col-md-6 ">
+                                        {% if doc.thumbnail %}
+                                            <img src="{{ doc.thumbnail.url }}" class="img-fluid rounded-start doc-thumbnail" alt="Miniaturka Dokumentu">
+                                        {% else %}
+                                            <img src="{% static "map_browser/images/placeholder.png" %}" class="img-fluid rounded-start doc-thumbnail" alt="Miniaturka Dokumentu">
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ doc.title|truncatechars:100 }}</h5>
+                                            <p class="card-text">{{ doc.description|truncatechars:300 }}</p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
+                        </a>
+                    {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="d-flex justify-content-center align-items-mid">
+                        <div>
+                            <div class="d-flex justify-content-center align-items-center">
+                                <img src="{% static "map_browser/images/search-remove-icon.png" %}" alt="Brak wyników" style="max-height: 150px">
+                            </div>
+                            <h3 class="text-center">Brak wyników!</h3>
+                            <h5 class="text-center">Nie udało się znaleźć żadnego dokumentu pasującego do podanych wartości, sprawdź pisownie lub spróbuj innych opcji</h5>
                         </div>
-                    </a>
-                {% endfor %}
-                </div>
+                    </div>
+                {% endif %}
                 {% if is_paginated %}
                 <nav aria-label="dokumenty-paginator" >
                     <ul class="pagination justify-content-end mt-4">

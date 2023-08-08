@@ -1,7 +1,7 @@
 {% extends "map_browser/base.html" %}
 {% load templatehelper %}
 {% load crispy_forms_tags %}
-
+{% load static %}
 {% block title %}
     <title>Wyszukaj</title>
 {% endblock title %}
@@ -24,6 +24,7 @@
         </div>
         <div class="col-md-8">
             <div class="tab-pane fade show active" id="maps" role="tabpanel" aria-labelledby="maps-tab">
+                {% if map_list %}
                 <div id="box" class="row row-cols-sm-1 row-cols-md-3 g-4">
                 {% for map in object_list %}
                     <a class="card-as-link" href="{% url 'szczegoly-mapy' map.pk %}">
@@ -36,6 +37,17 @@
                     </a>
                 {% endfor %}
                 </div>
+                {% else %}
+                    <div class="d-flex justify-content-center align-items-mid">
+                        <div>
+                            <div class="d-flex justify-content-center align-items-center">
+                                <img src="{% static "map_browser/images/search-remove-icon.png" %}" alt="Brak wyników" style="max-height: 150px">
+                            </div>
+                            <h3 class="text-center">Brak wyników!</h3>
+                            <h5 class="text-center">Nie udało się znaleźć żadnej mapy pasującej do podanych wartości, sprawdź pisownie lub spróbuj innych opcji</h5>
+                        </div>
+                    </div>
+            {% endif %}
                 {% if is_paginated %}
                 <nav aria-label="dokumenty-paginator" >
                     <ul class="pagination justify-content-end mt-4">

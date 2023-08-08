@@ -24,20 +24,9 @@
             </form>
         </div>
     </div>
-{#    <div class="row row-cols-sm-1 row-cols-md-3 g-4">#}
-{#    {% for doc in document_list %}#}
-{#        <a class="card-as-link" href="{% url 'szczegoly-dokumenty' doc.id %}">#}
-{#            <div class="card doc-card">#}
-{#                {% if doc.thumbnail %}<img src="{{ doc.thumbnail.url }}" class="mapa card-img-top" alt="map_image">{% endif %}#}
-{#                <div class="card-body">#}
-{#                        <p class="card-text">{{ doc.title|truncatechars:100 }}</p>#}
-{#                </div>#}
-{#            </div>#}
-{#        </a>#}
-{#    {% endfor %}#}
-{#    </div>#}
+    {% if document_list %}
     <div class="row row-cols-sm-1 row-cols-md-1 row-cols-lg-2 g-4">
-    {% for doc in document_list %}
+        {% for doc in document_list %}
             <a class="card-as-link" href="{% url 'szczegoly-dokumenty' doc.id %}">
                 <div class="card">
                     <div class="row g-0">
@@ -57,7 +46,18 @@
                     </div>
                 </div>
             </a>
-    {% endfor %}
+        {% endfor %}
+    {% else %}
+        <div class="d-flex justify-content-center align-items-mid" style="margin-top: 50px">
+            <div>
+                <div class="d-flex justify-content-center align-items-center">
+                    <img src="{% static "map_browser/images/search-remove-icon.png" %}" alt="Brak wyników" style="max-height: 150px">
+                </div>
+                <h3 class="text-center">Brak wyników!</h3>
+                <h5 class="text-center">Nie udało się znaleźć żadnego dokumentu pasującego do frazy <i>"{{ title }}"</i>, sprawdź pisownie lub spróbuj z inną frazą!</h5>
+            </div>
+        </div>
+    {% endif %}
     </div>
     {% if is_paginated %}
     <nav aria-label="dokumenty-paginator" >

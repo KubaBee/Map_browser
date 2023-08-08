@@ -24,7 +24,9 @@ class Archive(models.Model):
     archive_number = models.CharField(max_length=200, blank=True)
 
     def __str__(self):
-        return f'{self.archive_name}/{self.archive_team}/{self.archive_unit}/{self.archive_number}'
+        parts = [self.archive_name, self.archive_team, self.archive_unit, self.archive_number]
+        non_empty_parts = [part for part in parts if part]  # filter out unnecessary parts
+        return '/'.join(non_empty_parts)
 
     unique_together = [
         ['archive_name', 'archive_team', 'archive_unit', 'archive_number']
@@ -52,6 +54,39 @@ class SubjectTypes(models.Model):
 
     def __str__(self):
         return f'{self.name}'
+
+
+def make_thumbnail(instance):
+
+    if isinstance(instance, Map):
+        img = Image.open(instance.filename)
+        img.thumbnail((916, 624))
+        thumb_name, thumb_extension = os.path.splitext(instance.filename.name)
+    elif isinstance(instance, Document):
+        img = Image.open(instance.thumbnail)
+        img.thumbnail((916, 624))
+        thumb_name, thumb_extension = os.path.splitext(instance.thumbnail.name)
+    else:
+        return False
+
+    thumb_extension = thumb_extension.lower()
+    thumb_filename = thumb_name + '_copy' + thumb_extension
+
+    if thumb_extension == '.jpg':
+        FTYPE = 'JPEG'
+    elif thumb_extension == '.png':
+        FTYPE = "PNG"
+    else:
+        return False
+
+    temp_thumb = BytesIO()
+    img.save(temp_thumb, FTYPE)
+    temp_thumb.seek(0)
+    instance.thumbnail.save(thumb_filename, ContentFile(temp_thumb.read()), save=False)
+
+    temp_thumb.close()
+
+    return True
 
 
 class Map(models.Model):
@@ -100,33 +135,9 @@ class Map(models.Model):
 
     def save(self, *args, **kwargs):
 
-        if not self.make_thumbnail():
+        if not make_thumbnail(self):
             raise Exception("Error when creating a thumbnail")
         super(Map, self).save(*args, **kwargs)
-
-    def make_thumbnail(self):
-
-        img = Image.open(self.filename)
-        img.thumbnail((916, 624))
-        thumb_name, thumb_extension = os.path.splitext(self.filename.name)
-        thumb_extension = thumb_extension.lower()
-        thumb_filename = thumb_name + '_copy' + thumb_extension
-
-        if thumb_extension == '.jpg':
-            FTYPE = 'JPEG'
-        elif thumb_extension == '.png':
-            FTYPE = "PNG"
-        else:
-            return False
-
-        temp_thumb = BytesIO()
-        img.save(temp_thumb, FTYPE)
-        temp_thumb.seek(0)
-
-        self.thumbnail.save(thumb_filename, ContentFile(temp_thumb.read()), save=False)
-        temp_thumb.close()
-
-        return True
 
 
 class Document(models.Model):
@@ -182,16 +193,18 @@ class Document(models.Model):
         blank=True,
         upload_to='translations/',
     )
-    thumbnail = models.ImageField(
-        upload_to='doc_thumbnails/',
-        blank=False,
-        null=True,
-        validators=[
-            FileExtensionValidator(
-                ['jpg', 'jpeg', 'png'],
-                message="Podany format nie jest obsługiwany. Akceptowane są tylko pliki .png lub .jpg",
-            )
-        ],)
+    thumbnail = models.ImageField(upload_to='doc_thumbnails/', null=True, blank=True)
+
+    # thumbnail = models.ImageField(
+    #     upload_to='doc_thumbnails/',
+    #     blank=False,
+    #     null=True,
+    #     validators=[
+    #         FileExtensionValidator(
+    #             ['jpg', 'jpeg', 'png'],
+    #             message="Podany format nie jest obsługiwany. Akceptowane są tylko pliki .png lub .jpg",
+    #         )
+    #     ],)
 
     volume = models.IntegerField(verbose_name="Liczba/objętość", blank=True, null=True)
     doc_format = models.CharField(
@@ -203,3 +216,8 @@ class Document(models.Model):
 
     def __str__(self):
         return self.title
+
+    def save(self, *args, **kwargs):
+        if not make_thumbnail(self):
+            raise Exception("Error when creating a thumbnail")
+        super(Document, self).save(*args, **kwargs)
