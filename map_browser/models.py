@@ -218,6 +218,7 @@ class Document(models.Model):
         return self.title
 
     def save(self, *args, **kwargs):
-        if not make_thumbnail(self):
-            raise Exception("Error when creating a thumbnail")
+        if self.thumbnail:
+            if not make_thumbnail(self):
+                raise Exception("Error when creating a thumbnail")
         super(Document, self).save(*args, **kwargs)
