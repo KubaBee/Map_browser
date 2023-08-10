@@ -72,7 +72,7 @@ def make_thumbnail(instance):
     thumb_extension = thumb_extension.lower()
     thumb_filename = thumb_name + '_copy' + thumb_extension
 
-    if thumb_extension == '.jpg':
+    if thumb_extension in ['.jpeg', '.jpg']:
         FTYPE = 'JPEG'
     elif thumb_extension == '.png':
         FTYPE = "PNG"
@@ -82,7 +82,7 @@ def make_thumbnail(instance):
     temp_thumb = BytesIO()
     img.save(temp_thumb, FTYPE)
     temp_thumb.seek(0)
-    instance.thumbnail.save(thumb_filename, ContentFile(temp_thumb.read()), save=False)
+    instance.thumbnail.save(thumb_filename, ContentFile(temp_thumb.getvalue()), save=False)
 
     temp_thumb.close()
 
