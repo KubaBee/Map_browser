@@ -8,6 +8,9 @@ from django.core.files.base import ContentFile
 
 
 class People(models.Model):
+    class Meta:
+        app_label = 'map_browser'
+
     first_name = models.CharField(max_length=80, blank=True)
     last_name = models.CharField(max_length=80, blank=True)
 
@@ -18,6 +21,9 @@ class People(models.Model):
 
 
 class Archive(models.Model):
+    class Meta:
+        app_label = 'map_browser'
+
     archive_name = models.CharField(max_length=200, blank=True)
     archive_team = models.CharField(max_length=200, blank=True)
     archive_unit = models.CharField(max_length=200, blank=True)
@@ -34,6 +40,9 @@ class Archive(models.Model):
 
 
 class Languages(models.Model):
+    class Meta:
+        app_label = 'map_browser'
+
     language_code = models.CharField(max_length=4, blank=True)
     language_name = models.CharField(max_length=50, blank=True)
 
@@ -42,6 +51,9 @@ class Languages(models.Model):
 
 
 class PublicationPlaces(models.Model):
+    class Meta:
+        app_label = 'map_browser'
+
     country_name = models.CharField(max_length=100, blank=True)
     city_name = models.CharField(max_length=100, blank=True)
 
@@ -50,6 +62,9 @@ class PublicationPlaces(models.Model):
 
 
 class SubjectTypes(models.Model):
+    class Meta:
+        app_label = 'map_browser'
+
     name = models.CharField(max_length=50, blank=True)
 
     def __str__(self):
@@ -90,10 +105,14 @@ def make_thumbnail(instance):
 
 
 class Map(models.Model):
+    class Meta:
+        app_label = 'map_browser'
+
     filename = models.ImageField(upload_to='maps/')
     thumbnail = models.ImageField(upload_to='thumbnails/')
     link = models.URLField(verbose_name="Link do Mapy", null=True, blank=True)
     authors = models.ManyToManyField(People, null=True)
+    is_active = models.BooleanField(default=False, verbose_name="Publiczna", help_text="Zaznacz jeśli mapa ma być widoczna dla niezalogowanego użytkownika")
     corrector_id = models.ForeignKey(
         People,
         blank=True,
@@ -141,10 +160,14 @@ class Map(models.Model):
 
 
 class Document(models.Model):
+    class Meta:
+        app_label = 'map_browser'
+
     title = models.CharField(max_length=250, verbose_name="Tytuł")
     description = models.TextField(blank=True, verbose_name="Opis dokumentu")
     added_at = models.DateTimeField(auto_now_add=True)
     authors = models.ManyToManyField(People, null=True, verbose_name="Autorzy")
+    is_active = models.BooleanField(default=False, verbose_name="Publiczny", help_text="Zaznacz jeśli dokument ma być widoczny dla niezalogowanego użytkownika")
     creator = models.ManyToManyField(
         settings.AUTH_USER_MODEL, verbose_name="Osoba wprowadzająca dane"
     )

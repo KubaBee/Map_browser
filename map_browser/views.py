@@ -9,13 +9,13 @@ from django.views.generic.list import ListView, MultipleObjectMixin
 from django.views.generic.detail import DetailView
 from django.contrib import messages
 from django.urls import reverse_lazy
-from django.db.models import Q
-from .filters import MapFilter, DocumentFilter
 from django.http import HttpResponse, HttpResponseServerError
+from .mixins import ActiveObjectFilterMixin
+from .filters import MapFilter, DocumentFilter
 import csv
 
 
-class MapListView(ListView, MultipleObjectMixin):
+class MapListView(ActiveObjectFilterMixin, ListView, MultipleObjectMixin):
     model = Map
     template_name = 'map_browser/map_list.html'
     ordering = ['-added_at']
@@ -33,13 +33,12 @@ class MapListView(ListView, MultipleObjectMixin):
         qs = super().get_queryset()
         title = self.request.GET.get('title')
         if title:
-            res = qs.filter(Q(full_title__icontains=title))
-            return res
+            return qs.filter(full_title__icontains=title)
         else:
             return qs
 
 
-class DocumentListView(ListView, MultipleObjectMixin):
+class DocumentListView(ActiveObjectFilterMixin, ListView, MultipleObjectMixin):
     model = Document
     template_name = 'map_browser/document_list.html'
     ordering = ['-added_at']
@@ -52,18 +51,16 @@ class DocumentListView(ListView, MultipleObjectMixin):
             context.update({'title': title})
         return context
 
-    # dodaj szukanie po dokumentsach
     def get_queryset(self):
         qs = super().get_queryset()
         title = self.request.GET.get('title')
         if title:
-            res = qs.filter(Q(title__icontains=title))
-            return res
+            return qs.filter(title__icontains=title)
         else:
             return qs
 
 
-class MapDetailView(DetailView):
+class MapDetailView(ActiveObjectFilterMixin, DetailView):
     model = Map
 
     def get_context_data(self, **kwargs):
@@ -71,16 +68,16 @@ class MapDetailView(DetailView):
         context = super(MapDetailView, self).get_context_data(**kwargs)
 
         if Map.objects.filter(id__gt=self.get_object().id).first() is not None:
-            context['next_map'] = Map.objects.filter(
+            context['next_map'] = self.get_queryset().filter(
                 id__gt=self.get_object().id
             ).first()
         if Map.objects.filter(id__lt=self.get_object().id).first() is not None:
-            context['prev_map'] = Map.objects.filter(id__lt=self.get_object().id).last()
+            context['prev_map'] = self.get_queryset().filter(id__lt=self.get_object().id).last()
 
         return context
 
 
-class DocumentDetailView(DetailView, MultipleObjectMixin):
+class DocumentDetailView(ActiveObjectFilterMixin, DetailView, MultipleObjectMixin):
     model = Document
     paginate_by = 5
 
@@ -91,31 +88,31 @@ class DocumentDetailView(DetailView, MultipleObjectMixin):
         )
 
         if Document.objects.filter(id__gt=self.get_object().id).first() is not None:
-            context['next_doc'] = Document.objects.filter(
+            context['next_doc'] = self.get_queryset().filter(
                 id__gt=self.get_object().id
             ).first()
         if Document.objects.filter(id__lt=self.get_object().id).first() is not None:
-            context['prev_doc'] = Document.objects.filter(
+            context['prev_doc'] = self.get_queryset().filter(
                 id__lt=self.get_object().id
             ).last()
         return context
 
 
-class FilterMapView(ListView):
+class FilterMapView(ActiveObjectFilterMixin, ListView):
     model = Map
     template_name = 'map_browser/map-search.html'
     paginate_by = 6
 
     def get_context_data(self, **kwargs):
         obj_list = MapFilter(self.request.GET, queryset=self.get_queryset())
-        context = super(FilterMapView, self).get_context_data(
-            object_list=obj_list.qs.order_by('added_at')
+        context = super().get_context_data(
+            object_list=obj_list.qs.order_by('-added_at')
         )
         context['filter'] = obj_list
         return context
 
 
-class FilterDocumentView(ListView):
+class FilterDocumentView(ActiveObjectFilterMixin, ListView):
     model = Document
     template_name = 'map_browser/document-search.html'
     paginate_by = 6
@@ -123,7 +120,7 @@ class FilterDocumentView(ListView):
     def get_context_data(self, **kwargs):
         obj_list = DocumentFilter(self.request.GET, queryset=self.get_queryset())
         context = super(FilterDocumentView, self).get_context_data(
-            object_list=obj_list.qs.order_by('added_at')
+            object_list=obj_list.qs.order_by('-added_at')
         )
         context['filter'] = obj_list
 

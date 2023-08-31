@@ -82,7 +82,8 @@ class MapForm(forms.ModelForm):
             'keyword_geo',
             'additional_notes',
             'language_id',
-            'related_docs'
+            'related_docs',
+            "is_active"
         ]
 
         labels = {
@@ -146,6 +147,7 @@ class DocumentForm(forms.ModelForm):
             "volume",
             "doc_format",
             "source_type",
+            "is_active",
         ]
 
         labels = {

@@ -10,7 +10,6 @@
         {%  csrf_token %}
         <div class="mb-3">
 {#            {% crispy doc_form %}#}
-
             <ul class="nav nav-tabs">
                 <li class="nav-item">
                     <a class="nav-link active" href="#informacje-o-dokumencie" data-bs-toggle="tab">Informacje o dokumencie</a>
@@ -54,27 +53,26 @@
                     </div>
                     <div class="row">
                         <div class="col-12 col-md-6">
-                            {{ doc_form.link|as_crispy_field }}
+                            {{ doc_form.description|as_crispy_field }}
                         </div>
-                        <div class="col-12 col-md-3 align-self-center">
-                            {{ doc_form.is_statistic_data|as_crispy_field }}
-                        </div>
-                        <div class="col-12 col-md-3 align-self-center">
-                            {{ doc_form.is_map|as_crispy_field }}
+                        <div class="col-12 col-md-6">
+                            <div class="col-12">
+                                {{ doc_form.link|as_crispy_field }}
+                            </div>
+                            <div class="col-12">
+                                {{ doc_form.volume|as_crispy_field }}
+                            </div>
+                            <div class="col-12">
+                                {{ doc_form.created_at|as_crispy_field }}
+                            </div>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-12 col-md-3">
-                            {{ doc_form.volume|as_crispy_field }}
-                        </div>
-                        <div class="col-12 col-md-3">
+                        <div class="col-12 col-md-6">
                             {{ doc_form.doc_format|as_crispy_field }}
                         </div>
-                        <div class="col-12 col-md-3">
+                        <div class="col-12 col-md-6">
                             {{ doc_form.source_type|as_crispy_field }}
-                        </div>
-                        <div class="col-12 col-md-3">
-                            {{ doc_form.created_at|as_crispy_field }}
                         </div>
                     </div>
                     <div class="row">
@@ -87,8 +85,16 @@
                         <div class="col-12 col-md-4">
                             {{ doc_form.keyword_geo|as_crispy_field }}
                         </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-md-3 align-self-center">
+                            {{ doc_form.is_statistic_data|as_crispy_field }}
+                        </div>
+                        <div class="col-12 col-md-3 align-self-center">
+                            {{ doc_form.is_map|as_crispy_field }}
+                        </div>
                         <div class="col-12 col-md-6">
-                            {{ doc_form.description|as_crispy_field }}
+                            {{ doc_form.is_active|as_crispy_field }}
                         </div>
                     </div>
                 </div>
