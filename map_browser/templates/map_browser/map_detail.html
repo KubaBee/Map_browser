@@ -64,7 +64,7 @@
             {% if object.description %}
                 <h5><strong>Opis</strong></h5>
                 <p>
-                    {{ object.description|linebreaksbr }}
+                    {{ object.description|urlize }}
                 </p>
             {% endif %}
             {% if object.additional_notes %}
