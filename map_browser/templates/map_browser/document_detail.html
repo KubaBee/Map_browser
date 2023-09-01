@@ -91,7 +91,7 @@
             {% if object.description %}
                 <h5><strong>Opis</strong></h5>
                 <p>
-                    {{ object.description }}
+                    {{ object.description|urlize }}
                 </p>
             {% endif %}
 
