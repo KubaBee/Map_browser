@@ -48,7 +48,6 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
     'django_filters',
     'map_browser.templatetags',
-    'django.contrib.contenttypes',
 ]
 
 MIDDLEWARE = [
