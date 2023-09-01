@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404
+from django.contrib.auth.mixins import UserPassesTestMixin
 
 
 class ActiveObjectFilterMixin:
@@ -17,9 +18,24 @@ class ActiveObjectFilterMixin:
 
         return obj
 
-    # def get_context_data(self, *, object_list=None, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     title = self.request.GET.get('title')
-    #     if title:
-    #         context.update({'title': title})
-    #     return context
+    def filter_queryset(self, qs):
+        title = self.request.GET.get('title')
+        if title:
+            return qs.filter(title__icontains=title)
+        else:
+            return qs
+
+
+class FilterViewMixin:
+    filter_class = None
+    template_name = None
+    paginate_by = 6
+
+    def get_context_data(self, **kwargs):
+        obj_list = self.filter_class(self.request.GET, queryset=self.get_queryset())
+        context = super().get_context_data(
+            object_list=obj_list.qs.order_by('-added_at'),
+            **kwargs
+        )
+        context['filter'] = obj_list
+        return context

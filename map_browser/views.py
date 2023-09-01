@@ -10,7 +10,7 @@ from django.views.generic.detail import DetailView
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.http import HttpResponse, HttpResponseServerError
-from .mixins import ActiveObjectFilterMixin
+from .mixins import ActiveObjectFilterMixin, FilterViewMixin
 from .filters import MapFilter, DocumentFilter
 import csv
 
@@ -28,14 +28,9 @@ class MapListView(ActiveObjectFilterMixin, ListView, MultipleObjectMixin):
             context.update({'title': title})
         return context
 
-    # dodaj szukanie po mapach
     def get_queryset(self):
         qs = super().get_queryset()
-        title = self.request.GET.get('title')
-        if title:
-            return qs.filter(full_title__icontains=title)
-        else:
-            return qs
+        return self.filter_queryset(qs)
 
 
 class DocumentListView(ActiveObjectFilterMixin, ListView, MultipleObjectMixin):
@@ -53,11 +48,7 @@ class DocumentListView(ActiveObjectFilterMixin, ListView, MultipleObjectMixin):
 
     def get_queryset(self):
         qs = super().get_queryset()
-        title = self.request.GET.get('title')
-        if title:
-            return qs.filter(title__icontains=title)
-        else:
-            return qs
+        return self.filter_queryset(qs)
 
 
 class MapDetailView(ActiveObjectFilterMixin, DetailView):
@@ -67,11 +58,11 @@ class MapDetailView(ActiveObjectFilterMixin, DetailView):
 
         context = super(MapDetailView, self).get_context_data(**kwargs)
 
-        if Map.objects.filter(id__gt=self.get_object().id).first() is not None:
+        if self.model.objects.filter(id__gt=self.get_object().id).first() is not None:
             context['next_map'] = self.get_queryset().filter(
                 id__gt=self.get_object().id
             ).first()
-        if Map.objects.filter(id__lt=self.get_object().id).first() is not None:
+        if self.model.objects.filter(id__lt=self.get_object().id).first() is not None:
             context['prev_map'] = self.get_queryset().filter(id__lt=self.get_object().id).last()
 
         return context
@@ -87,48 +78,27 @@ class DocumentDetailView(ActiveObjectFilterMixin, DetailView, MultipleObjectMixi
             object_list=object_list
         )
 
-        if Document.objects.filter(id__gt=self.get_object().id).first() is not None:
+        if self.model.objects.filter(id__gt=self.get_object().id).first() is not None:
             context['next_doc'] = self.get_queryset().filter(
                 id__gt=self.get_object().id
             ).first()
-        if Document.objects.filter(id__lt=self.get_object().id).first() is not None:
+        if self.model.objects.filter(id__lt=self.get_object().id).first() is not None:
             context['prev_doc'] = self.get_queryset().filter(
                 id__lt=self.get_object().id
             ).last()
         return context
 
 
-class FilterMapView(ActiveObjectFilterMixin, ListView):
+class FilterMapView(ActiveObjectFilterMixin, FilterViewMixin, ListView):
     model = Map
     template_name = 'map_browser/map-search.html'
-    paginate_by = 6
-
-    def get_context_data(self, **kwargs):
-        obj_list = MapFilter(self.request.GET, queryset=self.get_queryset())
-        context = super().get_context_data(
-            object_list=obj_list.qs.order_by('-added_at')
-        )
-        context['filter'] = obj_list
-        return context
+    filter_class = MapFilter
 
 
-class FilterDocumentView(ActiveObjectFilterMixin, ListView):
+class FilterDocumentView(ActiveObjectFilterMixin, FilterViewMixin, ListView):
     model = Document
     template_name = 'map_browser/document-search.html'
-    paginate_by = 6
-
-    def get_context_data(self, **kwargs):
-        obj_list = DocumentFilter(self.request.GET, queryset=self.get_queryset())
-        context = super(FilterDocumentView, self).get_context_data(
-            object_list=obj_list.qs.order_by('-added_at')
-        )
-        context['filter'] = obj_list
-
-        return context
-
-
-def contact(request):
-    return render(request, 'map_browser/kontakt.html', {})
+    filter_class = DocumentFilter
 
 
 def default_redirect(request):
