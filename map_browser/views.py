@@ -294,10 +294,10 @@ class AddDocumentForm(LoginRequiredMixin, CreateView):
         )
 
 
-def check_url_existence(self):
+def check_url_existence(self, request):
 
     if self and hasattr(self, 'url'):
-        return self.url
+        return request.build_absolute_uri(self.url)
     else:
         return "Brak zedfiniowanego linku dla tego obiektu"
 
@@ -306,7 +306,7 @@ def check_url_existence(self):
 def map_csv_export(request):
     all_maps = Map.objects.all()
 
-    response = HttpResponse('text/csv')
+    response = HttpResponse()
     response[
         'Content-Disposition'
     ] = f'attachment; filename="Raport Map_{datetime.datetime.now()}.csv"'
@@ -325,18 +325,18 @@ def map_csv_export(request):
     )
 
     for single_map in all_maps:
+        creators = ", ".join([user.username for user in single_map.creator.all()])
+        authors = ", ".join(
+            [f"{author.last_name} {author.first_name}" if author else " " for author in single_map.authors.all()])
         writer.writerow(
             [
-                single_map.added_at,
+                single_map.added_at.strftime("%d-%m-%Y"),
                 single_map.full_title,
                 single_map.short_title,
-                single_map.creator,
+                creators,
                 single_map.publication_place,
-                check_url_existence(single_map),
-                [
-                    author if author is not None else " "
-                    for author in single_map.authors.all()
-                ],
+                check_url_existence(single_map, request),
+                authors
             ]
         )
     return response
@@ -364,17 +364,17 @@ def doc_csv_export(request):
     )
 
     for single_doc in all_docs:
+        creators = ", ".join([user.username for user in single_doc.creator.all()])
+        authors = ", ".join(
+            [f"{author.last_name} {author.first_name}" if author else " " for author in single_doc.authors.all()])
         writer.writerow(
             [
-                single_doc.added_at,
+                single_doc.added_at.strftime("%d-%m-%Y"),
                 single_doc.title,
-                single_doc.creator,
-                check_url_existence(single_doc.doc_file),
-                check_url_existence(single_doc.translation_file),
-                [
-                    author if author is not None else " "
-                    for author in single_doc.authors.all()
-                ],
+                creators,
+                check_url_existence(single_doc.doc_file, request),
+                check_url_existence(single_doc.translation_file, request),
+                authors
             ]
         )
     return response
