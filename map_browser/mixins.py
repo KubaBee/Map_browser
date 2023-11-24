@@ -1,5 +1,7 @@
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.mixins import UserPassesTestMixin
+from .models import Map, Document
+from django.http import HttpResponse
 
 
 class ActiveObjectFilterMixin:
@@ -19,11 +21,17 @@ class ActiveObjectFilterMixin:
         return obj
 
     def filter_queryset(self, qs):
-        title = self.request.GET.get('title')
+        # Get the model name
+        model_name = qs.model._meta.model_name
+        title = self.request.GET.get("title")
+
         if title:
-            return qs.filter(title__icontains=title)
-        else:
-            return qs
+            if model_name == 'map':
+                return qs.filter(full_title__icontains=title)
+            elif model_name == 'document':
+                return qs.filter(title__icontains=title)
+
+        return qs
 
 
 class FilterViewMixin:

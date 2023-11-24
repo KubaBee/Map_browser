@@ -72,12 +72,15 @@ class SubjectTypes(models.Model):
 
 
 def make_thumbnail(instance):
-
     if isinstance(instance, Map):
+        if not instance.filename:
+            return False
         img = Image.open(instance.filename)
         img.thumbnail((916, 624))
         thumb_name, thumb_extension = os.path.splitext(instance.filename.name)
     elif isinstance(instance, Document):
+        if not instance.thumbnail:
+            return False
         img = Image.open(instance.thumbnail)
         img.thumbnail((916, 624))
         thumb_name, thumb_extension = os.path.splitext(instance.thumbnail.name)
@@ -104,12 +107,25 @@ def make_thumbnail(instance):
     return True
 
 
+def upload_thumbnail_path(instance, filename):
+    # Construct the path for the thumbnail using the document's title or ID
+    base_filename, file_extension = os.path.splitext(filename)
+    if isinstance(instance, Map):
+        return os.path.join('thumbnails', f'{instance.pk}{file_extension}')
+    elif isinstance(instance, Document):
+        return os.path.join('doc_thumbnails', f'{instance.pk}_copy{file_extension}')
+    else:
+        raise ValueError("Unsupported instance type for upload_thumbnail_path")
+
+
+
 class Map(models.Model):
     class Meta:
         app_label = 'map_browser'
 
     filename = models.ImageField(upload_to='maps/')
-    thumbnail = models.ImageField(upload_to='thumbnails/')
+    thumbnail = models.ImageField(upload_to=upload_thumbnail_path, null=True, blank=True)
+    # thumbnail = models.ImageField(upload_to='thumbnails/')
     link = models.URLField(verbose_name="Link do Mapy", null=True, blank=True)
     authors = models.ManyToManyField(People, null=True)
     is_active = models.BooleanField(default=False, verbose_name="Publiczna", help_text="Zaznacz jeśli mapa ma być widoczna dla niezalogowanego użytkownika")
@@ -216,7 +232,8 @@ class Document(models.Model):
         blank=True,
         upload_to='translations/',
     )
-    thumbnail = models.ImageField(upload_to='doc_thumbnails/', null=True, blank=True)
+    # thumbnail = models.ImageField(upload_to='doc_thumbnails/', null=True, blank=True)
+    thumbnail = models.ImageField(upload_to=upload_thumbnail_path, null=True, blank=True)
 
     # thumbnail = models.ImageField(
     #     upload_to='doc_thumbnails/',

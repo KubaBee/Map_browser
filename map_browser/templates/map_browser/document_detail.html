@@ -290,7 +290,7 @@
             <div class="col placeholder_doc pt-3">
                 <img src="{% static 'map_browser/images/doc_placeholder.svg' %}" alt="Dokument Placeholder">
                 <div class="alert alert-secondary" role="alert">
-                    <strong>Zewnętrzny serwis!</strong> Otworzony prze Ciebie dokument przechowywany jest w zewnętrznym serwisie, <a target="_blank" href="{{ object.filename.url }}">kliknij tutaj aby do niego przejść</a>
+                    <strong>Zewnętrzny serwis!</strong> Otworzony prze Ciebie dokument przechowywany jest w zewnętrznym serwisie, <a target="_blank" href="{{ object.link }}">kliknij tutaj aby do niego przejść</a>
                 </div>
             </div>
         {% endif %}
