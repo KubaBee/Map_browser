@@ -57,13 +57,27 @@ class MapDetailView(ActiveObjectFilterMixin, DetailView):
     def get_context_data(self, **kwargs):
 
         context = super(MapDetailView, self).get_context_data(**kwargs)
+        current_map = self.get_object()
+
+        # Get the related documents for the current map, filtering by is_active
+        if self.request.user.is_authenticated:
+            related_documents = Document.objects.filter(
+                source_reference=current_map
+            )
+        else:
+            related_documents = Document.objects.filter(
+                source_reference=current_map,
+                is_active=True
+            )
+
+        context['related_documents'] = related_documents
 
         if self.model.objects.filter(id__gt=self.get_object().id).first() is not None:
-            context['next_map'] = self.get_queryset().filter(
+            context['next_object'] = self.get_queryset().filter(
                 id__gt=self.get_object().id
             ).first()
         if self.model.objects.filter(id__lt=self.get_object().id).first() is not None:
-            context['prev_map'] = self.get_queryset().filter(id__lt=self.get_object().id).last()
+            context['prev_object'] = self.get_queryset().filter(id__lt=self.get_object().id).last()
 
         return context
 
@@ -73,17 +87,20 @@ class DocumentDetailView(ActiveObjectFilterMixin, DetailView, MultipleObjectMixi
     paginate_by = 5
 
     def get_context_data(self, **kwargs):
-        object_list = Map.objects.filter(document=self.get_object())
+        if self.request.user.is_authenticated:
+            object_list = Map.objects.filter(document=self.get_object())
+        else:
+            object_list = Map.objects.filter(document=self.get_object(), is_active=True)
         context = super(DocumentDetailView, self).get_context_data(
             object_list=object_list
         )
 
         if self.model.objects.filter(id__gt=self.get_object().id).first() is not None:
-            context['next_doc'] = self.get_queryset().filter(
+            context['next_object'] = self.get_queryset().filter(
                 id__gt=self.get_object().id
             ).first()
         if self.model.objects.filter(id__lt=self.get_object().id).first() is not None:
-            context['prev_doc'] = self.get_queryset().filter(
+            context['prev_object'] = self.get_queryset().filter(
                 id__lt=self.get_object().id
             ).last()
         return context

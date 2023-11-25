@@ -11,16 +11,16 @@
 {% block content %}
     <div class="row justify-content-between pb-3 pe-0">
         <div class="col-4">
-        {% if prev_map %}
+        {% if prev_object %}
 {#            <a href="{% url 'szczegoly-mapy' prev_map.id %}">&laquo; Poprzednia</a>#}
-            <button onclick="location.href='{% url 'szczegoly-mapy' prev_map.id %}'" type="button" class="btn btn-outline-dark btn-sm">
+            <button onclick="location.href='{% url 'szczegoly-mapy' prev_object.id %}'" type="button" class="btn btn-outline-dark btn-sm">
          &laquo; Poprzednia</button>
         {% endif %}
         </div>
         <div class="col-4 text-end">
-            {% if next_map is not None %}
+            {% if next_object is not None %}
 {#                <a href="{% url 'szczegoly-mapy' next_map.id %}">Następna &raquo;</a>#}
-                <button onclick="location.href='{% url 'szczegoly-mapy' next_map.id %}'" type="button" class="btn btn-outline-dark btn-sm">
+                <button onclick="location.href='{% url 'szczegoly-mapy' next_object.id %}'" type="button" class="btn btn-outline-dark btn-sm">
          Następna &raquo;</button>
             {% endif %}
         </div>
@@ -180,7 +180,7 @@
                     </div>
                 </div>
                 {% endif %}
-                {% if object.document_set.count > 0 %}
+                {% if related_documents.count > 0 %}
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="mapaDane-headingFour">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#mapaDane-collapseFour" aria-expanded="false" aria-controls="mapaDane-collapseFour">
@@ -190,7 +190,7 @@
                     <div id="mapaDane-collapseFour" class="accordion-collapse collapse" aria-labelledby="mapaDane-headingFour">
                         <div class="accordion-body">
                                 <ul class="list-group mt-2">
-                                {% for doc in object.document_set.all %}
+                                {% for doc in related_documents %}
                                     <li class="list-group-item"><a href={% url 'szczegoly-dokumenty' doc.id %}>{{ doc.title }}</a></li>
                                 {% endfor %}
                                 </ul>

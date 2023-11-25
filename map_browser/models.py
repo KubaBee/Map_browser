@@ -118,7 +118,6 @@ def upload_thumbnail_path(instance, filename):
         raise ValueError("Unsupported instance type for upload_thumbnail_path")
 
 
-
 class Map(models.Model):
     class Meta:
         app_label = 'map_browser'

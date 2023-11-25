@@ -8,12 +8,17 @@ class ActiveObjectFilterMixin:
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        if not self.request.user.is_authenticated:
+        user = self.request.user
+
+        if not user.is_authenticated:
             queryset = queryset.filter(is_active=True)
+
         return queryset
 
     def get_object(self, queryset=None):
-        if not self.request.user.is_authenticated:
+        user = self.request.user
+
+        if not user.is_authenticated:
             obj = get_object_or_404(self.model, pk=self.kwargs['pk'], is_active=True)
         else:
             obj = get_object_or_404(self.model, pk=self.kwargs['pk'])
@@ -32,6 +37,20 @@ class ActiveObjectFilterMixin:
                 return qs.filter(title__icontains=title)
 
         return qs
+    #
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #
+    #     if self.model.objects.filter(id__gt=self.get_object().id).first() is not None:
+    #         context['next_object'] = self.get_queryset().filter(
+    #             id__gt=self.get_object().id
+    #         ).first()
+    #     if self.model.objects.filter(id__lt=self.get_object().id).first() is not None:
+    #         context['prev_object'] = self.get_queryset().filter(
+    #             id__lt=self.get_object().id
+    #         ).last()
+    #
+    #     return context
 
 
 class FilterViewMixin:

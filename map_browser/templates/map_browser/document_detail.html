@@ -8,17 +8,17 @@
     {#  navigation between prev and next page  #}
     <div class="row justify-content-between pb-3 pe-0">
         <div class="col-4">
-            {% if prev_doc %}
+            {% if prev_object %}
 {#                <a href="{% url 'szczegoly-dokumenty' prev_doc.id %}">&laquo; Poprzedni</a>#}
-                <button onclick="location.href='{% url 'szczegoly-dokumenty' prev_doc.id %}'" type="button" class="btn btn-outline-dark btn-sm">
+                <button onclick="location.href='{% url 'szczegoly-dokumenty' prev_object.id %}'" type="button" class="btn btn-outline-dark btn-sm">
          &laquo; Poprzedni</button>
             {% endif %}
         </div>
 
         <div class="col-4 text-end">
-            {% if next_doc is not None %}
+            {% if next_object is not None %}
 {#                <a href="{% url 'szczegoly-dokumenty' next_doc.id %}">Następny &raquo;</a>#}
-                <button onclick="location.href='{% url 'szczegoly-dokumenty' next_doc.id %}'" type="button" class="btn btn-outline-dark btn-sm">
+                <button onclick="location.href='{% url 'szczegoly-dokumenty' next_object.id %}'" type="button" class="btn btn-outline-dark btn-sm">
          Następny &raquo;</button>
             {% endif %}
         </div>
