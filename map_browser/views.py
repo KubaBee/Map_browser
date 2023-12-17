@@ -9,6 +9,7 @@ from django.views.generic.list import ListView, MultipleObjectMixin
 from django.views.generic.detail import DetailView
 from django.contrib import messages
 from django.urls import reverse_lazy
+from django.db.models import Q
 from django.http import HttpResponse, HttpResponseServerError
 from .mixins import ActiveObjectFilterMixin, FilterViewMixin
 from .filters import MapFilter, DocumentFilter
@@ -18,7 +19,6 @@ import csv
 class MapListView(ActiveObjectFilterMixin, ListView, MultipleObjectMixin):
     model = Map
     template_name = 'map_browser/map_list.html'
-    ordering = ['-added_at']
     paginate_by = 9
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -36,7 +36,6 @@ class MapListView(ActiveObjectFilterMixin, ListView, MultipleObjectMixin):
 class DocumentListView(ActiveObjectFilterMixin, ListView, MultipleObjectMixin):
     model = Document
     template_name = 'map_browser/document_list.html'
-    ordering = ['-added_at']
     paginate_by = 6
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -72,12 +71,9 @@ class MapDetailView(ActiveObjectFilterMixin, DetailView):
 
         context['related_documents'] = related_documents
 
-        if self.model.objects.filter(id__gt=self.get_object().id).first() is not None:
-            context['next_object'] = self.get_queryset().filter(
-                id__gt=self.get_object().id
-            ).first()
-        if self.model.objects.filter(id__lt=self.get_object().id).first() is not None:
-            context['prev_object'] = self.get_queryset().filter(id__lt=self.get_object().id).last()
+        # affected by the new ordering
+        context['next_object'], context['prev_object'] = get_next_and_prev_objects(
+            self.get_object(), self.get_queryset())
 
         return context
 
@@ -91,19 +87,28 @@ class DocumentDetailView(ActiveObjectFilterMixin, DetailView, MultipleObjectMixi
             object_list = Map.objects.filter(document=self.get_object())
         else:
             object_list = Map.objects.filter(document=self.get_object(), is_active=True)
+
         context = super(DocumentDetailView, self).get_context_data(
             object_list=object_list
         )
+        context['next_object'], context['prev_object'] = get_next_and_prev_objects(
+            self.get_object(), self.get_queryset())
 
-        if self.model.objects.filter(id__gt=self.get_object().id).first() is not None:
-            context['next_object'] = self.get_queryset().filter(
-                id__gt=self.get_object().id
-            ).first()
-        if self.model.objects.filter(id__lt=self.get_object().id).first() is not None:
-            context['prev_object'] = self.get_queryset().filter(
-                id__lt=self.get_object().id
-            ).last()
         return context
+
+
+def get_next_and_prev_objects(current_object, queryset):
+
+    current_index = list(queryset).index(current_object)
+
+    next_index = current_index + 1
+    next_object = queryset[next_index] if next_index < len(queryset) else None
+
+    # Get the previous object
+    previous_index = current_index - 1
+    previous_object = queryset[previous_index] if previous_index >= 0 else None
+
+    return next_object, previous_object
 
 
 class FilterMapView(ActiveObjectFilterMixin, FilterViewMixin, ListView):

@@ -21,6 +21,11 @@ html, body{
     border-color: var(--main-color-buttons);
 }
 
+.btn-primary:active{
+    background-color: var(--main-color-buttons);
+    border-color: var(--main-color-buttons);
+}
+
 .btn-outline-primary{
     color: #927d5d;
     border-color: var(--main-color-buttons);

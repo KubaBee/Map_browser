@@ -8,13 +8,23 @@ from .models import (
     People,
     Document,
 )
+from adminsortable2.admin import SortableAdminMixin
 
-# Register your models here.
 
-admin.site.register(Map)
+# admin.site.register(Map)
+@admin.register(Map)
+class MapAdmin(SortableAdminMixin, admin.ModelAdmin):
+    ordering = ['my_order']
+
+
+# admin.site.register(Document)
+@admin.register(Document)
+class DocumentAdmin(SortableAdminMixin, admin.ModelAdmin):
+    ordering = ['my_order']
+
+
 admin.site.register(SubjectTypes)
 admin.site.register(PublicationPlaces)
 admin.site.register(Languages)
 admin.site.register(Archive)
 admin.site.register(People)
-admin.site.register(Document)

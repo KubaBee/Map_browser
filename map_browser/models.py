@@ -119,12 +119,16 @@ def upload_thumbnail_path(instance, filename):
 
 
 class Map(models.Model):
-    class Meta:
-        app_label = 'map_browser'
 
+    my_order = models.PositiveIntegerField(
+        default=0,
+        blank=False,
+        null=False,
+        db_index=True
+    )
     filename = models.ImageField(upload_to='maps/')
     thumbnail = models.ImageField(upload_to=upload_thumbnail_path, null=True, blank=True)
-    # thumbnail = models.ImageField(upload_to='thumbnails/')
+    geoportal_url = models.URLField(verbose_name="Link do Geoportalu", null=True, blank=True)
     link = models.URLField(verbose_name="Link do Mapy", null=True, blank=True)
     authors = models.ManyToManyField(People, null=True)
     is_active = models.BooleanField(default=False, verbose_name="Publiczna", help_text="Zaznacz jeśli mapa ma być widoczna dla niezalogowanego użytkownika")
@@ -139,6 +143,7 @@ class Map(models.Model):
     archive_id = models.ForeignKey(
         Archive, blank=True, null=True, on_delete=models.SET("N/A")
     )
+    source = models.CharField(max_length=200, blank=True, null=True)
     publication_place = models.CharField(max_length=100, blank=True, null=True)
     added_at = models.DateTimeField(auto_now_add=True)  # bez exportu
     creator = models.ManyToManyField(settings.AUTH_USER_MODEL)  # bez exportu
@@ -146,8 +151,8 @@ class Map(models.Model):
     short_title = models.CharField(max_length=500, blank=True)
     publishing_address = models.CharField(max_length=300, blank=True)
     scale = models.CharField(
-        blank=True, default='1', max_length=500
-    )  # add scale with ints
+        blank=True, max_length=500
+    )
     subject = models.CharField(max_length=500, blank=True)
     creation_type = models.CharField(max_length=500, blank=True)
     subject_type = models.ManyToManyField(SubjectTypes, blank=True, null=True)
@@ -173,11 +178,22 @@ class Map(models.Model):
             raise Exception("Error when creating a thumbnail")
         super(Map, self).save(*args, **kwargs)
 
+    class Meta:
+        # app_label = 'map_browser',
+        ordering = ['my_order']
+
 
 class Document(models.Model):
     class Meta:
-        app_label = 'map_browser'
+        # app_label = 'map_browser',
+        ordering = ['my_order']
 
+    my_order = models.PositiveIntegerField(
+        default=0,
+        blank=False,
+        null=False,
+        db_index=True
+    )
     title = models.CharField(max_length=250, verbose_name="Tytuł")
     description = models.TextField(blank=True, verbose_name="Opis dokumentu")
     added_at = models.DateTimeField(auto_now_add=True)
@@ -231,20 +247,7 @@ class Document(models.Model):
         blank=True,
         upload_to='translations/',
     )
-    # thumbnail = models.ImageField(upload_to='doc_thumbnails/', null=True, blank=True)
     thumbnail = models.ImageField(upload_to=upload_thumbnail_path, null=True, blank=True)
-
-    # thumbnail = models.ImageField(
-    #     upload_to='doc_thumbnails/',
-    #     blank=False,
-    #     null=True,
-    #     validators=[
-    #         FileExtensionValidator(
-    #             ['jpg', 'jpeg', 'png'],
-    #             message="Podany format nie jest obsługiwany. Akceptowane są tylko pliki .png lub .jpg",
-    #         )
-    #     ],)
-
     volume = models.IntegerField(verbose_name="Liczba/objętość", blank=True, null=True)
     doc_format = models.CharField(
         max_length=150, blank=True, verbose_name="Forma dokumentu"

@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
     'django_filters',
     'map_browser.templatetags',
+    'adminsortable2',
 ]
 
 MIDDLEWARE = [

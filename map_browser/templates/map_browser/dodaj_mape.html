@@ -45,11 +45,14 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-12 col-md-6">
+                        <div class="col-12 col-md-2">
                             {{ map_form.filename|as_crispy_field }}
                         </div>
-                        <div class="col-12 col-md-6">
+                        <div class="col-12 col-md-5">
                             {{ map_form.link|as_crispy_field }}
+                        </div>
+                        <div class="col-12 col-md-5">
+                            {{ map_form.geoportal_url|as_crispy_field }}
                         </div>
                     </div>
                     <div class="row">
@@ -107,6 +110,9 @@
                     <div class="mt-4">
                         {{ map_form.archive_id|as_crispy_field }}
                         <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#archiveModal">Dodaj nowe archiwum</button>
+                    </div>
+                    <div class="mt-4">
+                        {{ map_form.source|as_crispy_field }}
                     </div>
                 </div>
                 <div class="d-flex flex-row-reverse">

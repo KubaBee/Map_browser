@@ -71,6 +71,8 @@ class MapForm(forms.ModelForm):
             'filename',
             'link',
             'archive_id',
+            'source',
+            'geoportal_url',
             'publishing_address',
             'scale',
             'subject',
@@ -105,6 +107,8 @@ class MapForm(forms.ModelForm):
             "keyword_geo": "Słowa kluczowe geograficzne",
             "additional_notes": "Dodatkowe informacje",
             "archive_id": "Archiwum",
+            "source": "Źródło Mapy",
+            "geoportal_url": "Link do mapy w Geo Portalu",
             "authors": "Autorzy",
             "language_id": "Język",
             "related_docs": 'Powiązane dokumenty'
@@ -113,6 +117,8 @@ class MapForm(forms.ModelForm):
         help_texts = {
             "link": "Wypełnij to pole TYLKO jeśli mapa jest przechowywana w zewnętrzynym zasobie",
             "creator": "Aby odznaczyć lub zaznaczyć więcej niż jeden przytrzymaj CTRL",
+            "source": "Podaj źródło mapy lub archiwum",
+            "geoportal_url": "Jeśli link nie istnieje, zostaw to pole puste",
             "filename": "Wybierz plik mapy jeśli ma ona być przechowywana w aplikacji"
         }
 
