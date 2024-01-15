@@ -43,6 +43,14 @@
                     {% endif %}
                 </div>
             </div>
+            <h6>
+                {% if object.category.all %}
+                    Kategoria:
+                    {% for type in object.category.all %}
+                        <span class="badge rounded-pill bg-dark mt-3">{{ type }}</span>
+                    {% endfor %}
+                {% endif %}
+            </h6>
         </div>
 {#        <h5>{% for type in object.category.all %}<span class="badge rounded-pill bg-secondary mt-3">{{ type }}</span> {% endfor %}</h5>#}
     </div>
