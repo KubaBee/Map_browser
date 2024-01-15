@@ -155,6 +155,7 @@ class DocumentForm(forms.ModelForm):
             "translation_file",
             "volume",
             "doc_format",
+            "source",
             "source_type",
             "is_active",
         ]
@@ -182,10 +183,12 @@ class DocumentForm(forms.ModelForm):
             "volume": "Objętość (liczba stron)",
             "doc_format": "Format dokumentu",
             "source_type": "Typ źródła",
+            "source": "Żródło"
         }
 
         help_texts = {
-            "link": "Wypełnij to pole TYLKO jeśli dokument jest przechowywany w zewnętrzynym zasobie"
+            "link": "Wypełnij to pole TYLKO jeśli dokument jest przechowywany w zewnętrzynym zasobie",
+            "source": "Podaj źródło mapy lub archiwum"
         }
 
 # class RelatedDocs(forms.Form):

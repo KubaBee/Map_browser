@@ -109,6 +109,9 @@
                         {{ doc_form.archive_id|as_crispy_field }}
                         <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#archiveModal">Dodaj nowe archiwum</button>
                     </div>
+                    <div class="col-12 col-md-6 mt-3">
+                        {{ doc_form.source|as_crispy_field }}
+                    </div>
                 </div>
                 <div class="d-flex flex-row-reverse">
                     <button type="submit" name="doc_form" class="btn btn-primary">Zapisz</button>
