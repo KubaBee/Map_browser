@@ -51,14 +51,16 @@
                     {% if not forloop.last and object.category.all %}
                         <span class="badge rounded-pill bg-secondary mt-3">{{ type }}</span>
                     {% else %}
-                        <span class="badge rounded-pill bg-secondary mt-3 me-3">{{ type }}</span>
+                        <span class="badge rounded-pill bg-secondary mt-3 me-2">{{ type }}</span>
                     {% endif %}
                 {% endfor %}
             {% endif %}
+        </h6>
+        <h6>
             {% if object.category.all %}
                 Kategoria:
                 {% for type in object.category.all %}
-                    <span class="badge rounded-pill bg-dark mt-3">{{ type }}</span>
+                    <span class="badge rounded-pill bg-dark">{{ type }}</span>
                 {% endfor %}
             {% endif %}
         </h6>
