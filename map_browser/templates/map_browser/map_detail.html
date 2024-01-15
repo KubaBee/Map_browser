@@ -45,13 +45,22 @@
             </div>
         </div>
         <h6>
-            Typ Mapy:
-            {% for type in object.subject_type.all %}
-                <span class="badge rounded-pill bg-secondary mt-3">{{ type }}</span>
-            {% endfor %} Kategoria:
-            {% for type in object.category.all %}
-                <span class="badge rounded-pill bg-dark mt-3">{{ type }}</span>
-            {% endfor %}
+            {% if object.subject_type.all %}
+                Typ Mapy:
+                {% for type in object.subject_type.all %}
+                    {% if not forloop.last and object.category.all %}
+                        <span class="badge rounded-pill bg-secondary mt-3">{{ type }}</span>
+                    {% else %}
+                        <span class="badge rounded-pill bg-secondary mt-3 me-3">{{ type }}</span>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+            {% if object.category.all %}
+                Kategoria:
+                {% for type in object.category.all %}
+                    <span class="badge rounded-pill bg-dark mt-3">{{ type }}</span>
+                {% endfor %}
+            {% endif %}
         </h6>
     </div>
 
