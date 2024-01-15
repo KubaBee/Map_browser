@@ -44,8 +44,7 @@
                 </div>
             </div>
         </div>
-        <h5>{% for type in object.subject_type.all %}
-            <span class="badge rounded-pill bg-secondary mt-3">{{ type }}</span> {% endfor %}</h5>
+        <h5>{% for type in object.category.all %}<span class="badge rounded-pill bg-secondary mt-3">{{ type }}</span> {% endfor %}</h5>
     </div>
 
     <div class="row row-cols-md-2 row-cols-1">
@@ -173,6 +172,10 @@
                             {% if object.archive_id %}
                                 <p><strong>Archiwum:</strong>
                                 {{ object.archive_id }}</p>
+                            {% endif %}
+                            {% if object.source %}
+                                <p><strong>Źródło:</strong>
+                                {{ object.source }}</p>
                             {% endif %}
                             {% if object.is_statistic_data %}
                                 <p><strong>Zawiera dane statystyczne: </strong>Tak</p>

@@ -336,29 +336,32 @@ def map_csv_export(request):
     writer = csv.writer(response)
     writer.writerow(
         [
+            'id',
             'Sygnatura Czasowa',
             'Tytuł Pełny',
             'Tytuł Krótki',
             'Osoba Dodająca',
             'Miejsce Wydania',
-            'Link do mapy',
-            'Autorzy',
+            'Link do Mapy (plik .jpg)',
+            'Link do Mapy (w aplikacji)',
+            'Opis'
         ]
     )
 
     for single_map in all_maps:
         creators = ", ".join([user.username for user in single_map.creator.all()])
-        authors = ", ".join(
-            [f"{author.last_name} {author.first_name}" if author else " " for author in single_map.authors.all()])
+        detail_url = request.build_absolute_uri(reverse('szczegoly-mapy', args=[single_map.pk]))
         writer.writerow(
             [
+                single_map.id,
                 single_map.added_at.strftime("%d-%m-%Y"),
                 single_map.full_title,
                 single_map.short_title,
                 creators,
                 single_map.publication_place,
-                check_url_existence(single_map, request),
-                authors
+                check_url_existence(single_map.filename, request),
+                detail_url,
+                single_map.description
             ]
         )
     return response
@@ -376,12 +379,13 @@ def doc_csv_export(request):
     writer = csv.writer(response)
     writer.writerow(
         [
+            'id',
             'Sygnatura Czasowa',
             'Tytuł',
             'Osoba Dodająca',
             'Link do dokumentu',
-            'Link do tłumacznenia',
-            'Autorzy',
+            'Link do tłumaczenia',
+            'Link do Dokumentu (w aplikacji)'
         ]
     )
 
@@ -389,14 +393,17 @@ def doc_csv_export(request):
         creators = ", ".join([user.username for user in single_doc.creator.all()])
         authors = ", ".join(
             [f"{author.last_name} {author.first_name}" if author else " " for author in single_doc.authors.all()])
+        detail_url = request.build_absolute_uri(reverse('szczegoly-dokumenty', args=[single_doc.pk]))
+
         writer.writerow(
             [
+                single_doc.id,
                 single_doc.added_at.strftime("%d-%m-%Y"),
                 single_doc.title,
                 creators,
                 check_url_existence(single_doc.doc_file, request),
                 check_url_existence(single_doc.translation_file, request),
-                authors
+                detail_url
             ]
         )
     return response
@@ -412,17 +419,3 @@ def custom_error_view(request, exception=None):
 
 def custom_forbidden_view(request, exception=None):
     return render(request, "map_browser/403.html")
-
-
-# def navigate_through_detail(objects, current_id):
-#
-#     context = {}
-#
-#     if objects.filter(id__gt=current_id).first() is not None:
-#         next_map = Map.objects.filter(id__gt=current_id).first()
-#         context['next_map'] = next_map
-#     if objects.filter(id__lt=current_id).last() is not None:
-#         prev_map = Map.objects.filter(id__lt=current_id).last()
-#         context['prev_map'] = prev_map
-#
-#     return context

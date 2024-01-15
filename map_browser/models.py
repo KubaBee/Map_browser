@@ -10,6 +10,7 @@ from django.core.files.base import ContentFile
 class People(models.Model):
     class Meta:
         app_label = 'map_browser'
+        verbose_name_plural = "People"
 
     first_name = models.CharField(max_length=80, blank=True)
     last_name = models.CharField(max_length=80, blank=True)
@@ -42,6 +43,7 @@ class Archive(models.Model):
 class Languages(models.Model):
     class Meta:
         app_label = 'map_browser'
+        verbose_name_plural = "Languages"
 
     language_code = models.CharField(max_length=4, blank=True)
     language_name = models.CharField(max_length=50, blank=True)
@@ -53,6 +55,7 @@ class Languages(models.Model):
 class PublicationPlaces(models.Model):
     class Meta:
         app_label = 'map_browser'
+        verbose_name_plural = "Publication Places"
 
     country_name = models.CharField(max_length=100, blank=True)
     city_name = models.CharField(max_length=100, blank=True)
@@ -64,6 +67,18 @@ class PublicationPlaces(models.Model):
 class SubjectTypes(models.Model):
     class Meta:
         app_label = 'map_browser'
+        verbose_name_plural = "Subject Types"
+
+    name = models.CharField(max_length=50, blank=True)
+
+    def __str__(self):
+        return f'{self.name}'
+
+
+class Category(models.Model):
+    class Meta:
+        app_label = 'map_browser'
+        verbose_name_plural = "Categories"
 
     name = models.CharField(max_length=50, blank=True)
 
@@ -145,8 +160,8 @@ class Map(models.Model):
     )
     source = models.CharField(max_length=200, blank=True, null=True)
     publication_place = models.CharField(max_length=100, blank=True, null=True)
-    added_at = models.DateTimeField(auto_now_add=True)  # bez exportu
-    creator = models.ManyToManyField(settings.AUTH_USER_MODEL)  # bez exportu
+    added_at = models.DateTimeField(auto_now_add=True)
+    creator = models.ManyToManyField(settings.AUTH_USER_MODEL)
     full_title = models.CharField(max_length=500, blank=True)
     short_title = models.CharField(max_length=500, blank=True)
     publishing_address = models.CharField(max_length=300, blank=True)
@@ -156,6 +171,7 @@ class Map(models.Model):
     subject = models.CharField(max_length=500, blank=True)
     creation_type = models.CharField(max_length=500, blank=True)
     subject_type = models.ManyToManyField(SubjectTypes, blank=True, null=True)
+    category = models.ManyToManyField(Category, blank=True, null=True)
     description = models.TextField(blank=True)
     keyword_name = models.CharField(max_length=500, blank=True)
     keyword_subject = models.CharField(max_length=500, blank=True)
@@ -224,6 +240,9 @@ class Document(models.Model):
     source_reference = models.ManyToManyField(
         Map, blank=True, verbose_name="Odwołanie do mapy źródłowej"
     )
+    source = models.CharField(max_length=200, blank=True, null=True)
+    category = models.ManyToManyField(Category, blank=True, null=True)
+
     is_statistic_data = models.BooleanField(
         blank=True, verbose_name="Czy znajdują się dane statystyczne?"
     )

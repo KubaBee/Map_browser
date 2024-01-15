@@ -44,7 +44,15 @@
                 </div>
             </div>
         </div>
-        <h5>{% for type in object.subject_type.all %}<span class="badge rounded-pill bg-secondary mt-3">{{ type }}</span> {% endfor %}</h5>
+        <h6>
+            Typ Mapy:
+            {% for type in object.subject_type.all %}
+                <span class="badge rounded-pill bg-secondary mt-3">{{ type }}</span>
+            {% endfor %} Kategoria:
+            {% for type in object.category.all %}
+                <span class="badge rounded-pill bg-dark mt-3">{{ type }}</span>
+            {% endfor %}
+        </h6>
     </div>
 
     <div class="row row-cols-md-2 row-cols-1 pe-md-0 ps-md-0 pe-3 ps-3">
@@ -146,7 +154,7 @@
                                 {{ object.archive_id }}</p>
                             {% endif %}
                             {% if object.source %}
-                                <p><strong>Źródło</strong>
+                                <p><strong>Źródło:</strong>
                                 {{ object.source }}</p>
                             {% endif %}
                             {% if object.scale %}
