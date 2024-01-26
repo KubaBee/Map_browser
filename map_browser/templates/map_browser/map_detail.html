@@ -33,9 +33,9 @@
         {% endif %}
         <div>
             <div class="row">
-                <div class="col d-flex">
-                    <span class="me-2">{{ object.added_at| date:"d/m/Y" }}</span>
-                </div>
+{#                <div class="col d-flex">#}
+{#                    <span class="me-2">{{ object.added_at| date:"d/m/Y" }}</span>#}
+{#                </div>#}
                 <div class="col d-flex justify-content-end">
                     {% if user in object.creator.all or user.is_superuser %}
                         <span class="me-4"><a href="{% url 'edytuj-mape' object.id %}"><img class="action-buttons-detail" style="max-width: 16px" src="{% static 'map_browser/images/pencil.png' %}" alt="Edytuj"></a></span>
@@ -46,7 +46,7 @@
         </div>
         <h6>
             {% if object.subject_type.all %}
-                Typ Mapy:
+                Typ mapy:
                 {% for type in object.subject_type.all %}
                     {% if not forloop.last and object.category.all %}
                         <span class="badge rounded-pill bg-secondary mt-3">{{ type }}</span>

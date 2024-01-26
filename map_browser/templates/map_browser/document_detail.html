@@ -28,9 +28,9 @@
         <h1>{{ object.title }}</h1>
         <div>
             <div class="row">
-                <div class="col d-flex">
-                    <span class="me-2">{{ object.added_at| date:"d/m/Y" }}</span>
-                </div>
+{#                <div class="col d-flex">#}
+{#                    <span class="me-2">{{ object.added_at| date:"d/m/Y" }}</span>#}
+{#                </div>#}
                 <div class="col d-flex justify-content-end">
                     {% if user in object.creator.all or user.is_superuser %}
                         <span class="me-4"><a href="{% url 'edytuj-dokument' object.id %}"><img
