@@ -36,7 +36,21 @@
 {#                <div class="col d-flex">#}
 {#                    <span class="me-2">{{ object.added_at| date:"d/m/Y" }}</span>#}
 {#                </div>#}
-                <div class="col d-flex justify-content-end">
+                <div class="col-10">
+                    <h6>
+                        {% if object.subject_type.all %}
+                            Typ mapy:
+                            {% for type in object.subject_type.all %}
+                                {% if not forloop.last and object.category.all %}
+                                    <span class="badge rounded-pill bg-secondary mt-3">{{ type }}</span>
+                                {% else %}
+                                    <span class="badge rounded-pill bg-secondary mt-3 me-2">{{ type }}</span>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    </h6>
+                </div>
+                <div class="col-2 d-flex justify-content-end">
                     {% if user in object.creator.all or user.is_superuser %}
                         <span class="me-4"><a href="{% url 'edytuj-mape' object.id %}"><img class="action-buttons-detail" style="max-width: 16px" src="{% static 'map_browser/images/pencil.png' %}" alt="Edytuj"></a></span>
                         <span><a href="{% url 'usun-mape' object.id %}"><img class="action-buttons-detail" style="max-width: 16px" src="{% static 'map_browser/images/bin.png' %}" alt="Usuń"></a></span>
@@ -44,26 +58,17 @@
                 </div>
             </div>
         </div>
-        <h6>
-            {% if object.subject_type.all %}
-                Typ mapy:
-                {% for type in object.subject_type.all %}
-                    {% if not forloop.last and object.category.all %}
-                        <span class="badge rounded-pill bg-secondary mt-3">{{ type }}</span>
-                    {% else %}
-                        <span class="badge rounded-pill bg-secondary mt-3 me-2">{{ type }}</span>
-                    {% endif %}
-                {% endfor %}
-            {% endif %}
-        </h6>
-        <h6>
-            {% if object.category.all %}
-                Kategoria:
-                {% for type in object.category.all %}
-                    <span class="badge rounded-pill bg-dark">{{ type }}</span>
-                {% endfor %}
-            {% endif %}
-        </h6>
+
+        <div class="col-2">
+            <h6>
+                {% if object.category.all %}
+                    Kategoria:
+                    {% for type in object.category.all %}
+                        <span class="badge rounded-pill bg-dark">{{ type }}</span>
+                    {% endfor %}
+                {% endif %}
+            </h6>
+        </div>
     </div>
 
     <div class="row row-cols-md-2 row-cols-1 pe-md-0 ps-md-0 pe-3 ps-3">
