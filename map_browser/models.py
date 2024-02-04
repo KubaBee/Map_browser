@@ -226,7 +226,7 @@ class Document(models.Model):
         People, blank=True, verbose_name="Adresat", related_name="receiver_id"
     )
     archive_id = models.ForeignKey(
-        Archive, blank=False, null=False, on_delete=models.SET("N/A"), verbose_name="Archiwum", default="Nieznane"
+        Archive, blank=True, null=True, on_delete=models.SET("N/A"), verbose_name="Archiwum"
     )
     keyword_name = models.CharField(
         max_length=500, blank=True, verbose_name="Słowa kluczowe imienne"
