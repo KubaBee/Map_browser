@@ -340,7 +340,7 @@ def map_csv_export(request):
             'Sygnatura Czasowa',
             'Tytuł Pełny',
             'Tytuł Krótki',
-            'Osoba Dodająca',
+            'Autor Mapy',
             'Miejsce Wydania',
             'Link do Mapy (plik .jpg)',
             'Link do Mapy (w aplikacji)',
@@ -349,7 +349,8 @@ def map_csv_export(request):
     )
 
     for single_map in all_maps:
-        creators = ", ".join([user.username for user in single_map.creator.all()])
+        authors = ", ".join(
+            [f"{author.last_name} {author.first_name}" if author else " " for author in single_map.authors.all()])
         detail_url = request.build_absolute_uri(reverse('szczegoly-mapy', args=[single_map.pk]))
         writer.writerow(
             [
@@ -357,7 +358,7 @@ def map_csv_export(request):
                 single_map.added_at.strftime("%d-%m-%Y"),
                 single_map.full_title,
                 single_map.short_title,
-                creators,
+                authors,
                 single_map.publication_place,
                 check_url_existence(single_map.filename, request),
                 detail_url,
@@ -382,7 +383,7 @@ def doc_csv_export(request):
             'id',
             'Sygnatura Czasowa',
             'Tytuł',
-            'Osoba Dodająca',
+            'Autor Dokumentu',
             'Link do dokumentu',
             'Link do tłumaczenia',
             'Link do Dokumentu (w aplikacji)'
@@ -390,7 +391,7 @@ def doc_csv_export(request):
     )
 
     for single_doc in all_docs:
-        creators = ", ".join([user.username for user in single_doc.creator.all()])
+        # creators = ", ".join([user.username for user in single_doc.creator.all()])
         authors = ", ".join(
             [f"{author.last_name} {author.first_name}" if author else " " for author in single_doc.authors.all()])
         detail_url = request.build_absolute_uri(reverse('szczegoly-dokumenty', args=[single_doc.pk]))
@@ -400,7 +401,7 @@ def doc_csv_export(request):
                 single_doc.id,
                 single_doc.added_at.strftime("%d-%m-%Y"),
                 single_doc.title,
-                creators,
+                authors,
                 check_url_existence(single_doc.doc_file, request),
                 check_url_existence(single_doc.translation_file, request),
                 detail_url
