@@ -1,7 +1,7 @@
 import os.path
 from django.db import models
 from django.conf import settings
-from PIL import Image
+from PIL import Image, ImageOps
 from io import BytesIO
 from django.core.validators import FileExtensionValidator
 from django.core.files.base import ContentFile
@@ -86,21 +86,64 @@ class Category(models.Model):
         return f'{self.name}'
 
 
+# def make_thumbnail(instance):
+#     if isinstance(instance, Map):
+#         if not instance.filename:
+#             return False
+#         img = Image.open(instance.filename)
+#         img.thumbnail((916, 624))
+#         thumb_name, thumb_extension = os.path.splitext(instance.filename.name)
+#     elif isinstance(instance, Document):
+#         if not instance.thumbnail:
+#             return False
+#         img = Image.open(instance.thumbnail)
+#         img.thumbnail((916, 624))
+#         thumb_name, thumb_extension = os.path.splitext(instance.thumbnail.name)
+#     else:
+#         return False
+#
+#     thumb_extension = thumb_extension.lower()
+#     thumb_filename = thumb_name + '_copy' + thumb_extension
+#
+#     if thumb_extension in ['.jpeg', '.jpg']:
+#         FTYPE = 'JPEG'
+#     elif thumb_extension == '.png':
+#         FTYPE = "PNG"
+#     else:
+#         return False
+#
+#     temp_thumb = BytesIO()
+#     img.save(temp_thumb, FTYPE)
+#     temp_thumb.seek(0)
+#     instance.thumbnail.save(thumb_filename, ContentFile(temp_thumb.getvalue()), save=False)
+#
+#     temp_thumb.close()
+#
+#     return True
+
 def make_thumbnail(instance):
     if isinstance(instance, Map):
         if not instance.filename:
             return False
         img = Image.open(instance.filename)
-        img.thumbnail((916, 624))
-        thumb_name, thumb_extension = os.path.splitext(instance.filename.name)
     elif isinstance(instance, Document):
         if not instance.thumbnail:
             return False
         img = Image.open(instance.thumbnail)
-        img.thumbnail((916, 624))
-        thumb_name, thumb_extension = os.path.splitext(instance.thumbnail.name)
     else:
         return False
+
+    # Correct orientation based on EXIF data
+    img = ImageOps.exif_transpose(img)
+
+    # Create thumbnail
+    img.thumbnail((916, 624))
+
+    # Determine file name and extension
+    if isinstance(instance, Map):
+        thumb_name, thumb_extension = os.path.splitext(instance.filename.name)
+    else:
+        thumb_name, thumb_extension = os.path.splitext(instance.thumbnail.name)
 
     thumb_extension = thumb_extension.lower()
     thumb_filename = thumb_name + '_copy' + thumb_extension

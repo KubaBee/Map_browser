@@ -96,7 +96,9 @@
             {% if object.additional_notes %}
                 <h5><strong>Dodatkowe informacje</strong></h5>
                 <p>
-                    {{ object.additional_notes|linebreaksbr }}
+                    {% with additional_notes=object.additional_notes|urlize %}
+                        {{ additional_notes|linebreaksbr }}
+                     {% endwith %}
                 </p>
             {% endif %}
             <div class="accordion" id="accordionPanelsStayOpenExample">
